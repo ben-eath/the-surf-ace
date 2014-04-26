@@ -8,16 +8,16 @@
 
 	exports.Bloodstain = function(game, settings) {
 		this.c = game.c;
-		initObject(this, settings);
-	};
-
-	exports.Bloodstain.prototype = {
-		color: {
+		this.color = {
 			r: 100,
 			g: 0,
 			b: 0,
 			a: 1
-		},
+		};
+		initObject(this, settings);
+	};
+
+	exports.Bloodstain.prototype = {
 		center: {
 			x: 0,
 			y: 0
