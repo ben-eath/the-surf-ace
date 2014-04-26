@@ -162,8 +162,6 @@ server.on('connection', function(socket) {
         if(controllerFunctions[fn]) {
             controllerFunctions[fn](args, socket);
             console.log("valid command");
-            var c = players[socket.id];
-            console.log(c.room.controllers[c.index]);
         } else if (displayFunctions[fn]) {
             displayFunctions[fn](args, socket);
         } else {
