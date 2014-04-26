@@ -22,11 +22,32 @@
         <td id="doDirection"></td>
         </tr>
     </table>
+<<<<<<< Updated upstream
     </div>
 
     <div class="container" style="perspective: 300;">
     <img src="html5_logo.png" id="imgLogo" class="logo">
     </div>
+=======
+
+    <hr>
+    <table>
+        <tr>
+        <td>Acceleration</td>
+        <td id="acceleration"></td>
+        </tr>
+        <tr>
+        <td>Rotation Rate</td>
+        <td id="rotationrate"></td>
+        </tr>
+        <tr>
+        <td>Interval</td>
+        <td id="interval"></td>
+        </tr>
+    </table>
+    </div>
+
+>>>>>>> Stashed changes
     <script>
 if (window.DeviceOrientationEvent) {
     console.log("DeviceOrientation is supported");
@@ -62,7 +83,22 @@ window.addEventListener('deviceorientation', function(eventData) {
     deviceOrientationHandler(tiltLR, tiltFB, dir);
 }, false);
 
+<<<<<<< Updated upstream
 
+=======
+window.addEventListener('devicemotion', function (deviceMotion) { 
+    accel = deviceMotion.acceleration ? deviceMotion.acceleration : deviceMotion.accelerationIncludingGravity
+    rot = deviceMotion.rotationRate
+    interval = deviceMotion.interval
+    // console.log('Acceleration: %o // rotationRate: %o // interval: %o', accel, rot, interval)
+
+    document.getElementById("acceleration").innerHTML =
+        accel.x + ", " + accel.y + ", " + accel.z;
+    document.getElementById("rotationrate").innerHTML =
+        rot.alpha + ", " + rot.beta + ", " + rot.gamma;
+    document.getElementById("interval").innerHTML = interval;
+}, true)
+>>>>>>> Stashed changes
     </script>
 </body>
 </html>
