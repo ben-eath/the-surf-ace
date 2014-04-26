@@ -3,6 +3,7 @@
 	exports.Ocean = function(game, settings) {
 		this.c = game.c;
 		var defaults = {
+			zindex: -100,
 			pos: {
 				x: 0,
 				y: 0
@@ -18,14 +19,15 @@
 			}
 		};
 		initObject(this, defaults, settings);
+		console.log(this);
 	};
 
 	exports.Ocean.prototype = {
 		draw: function(ctx){
-			ctx.fillColor = "rgb(" +
+			ctx.setFillColor("rgb(" +
 				this.color.r + "," +
 				this.color.g + "," +
-				this.color.b + ")";
+				this.color.b + ")");
 			ctx.fillRect(
 				this.pos.x,
 				this.pos.y,

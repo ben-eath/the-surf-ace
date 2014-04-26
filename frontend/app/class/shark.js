@@ -3,6 +3,7 @@
 	exports.Shark = function(game, settings) {
 		this.c = game.c;
 		var defaults = {
+			zindex: 1,
 			pos: {
 				x: 100,
 				y: 300
@@ -15,11 +16,12 @@
 			color: 'red'
 		};
 		initObject(this, defaults, settings);
+		console.log(this);
 	};
 
 	exports.Shark.prototype = {
 		draw: function(ctx){
-			ctx.fillColor = this.color;
+			ctx.setFillColor(this.color);
 			ctx.fillRect(
 				this.pos.x,
 				this.pos.y,

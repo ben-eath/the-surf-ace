@@ -19,7 +19,7 @@
 
 	exports.Shark.prototype = {
 		draw: function(ctx){
-			ctx.fillColor = this.color;
+			ctx.setFillColor(this.color);
 			ctx.fillRect(
 				this.pos.x,
 				this.pos.y,
