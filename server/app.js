@@ -136,8 +136,8 @@ server.on('connection', function(socket) {
             return;
         }
 
-        if(functions[fn]) {
-            functions[fn](args, socket);
+        if(controllerFunctions[fn]) {
+            controllerFunctions[fn](args, socket);
             console.log("valid command");
         } else {
             console.error('not valid command');
