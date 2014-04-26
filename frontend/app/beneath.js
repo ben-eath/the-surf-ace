@@ -10,6 +10,7 @@
 		this.c.entities.create(Ocean, {size: { x:width, y:height }});
 		this.c.entities.create(Shark, {});
 		this.c.entities.create(Surfer, {});
+		this.c.entities.create(Start, {center: {x:width/2, y:height/2}});
 	};
 
 	window.addEventListener('load', function() {
