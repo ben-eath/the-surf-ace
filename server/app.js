@@ -23,34 +23,35 @@ rooms['123'] = {
 }
 
 
-var functions = function(socket) {
-    return {
-        joinRoom: function(id) {
-            var room = rooms[id];
+var functions = {
+        joinRoom: function(args, socket) {
+            var room = rooms[args.room_id];
             if (room) {
-                if (!players[id]) {
-                    players[id] = {};
+                if (!players[socket.id]) {
+                    players[socket.id] = {};
                 }
 
-                players[id].room = room;
+                players[socket.id].room = room;
                 if (room.controllers.length < 4) {
-                    players[id].index = addController(room, null); // need to get socket
+                    players[socket.id].index = addController(room, socket); // need to get socket
                 } else {
-                    console.error("too many players");
+                    var msg = {fn: 'ERROR', args:'too many players'};
+                    socket.send(JSON.stringify(msg));
                     return false;
                 }
             } else {
-                console.error("Not a valid room");
-                return false
+                var msg = {fn: 'ERROR', args:'Not a valid room'};
+                socket.send(JSON.stringify(msg));
+                return false;
             }
         },
-        "setDepth": function(msg, id) {
-            var room = player[id].room;
-            room.controllers[player[id].index] = msg
+        setDepth: function(args, socket) {
+            var room = player[socket.id].room;
+            room.controllers[player[socket.id].index] = args.depth;
 
         }
-    };
 };
+
 
 
 function addToIDTable(id, socket) {
@@ -68,6 +69,7 @@ function addController(room, socket) {
         socket: socket,
         score: 0
     }
+
     return room.controllers.push(controller) - 1;
 }
 
@@ -107,7 +109,6 @@ server.on('connection', function(socket) {
 
 	console.log('New connected!');
 	sockets.push(socket);
-    var fns = functions(socket);
 
 	socket.on('message', function(msg) {
         var data;
@@ -126,8 +127,8 @@ server.on('connection', function(socket) {
             return;
         }
 
-        if(fns[fn]) {
-            fns[fn](args);
+        if(functions[fn]) {
+            functions[fn](args, socket);
             console.log("valid command");
         } else {
             console.error('not valid command');
