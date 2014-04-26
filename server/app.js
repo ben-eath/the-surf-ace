@@ -66,16 +66,18 @@ var controllerFunctions = {
         setDepth: function(args, socket) {
             var room = players[socket.id].room;
             if (checkControllerValues(args.depth, socket, "Depth not Valid")) {
-                room.controllers[players[socket.id].index].depth = args.depth;
-                obj = {msg: "depth", value: args.depth};
+                var index = players[socket.id].index;
+                room.controllers[index].depth = args.depth;
+                obj = {msg: "depth", index: index, value: args.depth};
                 room.socket.send(JSON.stringify(obj));
             }
         },
         setDirection: function(args, socket) {
             var room = players[socket.id].room;
             if (checkControllerValues(args.direction, socket, "Direction not Valid")) {
-                room.controllers[players[socket.id].index].direction = args.direction;
-                obj = {msg: "direction", value: args.direction};
+                var index = players[socket.id].index;
+                room.controllers[index].direction = args.direction;
+                obj = {msg: "direction", index: index, value: args.direction};
                 room.socket.send(JSON.stringify(obj));
             }
         },
