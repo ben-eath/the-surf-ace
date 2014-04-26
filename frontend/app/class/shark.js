@@ -14,7 +14,7 @@
 			submerged: true,
 			color: 'red'
 		};
-		initObject(this, defaults, settings);
+		window.initObject(this, defaults, settings);
 	};
 
 	exports.Shark.prototype = {

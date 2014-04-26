@@ -14,7 +14,7 @@
 			dead: false,
 			color: 'yellow'
 		};
-		initObject(this, defaults, settings);
+		window.initObject(this, defaults, settings);
 	};
 
 	exports.Shark.prototype = {

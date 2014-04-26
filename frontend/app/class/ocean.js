@@ -17,7 +17,7 @@
 				b: 255
 			}
 		};
-		initObject(this, defaults, settings);
+		window.initObject(this, defaults, settings);
 	};
 
 	exports.Ocean.prototype = {
