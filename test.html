@@ -2,6 +2,7 @@
 <head>
 </head>
 <body>
+  <div id="vel"> </div>
 <script>
 
     
@@ -41,6 +42,8 @@ ws.onopen = function (event) {
       sendDepth();
       last_depth = Math.round(shark_velocity.depth);
     }
+
+    document.getElementById("vel").textContent = shark_velocity
   }, false);
 
 };
