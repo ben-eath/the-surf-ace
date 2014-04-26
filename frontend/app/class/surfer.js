@@ -2,22 +2,20 @@
 
 	exports.Surfer = function(game, settings) {
 		this.c = game.c;
-		var defaults = {
-			pos: {
-				x: 100,
-				y: 0
-			},
-			size: {
-				x: 64,
-				y: 128
-			},
-			dead: false,
-			color: 'yellow'
-		};
-		initObject(this, defaults, settings);
+		initObject(this, settings);
 	};
 
-	exports.Shark.prototype = {
+	exports.Surfer.prototype = {
+		pos: {
+			x: 100,
+			y: 0
+		},
+		size: {
+			x: 64,
+			y: 128
+		},
+		dead: false,
+		color: 'yellow',
 		draw: function(ctx){
 			ctx.setFillColor(this.color);
 			ctx.fillRect(
