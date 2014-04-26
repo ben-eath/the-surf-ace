@@ -1,10 +1,10 @@
 ;(function(exports){
-	exports.initObject = function(obj, defaults, options) {
+	exports.initObject = function(obj, defaults, settings) {
 		for (var def in defaults) {
-			if (options[def] === undefined) {
+			if (settings[def] === undefined) {
 				obj[def] = defaults[def];
 			} else {
-				obj[def] = options[def];
+				obj[def] = settings[def];
 			}
 		}
 	};

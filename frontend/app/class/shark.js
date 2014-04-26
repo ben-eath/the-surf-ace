@@ -1,6 +1,7 @@
 ;(function(exports) {
 
-	exports.Shark = function(options) {
+	exports.Shark = function(game, settings) {
+		this.c = game.c;
 		var defaults = {
 			pos: {
 				x: 100,
@@ -10,9 +11,21 @@
 				x: 64,
 				y: 128
 			},
-			submerged: true
+			submerged: true,
+			color: 'red'
 		};
-		initObject(this, defaults, options);
+		initObject(this, defaults, settings);
+	};
+
+	exports.Shark.prototype = {
+		draw: function(ctx){
+			ctx.fillColor = this.color;
+			ctx.fillRect(
+				this.pos.x,
+				ths.pos.y,
+				this.size.x,
+				this.size.y);
+		}
 	};
 
 })(window);
