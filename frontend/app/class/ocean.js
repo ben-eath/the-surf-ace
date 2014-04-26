@@ -17,7 +17,7 @@
 				b: 255
 			}
 		};
-		window.initObject(this, defaults, settings);
+		initObject(this, defaults, settings);
 	};
 
 	exports.Ocean.prototype = {
@@ -28,7 +28,7 @@
 				this.color.b + ")";
 			ctx.fillRect(
 				this.pos.x,
-				ths.pos.y,
+				this.pos.y,
 				this.size.x,
 				this.size.y);
 		}

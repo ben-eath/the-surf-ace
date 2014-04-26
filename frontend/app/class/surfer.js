@@ -14,7 +14,7 @@
 			dead: false,
 			color: 'yellow'
 		};
-		window.initObject(this, defaults, settings);
+		initObject(this, defaults, settings);
 	};
 
 	exports.Shark.prototype = {
@@ -22,7 +22,7 @@
 			ctx.fillColor = this.color;
 			ctx.fillRect(
 				this.pos.x,
-				ths.pos.y,
+				this.pos.y,
 				this.size.x,
 				this.size.y);
 		}
