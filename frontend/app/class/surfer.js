@@ -10,7 +10,7 @@
 	};
 
 	exports.Surfer.prototype = {
-		pos: {
+		center: {
 			x: 100,
 			y: 0
 		},
@@ -23,21 +23,21 @@
 		draw: function(ctx){
 			ctx.setFillColor(this.color);
 			ctx.fillRect(
-				this.pos.x,
-				this.pos.y,
+				this.center.x - this.size.x / 2,
+				this.center.y - this.size.y / 2,
 				this.size.x,
 				this.size.y);
 		},
 		update: function(dt) {
-			this.pos.y += SPEED;
+			this.center.y += SPEED;
 
 			this.serpentine += 0.05;
-			this.pos.x += Math.sin(this.serpentine) * SERPENTINE_AMOUNT;
+			this.center.x += Math.sin(this.serpentine) * SERPENTINE_AMOUNT;
 		},
 		die: function(){
 			this.c.entities.destroy(this);
 			this.c.entities.create(Bloodstain, {
-				pos: this.pos
+				center: this.center
 			});
 		}
 	};

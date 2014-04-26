@@ -4,6 +4,8 @@
 	var SHARK_SPEED_Y_SURFACE = 1;
 	var SHARK_SPEED_Y_AIR = 0.75;
 
+	var SHARK_SPEED_X = 5;
+
 	exports.Shark = function(game, settings) {
 		this.c = game.c;
 		initObject(this, settings);
@@ -13,7 +15,7 @@
 	exports.Shark.prototype = {
 		id: 0,
 		zindex: 1,
-		pos: {
+		center: {
 			x: 0,
 			y: 300
 		},
@@ -30,8 +32,8 @@
 		draw: function(ctx) {
 			ctx.setFillColor(this.color);
 			ctx.fillRect(
-				this.pos.x,
-				this.pos.y,
+				this.center.x - this.size.x / 2,
+				this.center.y - this.size.y / 2,
 				this.size.x,
 				this.size.y);
 		},
@@ -43,8 +45,8 @@
 			else if(this.depth < 1) this.speed.y = SHARK_SPEED_Y_DEEP;
 			else this.speed.y = SHARK_SPEED_Y_SURFACE;
 
-			this.pos.x += data.direction * this.speed.x * (dt/16.66);
-			this.pos.y -= data.depth * this.speed.y * (dt/16.66);
+			this.center.x += data.direction * this.speed.x * SHARK_SPEED_X * (dt/16.66);
+			this.center.y -= data.depth * this.speed.y * (dt/16.66);
 		},
 		calculateDepth: function(dd) {
 			if(dd > 0.35) {
@@ -57,7 +59,7 @@
 		},
 		collision: function(other, type) {
 			if(other instanceof Surfer) {
-				Surfer.die();
+				other.die();
 			}
 		}
 	};

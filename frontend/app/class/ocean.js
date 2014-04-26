@@ -1,5 +1,7 @@
 ;(function(exports) {
 
+	var SURFER_SPAWN_SPEED = 1000 * 3;
+
 	exports.Ocean = function(game, settings) {
 		this.c = game.c;
 		initObject(this, settings);
@@ -7,7 +9,7 @@
 
 	exports.Ocean.prototype = {
 		zindex: -100,
-		pos: {
+		center: {
 			x: 0,
 			y: 0
 		},
@@ -20,16 +22,26 @@
 			g: 128,
 			b: 255
 		},
-		draw: function(ctx){
-			ctx.setFillColor("rgb(" +
-				this.color.r + "," +
-				this.color.g + "," +
-				this.color.b + ")");
+		time: 0,
+		draw: function(ctx) {
+			ctx.setFillColor(colorFromObject(this.color));
 			ctx.fillRect(
-				this.pos.x,
-				this.pos.y,
+				this.center.x,
+				this.center.y,
 				this.size.x,
 				this.size.y);
+		},
+		update: function(dt) {
+			this.time += dt;
+			if (this.time >= SURFER_SPAWN_SPEED) {
+				this.time = 0;
+				this.c.entities.create(Surfer, {
+					center: {
+						x: Math.random() * this.size.x,
+						y: 0
+					}
+				});
+			}
 		}
 	};
 

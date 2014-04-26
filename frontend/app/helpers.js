@@ -4,4 +4,12 @@
 			obj[s] = settings[s];
 		}
 	};
+
+	exports.colorFromObject = function(color) {
+		return  "rgb" + (color.a ? "a" : "") + "(" +
+				color.r + "," +
+				color.g + "," +
+				color.b + (color.a ? "," : ")") +
+				(color.a ? color.a + ")" : "");
+	};
 })(window);
