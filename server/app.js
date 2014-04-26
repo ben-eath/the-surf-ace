@@ -68,12 +68,6 @@ var controllerFunctions = {
                 room.controllers[players[socket.id].index].direction = args.direction;
             }
         },
-        setSpeed: function(args, socket) {
-            var room = players[socket.id].room;
-            if (checkControllerValues(args.direction, socket, "Speed not Valid")) {
-                room.controllers[players[socket.id].index].speed = args.speed;
-            }
-        }      
 }; 
 
 
@@ -88,7 +82,6 @@ function addToIDTable(id, socket) {
 function addController(room, socket) {
     controller = {
         direction: LEFT,
-        speed: 0,
         depth:BOTTOM,
         socket: socket,
         score: 0
