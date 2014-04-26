@@ -22,6 +22,7 @@
         <td id="doDirection"></td>
         </tr>
     </table>
+
     <hr>
     <table>
         <tr>
@@ -29,7 +30,7 @@
         <td id="acceleration"></td>
         </tr>
         <tr>
-            <td>Rotation Rate</td>
+        <td>Rotation Rate</td>
         <td id="rotationrate"></td>
         </tr>
         <tr>
@@ -77,6 +78,7 @@ window.addEventListener('deviceorientation', function(eventData) {
     // call our orientation event handler
     deviceOrientationHandler(tiltLR, tiltFB, dir);
 }, false);
+
 
 window.addEventListener('devicemotion', function (deviceMotion) { 
     accel = deviceMotion.acceleration ? deviceMotion.acceleration : deviceMotion.accelerationIncludingGravity
