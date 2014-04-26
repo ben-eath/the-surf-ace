@@ -37,11 +37,7 @@ var displayFunctions = {
             socket: socket,
             controllers: []
         }
-    },
-    sendGameState: function(args, socket) {
-        socket.send(JSON.stringify(rooms[args.id].controllers));
     }
-    
 };
 
 var controllerFunctions = {
@@ -71,12 +67,16 @@ var controllerFunctions = {
             var room = players[socket.id].room;
             if (checkControllerValues(args.depth, socket, "Depth not Valid")) {
                 room.controllers[players[socket.id].index].depth = args.depth;
+                obj = {msg: "depth", value: args.depth};
+                room.socket.send(JSON.stringify(obj));
             }
         },
         setDirection: function(args, socket) {
             var room = players[socket.id].room;
             if (checkControllerValues(args.direction, socket, "Direction not Valid")) {
                 room.controllers[players[socket.id].index].direction = args.direction;
+                obj = {msg: "direction", value: args.direction};
+                room.socket.send(JSON.stringify(obj));
             }
         },
 }; 
