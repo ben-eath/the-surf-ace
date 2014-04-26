@@ -43,7 +43,8 @@ ws.onopen = function (event) {
       last_depth = Math.round(shark_velocity.depth);
     }
 
-    document.getElementById("vel").textContent = shark_velocity
+    document.getElementById("vel").textContent = "dir: " + shark_velocity.direction.toString() + " dep: " + shark_velocity.depth.toString();
+
   }, false);
 
 };
