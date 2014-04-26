@@ -7,7 +7,6 @@
 	exports.Shark = function(game, settings) {
 		this.c = game.c;
 		initObject(this, settings);
-		console.log(this);
 	};
 
 	exports.Shark.prototype = {
@@ -38,13 +37,13 @@
 		update: function(dt) {
 			var data = this.c.sock.getSharkData(this.id);
 
-			this.depth = this.calculateDepth(this.data.depth);
+			this.depth = this.calculateDepth(data.depth);
 			if(this.depth > 1) this.speed.y = SHARK_SPEED_Y_AIR;
 			else if(this.depth < 1) this.speed.y = SHARK_SPEED_Y_DEEP;
 			else this.speed.y = SHARK_SPEED_Y_SURFACE;
 
-			this.pos.x += data.direction.x * this.speed.x * (dt/16.66);
-			this.pos.y += data.direction.y * this.speed.y * (dt/16.66);
+			this.pos.x += data.direction * this.speed.x * (dt/16.66);
+			this.pos.y -= data.depth * this.speed.y * (dt/16.66);
 		},
 		calculateDepth: function(dd) {
 			if(dd > 0.35) {

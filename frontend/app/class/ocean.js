@@ -3,7 +3,6 @@
 	exports.Ocean = function(game, settings) {
 		this.c = game.c;
 		initObject(this, settings);
-		console.log(this);
 	};
 
 	exports.Ocean.prototype = {
