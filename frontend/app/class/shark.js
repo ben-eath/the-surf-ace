@@ -6,6 +6,8 @@
 
 	var SHARK_SPEED_X = 5;
 
+	var SPRITES_MAX = 39;
+
 	exports.Shark = function(game, settings) {
 		this.c = game.c;
 		initObject(this, settings);
@@ -29,13 +31,22 @@
 		},
 		depth: 0,
 		color: 'red',
+		sprites: new SpriteSheet('./resource/shark_swim/shark', SPRITES_MAX),
+		spriteNumber: 0,
 		draw: function(ctx) {
-			ctx.setFillColor(this.color);
-			ctx.fillRect(
+			if(!this.sprites.isReady()) return;
+			var sprite = this.sprites.getSprite(this.spriteNumber);
+			ctx.drawImage(
+				sprite.source,
+				sprite.pos.x,
+				sprite.pos.y,
+				sprite.size.x,
+				sprite.size.y,
 				this.center.x - this.size.x / 2,
 				this.center.y - this.size.y / 2,
 				this.size.x,
-				this.size.y);
+				this.size.y
+			);
 		},
 		update: function(dt) {
 			var data = this.c.sock.getSharkData(this.id);
@@ -47,6 +58,9 @@
 
 			this.center.x += data.direction * this.speed.x * SHARK_SPEED_X * (dt/16.66);
 			this.center.y -= data.depth * this.speed.y * (dt/16.66);
+
+			this.spriteNumber += 1;
+			if(this.spriteNumber >= SPRITES_MAX) this.spriteNumber = 0;
 		},
 		calculateDepth: function(dd) {
 			if(dd > 0.35) {

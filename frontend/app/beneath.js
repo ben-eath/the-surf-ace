@@ -5,6 +5,8 @@
 		this.c = new Coquette(this, "canvas", width, height, "#000");
 		this.c.sock = new Sock();
 
+		this.c.renderer._ctx.imageSmoothingEnabled = false;
+
 		this.c.entities.create(Ocean, {size: { x:width, y:height }});
 		this.c.entities.create(Shark, {});
 		this.c.entities.create(Surfer, {});

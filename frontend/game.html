@@ -8,11 +8,19 @@
 			}
 			canvas {
 				display: block;
+				image-rendering: optimizeSpeed;             // Older versions of FF
+				image-rendering: -moz-crisp-edges;          // FF 6.0+
+				image-rendering: -webkit-optimize-contrast; // Webkit
+															//  (Safari now, Chrome soon)
+				image-rendering: -o-crisp-edges;            // OS X & Windows Opera (12.02+)
+				image-rendering: optimize-contrast;         // Possible future browsers.
+				-ms-interpolation-mode: nearest-neighbor;   // IE
 			}
 		</style>
 		<script src="./lib/jquery.js"></script>
 		<script src="./lib/coquette.js"></script>
 		<script src="./app/helpers.js"></script>
+		<script src="./app/spritesheet.js"></script>
 		<script src="./app/class/shark.js"></script>
 		<script src="./app/class/surfer.js"></script>
 		<script src="./app/class/ocean.js"></script>
