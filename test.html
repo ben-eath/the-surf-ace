@@ -84,9 +84,9 @@ window.addEventListener('devicemotion', function (deviceMotion) {
     // console.log('Acceleration: %o // rotationRate: %o // interval: %o', accel, rot, interval)
 
     document.getElementById("acceleration").innerHTML =
-        accel.x + ", " + accel.y + ", " + accel.z;
+        Math.round(accel.x) + ", " + Math.round(accel.y) + ", " + Math.round(accel.z);
     document.getElementById("rotationrate").innerHTML =
-        rot.alpha + ", " + rot.beta + ", " + rot.gamma;
+        Math.round(rot.alpha) + ", " + Math.round(rot.beta) + ", " + Math.round(rot.gamma);
     document.getElementById("interval").innerHTML = interval;
 }, true)
     </script>
