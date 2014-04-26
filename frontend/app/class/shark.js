@@ -7,13 +7,14 @@
 	exports.Shark = function(game, settings) {
 		this.c = game.c;
 		initObject(this, settings);
+		this.boundingBox = this.c.collider.RECTANGLE;
 	};
 
 	exports.Shark.prototype = {
 		id: 0,
 		zindex: 1,
 		pos: {
-			x: 100,
+			x: 0,
 			y: 300
 		},
 		size: {
@@ -52,6 +53,11 @@
 				return 0;
 			} else if (dd < -0.35){
 				return -1;
+			}
+		},
+		collision: function(other, type) {
+			if(other instanceof Surfer) {
+				Surfer.die();
 			}
 		}
 	};

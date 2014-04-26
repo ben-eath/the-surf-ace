@@ -6,6 +6,7 @@
 	exports.Surfer = function(game, settings) {
 		this.c = game.c;
 		initObject(this, settings);
+		this.boundingBox = this.c.collider.RECTANGLE;
 	};
 
 	exports.Surfer.prototype = {
@@ -17,7 +18,6 @@
 			x: 64,
 			y: 128
 		},
-		dead: false,
 		color: 'yellow',
 		serpentine: 0,
 		draw: function(ctx){
@@ -33,6 +33,12 @@
 
 			this.serpentine += 0.05;
 			this.pos.x += Math.sin(this.serpentine) * SERPENTINE_AMOUNT;
+		},
+		die: function(){
+			this.c.entities.destroy(this);
+			this.c.entities.create(Bloodstain, {
+				pos: this.pos
+			});
 		}
 	};
 
