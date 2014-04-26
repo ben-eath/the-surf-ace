@@ -6,11 +6,14 @@
 
 	exports.Control = function(game, settings) {
 		this.c = game.c;
+		this.gameState = this.states.WAITING;
 		initObject(this, settings);
 	};
 
 	exports.Control.prototype = {
-		isRunning: false,
+		states: {WAITING: 1, BETWEEN_WAVES: 2, PLAY: 3},
+		waveNumber: 1,
+		cutSceneNumber: undefined,
 		zindex: 100,
 		center: {
 			x: 0,
