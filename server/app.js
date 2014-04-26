@@ -22,8 +22,6 @@ rooms["123"] = {
     controllers: []
 };
 
-var displayFunctions = {};
-
 function checkControllerValues(value, socket, errMsg) {
     if (value < -1 || value > 1) {
         var msg = {fn: 'ERROR', args: errMsg};
@@ -32,6 +30,19 @@ function checkControllerValues(value, socket, errMsg) {
     }
     return true;
 }
+
+var displayFunctions = {
+    createRoom: function(args, socket) {
+        rooms[args.id] = {
+            socket: socket,
+            controllers: []
+        }
+    },
+    sendGameState: function(args, socket) {
+        socket.send(JSON.stringify(rooms[args.id].controllers));
+    }
+    
+};
 
 var controllerFunctions = {
         joinRoom: function(args, socket) {
@@ -147,12 +158,15 @@ server.on('connection', function(socket) {
         if(controllerFunctions[fn]) {
             controllerFunctions[fn](args, socket);
             console.log("valid command");
+            var c = players[socket.id];
+            console.log(c.room.controllers[c.index]);
+        } else if (displayFunctions[fn]) {
+            displayFunctions[fn](args, socket);
         } else {
             console.error('not valid command');
             return;
         }
-        var c = players[socket.id];
-        console.log(c.room.controllers[c.index]);
+        
 	});
 
 	socket.on('close', function() {
