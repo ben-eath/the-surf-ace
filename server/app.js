@@ -14,16 +14,17 @@ var RIGHT = 1.0;
 
 var TOP = 1.0;
 var CENTER = 0.0;
-var BOTTOM = 1.0;
+var BOTTOM = -1.0;
 
 //Test data
-rooms['123'] = {
+rooms["123"] = {
     socket: null,
     controllers: []
-}
+};
 
+var displayFunctions = {}
 
-var functions = {
+var controllerFunctions = {
         joinRoom: function(args, socket) {
             var room = rooms[args.room_id];
             if (room) {
@@ -47,10 +48,18 @@ var functions = {
         },
         setDepth: function(args, socket) {
             var room = player[socket.id].room;
-            room.controllers[player[socket.id].index] = args.depth;
+            room.controllers[player[socket.id].index].depth = args.depth;
 
-        }
-};
+        },
+        setDirection: function(args, socket) {
+            var room = player[socket.id].room;
+            room.controllers[player[socket.id].index].direction = args.direction;
+        },
+        setSpeed: function(args, socket) {
+            var room = player[socket.id].room;
+            room.controllers[player[socket.id].index].speed = args.speed;
+        }      
+}; 
 
 
 
@@ -134,6 +143,8 @@ server.on('connection', function(socket) {
             console.error('not valid command');
             return;
         }
+        var c = players[socket.id];
+        console.log(c.room.controllers[c.index]);
 	});
 
 	socket.on('close', function() {
