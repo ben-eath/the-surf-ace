@@ -64,6 +64,7 @@ var controllerFunctions = {
             return true;
         },
         setDepth: function(args, socket) {
+            if(!players[socket.id]) return;
             var room = players[socket.id].room;
             if (checkControllerValues(args.depth, socket, "Depth not Valid")) {
                 var index = players[socket.id].index;
@@ -73,6 +74,7 @@ var controllerFunctions = {
             }
         },
         setDirection: function(args, socket) {
+            if(!players[socket.id]) return;
             var room = players[socket.id].room;
             if (checkControllerValues(args.direction, socket, "Direction not Valid")) {
                 var index = players[socket.id].index;
