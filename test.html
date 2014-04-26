@@ -2,96 +2,57 @@
 <head>
 </head>
 <body>
-    <div class="main">
-    <h2>Device Orientation</h2>
-    <table>
-        <tr>
-        <td>Event Supported</td>
-        <td id="doEvent"></td>
-        </tr>
-        <tr>
-        <td>Tilt Left/Right [gamma]</td>
-        <td id="doTiltLR"></td>
-        </tr>
-        <tr>
-        <td>Tilt Front/Back [beta]</td>
-        <td id="doTiltFB"></td>
-        </tr>
-        <tr>
-        <td>Direction [alpha]</td>
-        <td id="doDirection"></td>
-        </tr>
-    </table>
+<script>
 
-    <hr>
-    <table>
-        <tr>
-        <td>Acceleration</td>
-        <td id="acceleration"></td>
-        </tr>
-        <tr>
-        <td>Rotation Rate</td>
-        <td id="rotationrate"></td>
-        </tr>
-        <tr>
-        <td>Interval</td>
-        <td id="interval"></td>
-        </tr>
-    </table>
-    </div>
+    
+var shark_velocity = {'direction':0, 'depth':0};
 
-    <script>
-	    var shark_velocity = {'x': 0, 'y': 0};
+var last_direction = 0;
+var last_depth = 0;
+
+var ws = new WebSocket("ws://10.0.3.138:3001");
+var sendDepth = function() {
+  ws.send(JSON.stringify({'fn': 'setDepth', 'args':{'depth':Math.round(shark_velocity.depth)}}));
+};
+var sendDirection = function() {
+  ws.send(JSON.stringify({'fn': 'setDirection', 'args':{'direction':Math.round(shark_velocity.direction)}}));
+};
+
+
+ws.onopen = function (event) {
+  window.addEventListener('deviceorientation', function(eventData) {
+    // gamma is the left-to-right tilt in degrees, where right is positive
+    shark_velocity.depth = eventData.gamma/180;
+    // between -1 and 1
+
+    // beta is the front-to-back tilt in degrees, where front is positive
+    shark_velocity.direction = eventData.beta/90;
+    // also between -1 and 1
+
+    // alpha is the compass direction the device is facing in degrees
+    var dir = eventData.alpha;
+
+    // call our orientation event handler
+    if (Math.abs(Math.round(shark_velocity.direction) - last_direction) > .6) {
+      sendDirection();
+      last_direction = Math.round(shark_velocity.direction);
+    }
+    if (Math.abs(Math.round(shark_velocity.depth) - last_depth) > .6) {
+      sendDepth();
+      last_depth = Math.round(shark_velocity.depth);
+    }
+  }, false);
+
+};
+      
+
 if (window.DeviceOrientationEvent) {
     console.log("DeviceOrientation is supported");
 }
 
-var deviceOrientationHandler = function (tiltLR, tiltFB, dir) {
-	shark_velocity.x = (tiltLR + 90)/90.0;
-	shark_velocity.y = tiltFB/90.0;
 
-	document.getElementById("doTiltLR").innerHTML = Math.round(shark_velocity.x*1000)/1000;
-    document.getElementById("doTiltFB").innerHTML = Math.round(shark_velocity.y*1000)/1000;
-    document.getElementById("doDirection").innerHTML = Math.round(dir);
-
-    // Apply the transform to the image
-    // var logo = document.getElementById("imgLogo");
-    // logo.style.webkitTransform =
-    // "rotate("+ tiltLR +"deg) rotate3d(1,0,0, "+ (tiltFB*-1)+"deg)";
-    // logo.style.MozTransform = "rotate("+ tiltLR +"deg)";
-    // logo.style.transform =
-    // "rotate("+ tiltLR +"deg) rotate3d(1,0,0, "+ (tiltFB*-1)+"deg)";
-}
-
-document.getElementById("doEvent").innerHTML = "DeviceOrientation";
 // Listen for the deviceorientation event and handle the raw data
-window.addEventListener('deviceorientation', function(eventData) {
-    // gamma is the left-to-right tilt in degrees, where right is positive
-    var tiltLR = eventData.gamma;
 
-    // beta is the front-to-back tilt in degrees, where front is positive
-    var tiltFB = eventData.beta;
-
-    // alpha is the compass direction the device is facing in degrees
-    var dir = eventData.alpha
-
-    // call our orientation event handler
-    deviceOrientationHandler(tiltLR, tiltFB, dir);
-}, false);
-
-
-window.addEventListener('devicemotion', function (deviceMotion) { 
-    accel = deviceMotion.acceleration ? deviceMotion.acceleration : deviceMotion.accelerationIncludingGravity
-    rot = deviceMotion.rotationRate
-    interval = deviceMotion.interval
-    // console.log('Acceleration: %o // rotationRate: %o // interval: %o', accel, rot, interval)
-
-    document.getElementById("acceleration").innerHTML =
-        Math.round(accel.x) + ", " + Math.round(accel.y) + ", " + Math.round(accel.z);
-    document.getElementById("rotationrate").innerHTML =
-        Math.round(rot.alpha) + ", " + Math.round(rot.beta) + ", " + Math.round(rot.gamma);
-    document.getElementById("interval").innerHTML = interval;
-}, true)
     </script>
 </body>
 </html>
