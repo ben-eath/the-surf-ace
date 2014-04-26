@@ -1,7 +1,20 @@
 // socket input from the server
 ;(function(exports) {
 	var Sock = function() {
-		// this.socket = new WebSocket("ace");
+		var socket = new WebSocket("ws://ace:3001");
+		var self = this;
+		socket.onopen = function() {
+			socket.send(JSON.stringify({
+				fn: 'createRoom',
+				args: {'id': 'room'}
+			}));
+		};
+		socket.onmessage = function(msg) {
+			var data = JSON.parse(msg.data);
+			self.data.sharks[data.index][data.msg] = data.value;
+		};
+		this.socket = socket;
+
 		var self = this;
 		window.onkeydown = function(e) {
 			var shark = self.data.sharks[0];
