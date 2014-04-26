@@ -22,7 +22,16 @@ rooms["123"] = {
     controllers: []
 };
 
-var displayFunctions = {}
+var displayFunctions = {};
+
+function checkControllerValues(value, socket, errMsg) {
+    if (value < -1 || value > 1) {
+        var msg = {fn: 'ERROR', args: errMsg};
+        socket.send(JSON.stringify(msg));
+        return false;
+    }
+    return true;
+}
 
 var controllerFunctions = {
         joinRoom: function(args, socket) {
@@ -45,19 +54,25 @@ var controllerFunctions = {
                 socket.send(JSON.stringify(msg));
                 return false;
             }
+            return true;
         },
         setDepth: function(args, socket) {
-            var room = player[socket.id].room;
-            room.controllers[player[socket.id].index].depth = args.depth;
-
+            var room = players[socket.id].room;
+            if (checkControllerValues(args.depth, socket, "Depth not Valid")) {
+                room.controllers[players[socket.id].index].depth = args.depth;
+            }
         },
         setDirection: function(args, socket) {
-            var room = player[socket.id].room;
-            room.controllers[player[socket.id].index].direction = args.direction;
+            var room = players[socket.id].room;
+            if (checkControllerValues(args.direction, socket, "Direction not Valid")) {
+                room.controllers[players[socket.id].index].direction = args.direction;
+            }
         },
         setSpeed: function(args, socket) {
-            var room = player[socket.id].room;
-            room.controllers[player[socket.id].index].speed = args.speed;
+            var room = players[socket.id].room;
+            if (checkControllerValues(args.direction, socket, "Speed not Valid")) {
+                room.controllers[players[socket.id].index].speed = args.speed;
+            }
         }      
 }; 
 
