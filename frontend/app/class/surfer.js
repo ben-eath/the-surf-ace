@@ -19,7 +19,7 @@
 			[whiteness,  boardcolor[1],  suitcolor[1]],
 			[whiteness,  boardcolor[2],  suitcolor[2]]
 		];
-		this.sprites = new SpriteSheet('./resource/surfer_' + (Math.random() < 0.5 ? 'female_':'') + 'swim/surfer', SPRITES_MAX, this.colorMatrix);
+		this.sprites = new SpriteSheet('./resource/surfer_' + (Math.random() < 0.5 ? 'female_':'male_') + 'swim/surfer', SPRITES_MAX, this.colorMatrix);
 	};
 
 	exports.Surfer.prototype = {
