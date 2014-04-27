@@ -10,9 +10,6 @@
 		this.c.entities.create(Ocean, {size: { x:width, y:height }});
 		this.c.entities.create(Surfer, {});
 
-		this.c.entities.create(Shark, { id: 0, colorMatrix: COLOR_MATRIX_RED });
-		this.c.entities.create(Shark, { id: 1, colorMatrix: COLOR_MATRIX_GREEN, spriteNumber: 10});
-
 		this.c.entities.create(Control, {center: {x:width/2, y:height/2}});
 	};
 
