@@ -52,8 +52,6 @@
 			for(var i = 0; i < this.sprites.length; i++) {
 				if(!this.sprites[i].isReady()) return;
 			}
-			console.log(this.sprites[this.state]);
-			throw new Exception();
 			this.sprites[this.state].draw(ctx, this.center, this.size);
 		},
 		update: function(dt) {
