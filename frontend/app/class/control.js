@@ -11,7 +11,7 @@
 		this.c = game.c;
 		this.gameState = this.states.WAITING;
 		initObject(this, settings);
-		this.dialoguePortrait = new SpriteSheet('./resource/ben_eath_portrait/ben_eath', 2);
+		this.dialoguePortrait = new SpriteSheet('./resource/ben_eath_portrait/ben_eath', 2, COLOR_MATRIX_IDENTITY, 0.07);
 	};
 
 	exports.Control.prototype = {
@@ -21,7 +21,7 @@
 		zindex: 100,
 		dialogueY: 0,
 		dialogueUp: false,
-		dialogueText: "Bump into those tasty swimmers for a tasty snack! Simple swim up and bump into them to consume them, stealing their soul. It's tasty *and* nutritious!",
+		dialogueText: "Ben Eath:\nBump into those tasty swimmers for a tasty snack! Simple swim up and bump into them to consume them, stealing their soul. It's tasty *and* nutritious!",
 		center: {
 			x: 0,
 			y: 0
@@ -47,7 +47,7 @@
 			}
 			if (this.dialogueY > 0) {
 				var y = this.size.y - this.dialogueY * DIALOGUE_HEIGHT;
-				var textX = DIALOGUE_HEIGHT + DIALOGUE_PADDING;
+				var textX = DIALOGUE_HEIGHT;
 				var textY = y + DIALOGUE_PADDING + 30;
 				var textW = this.size.x - DIALOGUE_HEIGHT - DIALOGUE_PADDING;
 				ctx.fillStyle = 'rgba(0,0,0,0.35)';
@@ -58,6 +58,10 @@
 				wrapText(ctx, this.dialogueText, textX, textY+3, textW, 38);
 				ctx.fillStyle = 'white';
 				wrapText(ctx, this.dialogueText, textX, textY, textW, 38);
+				this.dialoguePortrait.draw(ctx,
+          {x: DIALOGUE_HEIGHT/2, y: y + DIALOGUE_HEIGHT/2},
+          {x: DIALOGUE_HEIGHT - DIALOGUE_PADDING * 2, y: DIALOGUE_HEIGHT - DIALOGUE_PADDING * 2},
+          true);
 			}
 		},
 		update: function() {
