@@ -71,7 +71,10 @@
 				for (var s in surfers) {
 					this.c.entities.destroy(surfers[s]);
 				}
-				this.c.entities.create(Shark, {});
+				this.c.entities.create(Shark, {
+					id: 0,
+					colorMatrix: COLOR_MATRIX_RED
+				});
 				this.isRunning = true;
 			}
 
