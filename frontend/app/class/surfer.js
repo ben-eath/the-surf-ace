@@ -21,6 +21,7 @@
 			[whiteness,  boardcolor[1],  suitcolor[1]],
 			[whiteness,  boardcolor[2],  suitcolor[2]]
 		];
+		this.serpentineSpeed = Math.random() * 0.1 + 0.01;
 		this.sprites = new SpriteSheet('./resource/surfer_' + (Math.random() < 0.5 ? 'female_':'male_') + 'swim/surfer', SPRITES_MAX, this.colorMatrix);
 	};
 
@@ -33,6 +34,7 @@
 			x: 60,
 			y: 120
 		},
+		zindex: 0,
 		color: 'yellow',
 		serpentine: 0,
 		spriteNumber: 0,
@@ -42,7 +44,7 @@
 		},
 		update: function(dt) {
 			this.center.y += SPEED;
-			this.serpentine += 0.05;
+			this.serpentine += this.serpentineSpeed;
 			this.center.x += Math.sin(this.serpentine) * SERPENTINE_AMOUNT;
 
 			if (this.center.y > 1000) { //PLACEHOLDER

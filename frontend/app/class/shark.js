@@ -12,7 +12,10 @@
 	var STATE_LAG_SURFACE = 2; //on surface, not swimming, move back
 	var STATE_CHOMPING = 3; //in air, not swimming, leap forward, lasts 1 second
 
-	var MAX_CHOMP_TIME = 1000; //time in ms that it takes to chomp
+	var DRIFT_SPEED = 2;
+	var DRIFT_PADDING = 30;
+
+	var MAX_CHOMP_TIME = 500; //time in ms that it takes to chomp
 
 	exports.Shark = function(game, settings) {
 		this.c = game.c;
@@ -38,14 +41,15 @@
 
 	exports.Shark.prototype = {
 		id: 0,
-		zindex: 1,
+		zindex: -10,
 		size: {
 			x: 90,
 			y: 180
 		},
 		sprites: [null,null,null,null],
 		spriteMaxes: [39, 39, 1, 1],
-		speeds: [0,0,0,0],
+		speeds: [-0.5,3,-2,3],
+		zindexes: [-20, -50, -20, 20],
 		spriteNumber: 0,
 		chompTime: 0,
 		draw: function(ctx) {
@@ -58,6 +62,9 @@
 			var data = this.c.sock.getSharkData(this.id);
 
 			this.calculateState(data.depth, dt);
+
+			this.speeds[STATE_SWIM_SURFACE] = DRIFT_SPEED * -(this.c.entities.all(Control)[0].size.y - this.center.y - DRIFT_PADDING) / this.c.entities.all(Control)[0].size.y;
+			this.zindex = this.zindexes[this.state];
 
 			this.center.x += data.direction * this.speed.x * SHARK_SPEED_X * (dt/16.66);
 			this.center.y -= this.speeds[this.state] * this.speed.y * (dt/16.66);

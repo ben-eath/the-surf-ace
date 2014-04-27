@@ -19,8 +19,8 @@
 		},
 		color: {
 			r: 0,
-			g: 98,
-			b: 130
+			g: 68,
+			b: 100
 		},
 		time: 0,
 		draw: function(ctx) {
