@@ -1,8 +1,7 @@
-var http = require('http');
-var WSS = require('ws').Server;
+var io = require('socket.io').listen(3001);
 
 var port = process.env.PORT || 3001;
-var server = new WSS({port: port});
+//var server = new WSS({port: port});
 
 // Init variables
 var sockets = [];
@@ -16,164 +15,98 @@ var TOP = 1.0;
 var CENTER = 0.0;
 var BOTTOM = -1.0;
 
-//Test data
-rooms["123"] = {
-    socket: null,
-    controllers: []
-};
 
-function checkControllerValues(value, socket, errMsg) {
-    if (value < -1 || value > 1) {
-        var msg = {fn: 'ERROR', args: errMsg};
-        socket.send(JSON.stringify(msg));
-        return false;
+function setDepth (room, index, depth) {
+    var player = room.players[index];
+     if (depth >= -1 && depth <= 1)  {
+        player.depth = depth;
+        console.log(room.players[index].depth)
+        room.socket.emit('updateDepth', depth);
+        return true;
     }
-    return true;
+    return false;
 }
 
-var displayFunctions = {
-    createRoom: function(args, socket) {
-        rooms[args.id] = {
-            socket: socket,
-            controllers: []
-        }
+function setDirection(room, index, direction) {
+    var player = room.player[index];
+    if (direction >= -1 && direction <= 1) {
+        player.direction = direction;
+        room.socket.emit('updateDirection', direction);
+        return true;
     }
-};
+    return false;
+}
 
-var controllerFunctions = {
-        joinRoom: function(args, socket) {
-            var room = rooms[args.room_id];
-            if (room) {
-                if (!players[socket.id]) {
-                    players[socket.id] = {};
-                }
-
-                players[socket.id].room = room;
-                if (room.controllers.length < 4) {
-                    players[socket.id].index = addController(room, socket); // need to get socket
-                } else {
-                    var msg = {fn: 'ERROR', args:'too many players'};
-                    socket.send(JSON.stringify(msg));
-                    return false;
-                }
-            } else {
-                var msg = {fn: 'ERROR', args:'Not a valid room'};
-                socket.send(JSON.stringify(msg));
-                return false;
-            }
-            return true;
-        },
-        setDepth: function(args, socket) {
-            if(!players[socket.id]) return;
-            var room = players[socket.id].room;
-            if (checkControllerValues(args.depth, socket, "Depth not Valid")) {
-                var index = players[socket.id].index;
-                room.controllers[index].depth = args.depth;
-                obj = {msg: "depth", index: index, value: args.depth};
-                room.socket.send(JSON.stringify(obj));
-            }
-        },
-        setDirection: function(args, socket) {
-            if(!players[socket.id]) return;
-            var room = players[socket.id].room;
-            if (checkControllerValues(args.direction, socket, "Direction not Valid")) {
-                var index = players[socket.id].index;
-                room.controllers[index].direction = args.direction;
-                obj = {msg: "direction", index: index, value: args.direction};
-                room.socket.send(JSON.stringify(obj));
-            }
-        },
-}; 
+function updateScore(room, index, score) {
+    var player = room.player[index];
+    player.score = score;
+    player.socket.emit('updateScore', score);
+}
 
 
+function generateSessionId (length) {
+    var chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+    var result = '';
+    for (var i = 0; i < length; i++) result += chars[ Math.round(Math.random() * (chars.length - 1)) ];
+    return result;
+}
 
-function addToIDTable(id, socket) {
-	rooms[id] = {
-		socket: socket,
-        controllers: []
-	};
+function createRoom (id, socket) {
+    rooms[id] = {
+        socket: socket,
+        players: []
+    }
+}
+
+function getRoomID() {
+    do {
+        var id = generateSessionId(4);
+    } while (rooms[id]);
+    return id;
 }
 
 function addController(room, socket) {
-    controller = {
+    player = {
         direction: LEFT,
-        depth:BOTTOM,
+        depth: BOTTOM,
         socket: socket,
         score: 0
     }
-
-    return room.controllers.push(controller) - 1;
+    return room.players.push(player) - 1;
 }
 
-server.on('connection', function(socket) {
-/*
-    if (socket.type === 'computer') {
-        var id = getRoomID();
-        socket.emit('tellID', id);
-        addToIDTable(id, socket);
-        socket.on('addScore', function() {//...});
-    } else if (socket.type === 'mobile') {
-        socket.on('joinRoom', function(id) { // id = 123
+io.sockets.on('connection', function(socket) {
+    socket.on('joinRoom', function (type, id) {
+        if (type === 'computer')  {
+            var id = getRoomID();
+            createRoom(id, socket);
+            socket.emit('notifyRoomID', id);
+        } else if (type === 'controller') {
             var room = rooms[id];
             if (room) {
-                socket.emit('verifyRoom', true);
+                var index = addController(room, socket);
+                players[socket.id] = {};
+                players[socket.id].index = index;
                 players[socket.id].room = room;
-                if room.players.length < 4 {
-                    players[socket.id].index = addPlayer(room, socket);
-                } else {
-                    socket.emit('Too many players', false);
-                }
-            } else {
-                socket.emit('verifyRoom', false);
+
+                socket.on('setDepth', function(depth) {
+                    if (!setDepth(room, index, depth)) {
+                        socket.emit("err", "depth is not valid");
+                    }
+                });
+
+                socket.on("setDirection", function(direction) {
+                    if (setDirection(room, index, direction)) {
+                        socket.emit("err", "direction is not valid");
+                    }
+                });
+            } else {    
+                socket.emit('err', "ERROR: Not a valid room");
             }
-            controller
-        });
-
-        socket.on('setDepth', function(message) {
-            controllers[socket.id].setDepth(message, socket.id);
-
-        });
-
-        socket.on('update', function())
-
-    }
-*/
-
-	console.log('New connected!');
-	sockets.push(socket);
-
-	socket.on('message', function(msg) {
-        var data;
-        try {
-            data = JSON.parse(msg);
-        } catch(e) {
-            console.error('Not JSON.');
-            console.error(e);
-            return;
         }
+    });
+    socket.on('joinRoom', function (data) {
+        console.log("connection");
+    });
 
-        var fn = data.fn;
-        var args = data.args;
-        if(!fn || !args) {
-            console.log("Did not get valid function");
-            return;
-        }
-
-        if(controllerFunctions[fn]) {
-            controllerFunctions[fn](args, socket);
-            console.log("valid command");
-        } else if (displayFunctions[fn]) {
-            displayFunctions[fn](args, socket);
-        } else {
-            console.error('not valid command');
-            return;
-        }
-        
-	});
-
-	socket.on('close', function() {
-		console.log('Connection closed!');
-		var index = sockets.indexOf(socket);
-		sockets.splice(index, 1);
-	});
 });
