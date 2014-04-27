@@ -32,10 +32,10 @@
 
 		this.spriteMaxes = [39, 39, 1, 1];
 
-		this.sprites[STATE_SWIM_SURFACE] = new SpriteSheet('./resource/shark_swim/shark', spriteMaxes[STATE_SWIM_SURFACE], settings.colorMatrix);
-		this.sprites[STATE_SWIM_DEEP] = new SpriteSheet('./resource/shark_swim/shark', spriteMaxes[STATE_SWIM_DEEP], settings.colorMatrix);
-		this.sprites[STATE_LAG_SURFACE] = new SpriteSheet('./resource/shark_bite/shark', spriteMaxes[STATE_LAG_SURFACE], settings.colorMatrix);
-		this.sprites[STATE_CHOMPING] = new SpriteSheet('./resource/shark_bite/shark', spriteMaxes[STATE_CHOMPING], settings.colorMatrix);
+		this.sprites[STATE_SWIM_SURFACE] = new SpriteSheet('./resource/shark_swim/shark', this.spriteMaxes[STATE_SWIM_SURFACE], settings.colorMatrix, 0.5);
+		this.sprites[STATE_SWIM_DEEP] = new SpriteSheet('./resource/shark_swim/shark', this.spriteMaxes[STATE_SWIM_DEEP], settings.colorMatrix, 0.5);
+		this.sprites[STATE_LAG_SURFACE] = new SpriteSheet('./resource/shark_bite/shark', this.spriteMaxes[STATE_LAG_SURFACE], settings.colorMatrix, 0.5);
+		this.sprites[STATE_CHOMPING] = new SpriteSheet('./resource/shark_bite/shark', this.spriteMaxes[STATE_CHOMPING], settings.colorMatrix, 0.5);
 
 		this.boundingBox = this.c.collider.RECTANGLE;
 	};
@@ -53,18 +53,7 @@
 			for(var i = 0; i < this.sprites.length; i++) {
 				if(!this.sprites[i].isReady()) return;
 			}
-			var sprite = this.sprites[this.state].getSprite(this.spriteNumber);
-			ctx.drawImage(
-				sprite.source,
-				sprite.pos.x,
-				sprite.pos.y,
-				sprite.size.x,
-				sprite.size.y,
-				this.center.x - this.size.x / 2,
-				this.center.y - this.size.y / 2,
-				this.size.x,
-				this.size.y
-			);
+			this.sprites[this.state].draw(ctx, this.center, this.size);
 		},
 		update: function(dt) {
 			var data = this.c.sock.getSharkData(this.id);
@@ -75,21 +64,6 @@
 
 			this.center.x += data.direction * this.speed.x * SHARK_SPEED_X * (dt/16.66);
 			this.center.y -= data.depth * this.speed.y * (dt/16.66);
-
-			this.spriteNumber += 0.5;
-			switch(this.depth){
-				case 0:
-					if(this.spriteNumber >= SPRITES_SURFACE_MAX) this.spriteNumber = 0;
-					break;
-				case 1:
-					if(this.spriteNumber >= SPRITES_AIR_MAX) this.spriteNumber = 0;
-					break;
-				case -1:
-					if(this.spriteNumber >= SPRITES_DEEP_MAX) this.spriteNumber = 0;
-					break;
-				default:
-					console.log("shark draw error - bad depth");
-			}
 		},
 		calculateDepth: function(dd) {
 			if(dd > 0.35) {

@@ -8,11 +8,12 @@
 		return str;
 	};
 
-	exports.SpriteSheet = function(src, numSprites, colorMatrix) {
+	exports.SpriteSheet = function(src, numSprites, colorMatrix, spriteSpeed) {
 		this.numSprites = numSprites;
 		if(colorMatrix !== undefined) {
 			this.colorMatrix = colorMatrix;
 		}
+		this.spriteSpeed = spriteSpeed || 1;
 		for(var i = 1; i <= numSprites; i++) {
 			var image = new Image();
 			image.onload = this.onImageLoad.bind(this);
@@ -20,6 +21,7 @@
 			this.spriteWidth = 0;
 		}
 		this.spritesLoaded = 0;
+		this.spriteNumber = 0;
 	};
 
 	exports.SpriteSheet.prototype = {
@@ -63,20 +65,35 @@
 
 			ctx.putImageData(imageData,0,0);
 		},
-		getSprite: function(spriteNumber) {
-			spriteNumber = spriteNumber | 0;
-			return {
-				source: this.blitfrom,
-				pos : {
-					x: this.spriteWidth * spriteNumber,
-					y: 0
-				},
-				size: {
-					x: this.spriteWidth,
-					y: this.blitfrom.height
-				}
-			};
+		draw: function(ctx, pos, size) {
+			ctx.drawImage(
+				this.blitfrom,
+				this.spriteWidth * (this.spriteNumber | 0),
+				0,
+				this.spriteWidth,
+				this.blitfrom.height,
+				pos.x - size.x / 2,
+				pos.y - size.y / 2,
+				size.x,
+				size.y
+			);
+			this.spriteNumber += this.spriteSpeed;
+			if(this.spriteNumber >= this.numSprites) this.spriteNumber = 0;
 		}
+		// getSprite: function() {
+		// 	var sprite = {
+		// 		source: this.blitfrom,
+		// 		pos : {
+		// 			x: this.spriteWidth * (this.spriteNumber | 0),
+		// 			y: 0
+		// 		},
+		// 		size: {
+		// 			x: this.spriteWidth,
+		// 			y: this.blitfrom.height
+		// 		}
+		// 	};
+		// 	return sprite;
+		// }
 	};
 
 })(window);

@@ -38,18 +38,7 @@
 		spriteNumber: 0,
 		draw: function(ctx) {
 			if(!this.sprites.isReady()) return;
-			var sprite = this.sprites.getSprite(this.spriteNumber);
-			ctx.drawImage(
-				sprite.source,
-				sprite.pos.x,
-				sprite.pos.y,
-				sprite.size.x,
-				sprite.size.y,
-				this.center.x - this.size.x / 2,
-				this.center.y - this.size.y / 2,
-				this.size.x,
-				this.size.y
-			);
+			this.sprites.draw(ctx, this.center, this.size);
 		},
 		update: function(dt) {
 			this.center.y += SPEED;
@@ -59,9 +48,6 @@
 			if (this.center.y > 1000) { //PLACEHOLDER
 				this.die();
 			}
-
-			this.spriteNumber += 1;
-			if(this.spriteNumber >= SPRITES_MAX) this.spriteNumber = 0;
 		},
 		die: function(){
 			this.c.entities.destroy(this);

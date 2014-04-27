@@ -13,6 +13,27 @@
 				(color.a ? color.a + ")" : "");
 	};
 
+	// thanks to http://www.html5canvastutorials.com/tutorials/html5-canvas-wrap-text-tutorial/
+	exports.wrapText = function(context, text, x, y, maxWidth, lineHeight) {
+		var words = text.split(' ');
+		var line = '';
+
+		for(var n = 0; n < words.length; n++) {
+			var testLine = line + words[n] + ' ';
+			var metrics = context.measureText(testLine);
+			var testWidth = metrics.width;
+			if (testWidth > maxWidth && n > 0) {
+				context.fillText(line, x, y);
+				line = words[n] + ' ';
+				y += lineHeight;
+			}
+			else {
+				line = testLine;
+			}
+		}
+		context.fillText(line, x, y);
+	};
+
 	exports.COLOR_MATRIX_RED = [[1,0,0], [0,1,0], [0,0,1]];
 	exports.COLOR_MATRIX_BLUE = [[0,0,1], [0,1,0], [1,0,0]];
 	exports.COLOR_MATRIX_GREEN = [[0,1,0], [1,0,0], [1,0,0]];
