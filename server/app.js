@@ -90,7 +90,7 @@ function getRoomID() {
     do {
         var id = generateSessionId(4);
     } while (rooms[id]);
-    return id;
+    return id.toUpperCase();
 }
 
 function addController(room, socket) {
