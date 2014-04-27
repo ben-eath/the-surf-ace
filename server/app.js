@@ -15,7 +15,7 @@ function setDepth (room, index, depth) {
     var player = room.players[index];
     if (depth >= BOTTOM && depth <= TOP)  {
         player.depth = depth;
-        room.socket.emit('updateDepth', depth);
+        room.socket.emit('updateDepth', index, depth);
         console.log("new depth");
         return true;
     }
@@ -26,7 +26,7 @@ function setDirection(room, index, direction) {
     var player = room.players[index];
     if (direction >= -1 && direction <= 1) {
         player.direction = direction;
-        room.socket.emit('updateDirection', direction);
+        room.socket.emit('updateDirection', index, direction);
         return true;
     }
     return false;
