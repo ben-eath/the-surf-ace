@@ -133,8 +133,10 @@ io.sockets.on('connection', function(socket) {
                         socket.emit("err", "direction is not valid");
                     }
                 });
+                
+                socket.emit('verifyRoom', true);
             } else {
-                socket.emit('err', "ERROR: Not a valid room");
+                socket.emit('verifyRoom', false);
             }
         }
     });
