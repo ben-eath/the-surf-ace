@@ -25,7 +25,6 @@
 			x: 1,
 			y: 1
 		};
-		this.depth = settings.depth || 0;
 		this.state = settings.state || 0;
 
 		initObject(this, settings);
@@ -53,32 +52,33 @@
 			for(var i = 0; i < this.sprites.length; i++) {
 				if(!this.sprites[i].isReady()) return;
 			}
+			console.log(this.sprites[this.state]);
+			throw new Exception();
 			this.sprites[this.state].draw(ctx, this.center, this.size);
 		},
 		update: function(dt) {
 			var data = this.c.sock.getSharkData(this.id);
 
-			this.depth = this.calculateDepth(data.depth);
-			if(this.depth > 1) this.speed.y = SHARK_SPEED_Y_AIR;
-			else if(this.depth < 1) this.speed.y = SHARK_SPEED_Y_DEEP;
+			this.calculateState(data.depth);
 
 			this.center.x += data.direction * this.speed.x * SHARK_SPEED_X * (dt/16.66);
-			this.center.y -= data.depth * this.speed.y * (dt/16.66);
+			this.center.y -= data.state * this.speed.y * (dt/16.66);
 		},
-		calculateDepth: function(dd) {
+		calculateState: function(dd) {
 			if(dd > 0.35) {
-				if (this.depth != 1) this.newDepthState();
-				return 1;
+				this.state = STATE_LAG_SURFACE;
 			} else if (dd < 0.25 && dd > -0.25 ) {
-				if (this.depth !== 0) this.newDepthState();
-				return 0;
+				if (this.state == STATE_LAG_SURFACE) {
+					this.state = STATE_CHOMPING;
+				} else {
+					this.state = STATE_SWIM_SURFACE;
+				}
 			} else if (dd < -0.35){
-				if (this.depth != -1) this.newDepthState();
-				return -1;
+				this.state = STATE_SWIM_DEEP;
 			}
-		},
-		newDepthState: function(){
-			this.spriteNumber = 0;
+			if (this.state === undefined) {
+				this.state = STATE_SWIM_SURFACE;
+			}
 		},
 		collision: function(other, type) {
 			if(other instanceof Surfer) {

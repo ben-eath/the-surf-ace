@@ -65,15 +65,15 @@
 
 			ctx.putImageData(imageData,0,0);
 		},
-		draw: function(ctx, pos, size) {
+		draw: function(ctx, center, size) {
 			ctx.drawImage(
 				this.blitfrom,
 				this.spriteWidth * (this.spriteNumber | 0),
 				0,
 				this.spriteWidth,
 				this.blitfrom.height,
-				pos.x - size.x / 2,
-				pos.y - size.y / 2,
+				center.x - size.x / 2,
+				center.y - size.y / 2,
 				size.x,
 				size.y
 			);
