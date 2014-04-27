@@ -3,7 +3,7 @@
 		var width = $(document).width();
 		var height = $(document).height();
 		this.c = new Coquette(this, "canvas", width, height, "#000");
-		this.c.sock = new Sock();
+		this.c.sock = new Sock(this);
 
 		this.c.renderer._ctx.imageSmoothingEnabled = false;
 

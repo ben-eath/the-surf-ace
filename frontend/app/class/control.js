@@ -21,7 +21,7 @@
 		zindex: 100,
 		dialogueY: 0,
 		dialogueUp: false,
-		dialogueText: "Ben Eath:\nBump into those tasty swimmers for a tasty snack! Simple swim up and bump into them to consume them, stealing their soul. It's tasty *and* nutritious!",
+		dialogueText: "Ben Eath:\nBump into those tasty swimmers for a tasty snack! Simply swim up and bump into them to consume them, stealing their soul. It's tasty *and* nutritious!",
 		center: {
 			x: 0,
 			y: 0
@@ -38,12 +38,19 @@
 		},
 		draw: function(ctx) {
 			if (!this.isRunning) {
-				ctx.font = '64pt VT323';
 				ctx.textAlign = 'center';
+
+				ctx.font = '64pt VT323';
 				ctx.fillStyle = 'black';
 				ctx.fillText('Ben Eath: Surf Ace', this.center.x, this.center.y+3);
 				ctx.fillStyle = 'white';
 				ctx.fillText('Ben Eath: Surf Ace', this.center.x, this.center.y);
+
+				ctx.font = '30pt VT323';
+				ctx.fillStyle = 'black';
+				ctx.fillText('' + this.c.sock.roomID, this.center.x, this.center.y+73);
+				ctx.fillStyle = 'white';
+				ctx.fillText('' + this.c.sock.roomID, this.center.x, this.center.y+70);
 			}
 			if (this.dialogueY > 0) {
 				var y = this.size.y - this.dialogueY * DIALOGUE_HEIGHT;
@@ -65,16 +72,11 @@
 			}
 		},
 		update: function() {
-			// TODO REPLACE WITH SOCKET STARTING
-			if (!this.isRunning && this.c.inputter.isDown(83)) {
+			if (!this.isRunning && (this.c.sock.gameStarted || this.c.inputter.isDown(83))) {
 				var surfers = this.c.entities.all(Surfer);
 				for (var s in surfers) {
 					this.c.entities.destroy(surfers[s]);
 				}
-				this.c.entities.create(Shark, {
-					id: 0,
-					colorMatrix: COLOR_MATRIX_RED
-				});
 				this.isRunning = true;
 			}
 
