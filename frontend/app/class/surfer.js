@@ -10,7 +10,7 @@
 		this.boundingBox = this.c.collider.RECTANGLE;
 
 		var whiteness = Math.random() * 0.4 + 0.2;
-		var redness = Math.random() * 0.5 + 0.8;
+		var redness = Math.random() * 0.5 + 0.6;
 
 		var suitcolor = [Math.random(), Math.random(), Math.random()];
 		var boardcolor = [Math.random(), Math.random(), Math.random()];
@@ -19,7 +19,7 @@
 			[whiteness,  boardcolor[1],  suitcolor[1]],
 			[whiteness,  boardcolor[2],  suitcolor[2]]
 		];
-		this.sprites = new SpriteSheet('./resource/surfer_swim/surfer', SPRITES_MAX, this.colorMatrix);
+		this.sprites = new SpriteSheet('./resource/surfer_' + (Math.random() < 0.5 ? 'female_':'') + 'swim/surfer', SPRITES_MAX, this.colorMatrix);
 	};
 
 	exports.Surfer.prototype = {
