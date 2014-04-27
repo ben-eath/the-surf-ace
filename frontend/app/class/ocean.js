@@ -19,8 +19,8 @@
 		},
 		color: {
 			r: 0,
-			g: 128,
-			b: 255
+			g: 98,
+			b: 130
 		},
 		time: 0,
 		draw: function(ctx) {
@@ -38,7 +38,7 @@
 				this.c.entities.create(Surfer, {
 					center: {
 						x: Math.random() * this.size.x,
-						y: 0
+						y: -100
 					}
 				});
 			}

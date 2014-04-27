@@ -12,4 +12,8 @@
 				color.b + (color.a ? "," : ")") +
 				(color.a ? color.a + ")" : "");
 	};
+
+	exports.COLOR_MATRIX_RED = [[1,0,0], [0,1,0], [0,0,1]];
+	exports.COLOR_MATRIX_BLUE = [[0,0,1], [0,1,0], [1,0,0]];
+	exports.COLOR_MATRIX_GREEN = [[0,1,0], [1,0,0], [1,0,0]];
 })(window);

@@ -16,8 +16,8 @@
 			y: 0
 		},
 		size: {
-			x: 64,
-			y: 128
+			x: 60,
+			y: 120
 		},
 		color: 'yellow',
 		serpentine: 0,
@@ -42,6 +42,10 @@
 			this.center.y += SPEED;
 			this.serpentine += 0.05;
 			this.center.x += Math.sin(this.serpentine) * SERPENTINE_AMOUNT;
+
+			if (this.center.y > 1000) { //PLACEHOLDER
+				this.die();
+			}
 
 			this.spriteNumber += 1;
 			if(this.spriteNumber >= SPRITES_MAX) this.spriteNumber = 0;

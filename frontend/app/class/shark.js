@@ -10,28 +10,27 @@
 
 	exports.Shark = function(game, settings) {
 		this.c = game.c;
+		this.center = settings.center || {
+			x: 0,
+			y: 300
+		};
+		this.speed = settings.speed || {
+			x: 1,
+			y: 1
+		};
+		this.depth = settings.depth || 0;
 		initObject(this, settings);
+		this.sprites = new SpriteSheet('./resource/shark_swim/shark', SPRITES_MAX, settings.colorMatrix);
 		this.boundingBox = this.c.collider.RECTANGLE;
 	};
 
 	exports.Shark.prototype = {
 		id: 0,
 		zindex: 1,
-		center: {
-			x: 0,
-			y: 300
-		},
 		size: {
-			x: 64,
-			y: 128
+			x: 90,
+			y: 180
 		},
-		speed: {
-			x: 1,
-			y: 1
-		},
-		depth: 0,
-		color: 'red',
-		sprites: new SpriteSheet('./resource/shark_swim/shark', SPRITES_MAX),
 		spriteNumber: 0,
 		draw: function(ctx) {
 			if(!this.sprites.isReady()) return;
@@ -59,7 +58,7 @@
 			this.center.x += data.direction * this.speed.x * SHARK_SPEED_X * (dt/16.66);
 			this.center.y -= data.depth * this.speed.y * (dt/16.66);
 
-			this.spriteNumber += 1;
+			this.spriteNumber += 0.5;
 			if(this.spriteNumber >= SPRITES_MAX) this.spriteNumber = 0;
 		},
 		calculateDepth: function(dd) {

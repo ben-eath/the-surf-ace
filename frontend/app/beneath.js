@@ -8,8 +8,10 @@
 		this.c.renderer._ctx.imageSmoothingEnabled = false;
 
 		this.c.entities.create(Ocean, {size: { x:width, y:height }});
-		this.c.entities.create(Shark, {});
 		this.c.entities.create(Surfer, {});
+
+		this.c.entities.create(Shark, { id: 0, colorMatrix: COLOR_MATRIX_RED });
+		this.c.entities.create(Shark, { id: 1, colorMatrix: COLOR_MATRIX_GREEN, spriteNumber: 10});
 	};
 
 	window.addEventListener('load', function() {
