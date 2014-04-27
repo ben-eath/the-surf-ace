@@ -67,6 +67,15 @@
 				if(!this.sprites[i].isReady()) return;
 			}
 			this.sprites[this.state].draw(ctx, this.center, this.size);
+
+			//uncomment to see collision box
+			// ctx.setFillColor('blue');
+			// ctx.fillRect(
+			//	this.center.x - this.size.x / 3,
+			//	this.center.y - this.size.y / 2,
+			//	(this.size.x / 3) * 2,
+			//	this.size.y / 2
+			// );
 		},
 		update: function(dt) {
 			var data = this.c.sock.getSharkData(this.id);
@@ -106,7 +115,13 @@
 		},
 		collision: function(other, type) {
 			if(other instanceof Surfer && this.state == STATE_CHOMPING) {
-				other.die(true);
+				if(
+					other.center.y < this.center.y &&
+					other.center.x < this.center.x + this.size.x / 3 &&
+					other.center.x > this.center.x - this.size.x / 3
+				) {
+					other.die(true);
+				}
 			}
 		}
 	};

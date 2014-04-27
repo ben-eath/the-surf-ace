@@ -88,6 +88,7 @@
 			ctx.putImageData(imageData,0,0);
 		},
 		draw: function(ctx, center, size) {
+			if(this.blitfrom === undefined) return;
 			ctx.drawImage(
 				this.blitfrom,
 				this.spriteWidth * (this.spriteNumber | 0),

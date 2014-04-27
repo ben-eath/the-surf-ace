@@ -6,7 +6,9 @@
 	};
 
 	exports.DarkObject.prototype = {
+		update: {
 
+		}
 	};
 
 })(window);

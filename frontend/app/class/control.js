@@ -3,90 +3,102 @@
 	// whether the game is running
 
 	var SURFER_SPAWN_SPEED = 1000 * 3;
-	var DIALOGUE_SPEED = 0.13;
-	var DIALOGUE_HEIGHT = 200;
-	var DIALOGUE_PADDING = 20;
 
 	exports.Control = function(game, settings) {
 		this.c = game.c;
-		this.gameState = this.states.WAITING;
 		initObject(this, settings);
-		this.dialoguePortrait = new SpriteSheet('./resource/ben_eath_portrait/ben_eath', 2, COLOR_MATRIX_IDENTITY, 0.07);
+		this.state = "WAITING_FOR_CONNECTION";
 	};
 
 	exports.Control.prototype = {
-		states: { WAITING: 1, BETWEEN_WAVES: 2, PLAY: 3 },
-		waveNumber: 1,
-		cutSceneNumber: undefined,
-		zindex: 100,
-		dialogueY: 0,
-		dialogueUp: false,
-		dialogueText: "Ben Eath:\nBump into those tasty swimmers for a tasty snack! Simply swim up and bump into them to consume them, stealing their soul. It's tasty *and* nutritious!",
-		center: {
-			x: 0,
-			y: 0
+		zindex: 90,
+		states: {
+			WAITING_FOR_CONNECTION: {
+				init: function() {
+
+				},
+				update: function() {
+					if ((this.c.sock.gameStarted || this.c.inputter.isDown(83))) {
+
+					}
+				},
+				draw: function() {
+
+				}
+			},
+			WAITING_FOR_PLAYERS: {
+				init: function() {},
+				update: function(dt) {
+					if ((this.c.sock.gameStarted || this.c.inputter.isDown(83))) {
+						var surfers = this.c.entities.all(Surfer);
+						for (var s in surfers) {
+							surfers[s].die(false);
+						}
+						this.changeState("INTRO_START");
+					}
+				},
+				draw: function(ctx){
+					this.drawLargeText(ctx, "Ben Eath, the Surf Ace");
+					ctx.font = '30pt VT323';
+					ctx.fillStyle = 'black';
+					var roomID = this.c.sock.roomID == null ? "Connecting to server..." : this.c.sock.roomID;
+					ctx.fillText('' + roomID, this.center.x, this.center.y+73);
+					ctx.fillStyle = 'white';
+					ctx.fillText('' + roomID, this.center.x, this.center.y+70);
+				}
+			},
+			INTRO_START: {
+				init: function() {
+					var height = this.c.renderer._ctx.canvas.height;
+					var width = this.c.renderer._ctx.canvas.width;
+					this.c.entities.create(DialogueBox, {
+						text: "HA HA HA I'M BEN EATH AND I HATE SHARKS. BOO YAH! SURF'S UP! LET'S GRAB SOME GNARLY WAVES, DUDES!",
+						center: {
+							x: width / 2,
+							y: height + 100
+						},
+						size: {
+							x: width,
+							y: 200
+						},
+						finalY: height - 200
+					});
+				},
+				update: function(dt) {
+					if(this.c.inputter.isDown(82)){
+						this.changeState('PLAY');
+					}
+				},
+				draw: function(ctx) {}
+			},
+			PLAY: {
+				init: function() {
+
+				},
+				update: function(dt) {},
+				draw: function(ctx) {}
+			}
 		},
-		size: {
-			x: 800,
-			y: 600
-		},
-		color: {
-			r: 0,
-			g: 128,
-			b: 255,
-			a: 0
+		changeState: function(newState) {
+			console.log(this.state + "->" + newState);
+			this.state = newState;
+			if(this.states[this.state].init !== undefined) {
+				this.states[this.state].init.call(this);
+			}
 		},
 		draw: function(ctx) {
-			if (!this.isRunning) {
-				ctx.textAlign = 'center';
-
-				ctx.font = '64pt VT323';
-				ctx.fillStyle = 'black';
-				ctx.fillText('Ben Eath: Surf Ace', this.center.x, this.center.y+3);
-				ctx.fillStyle = 'white';
-				ctx.fillText('Ben Eath: Surf Ace', this.center.x, this.center.y);
-
-				ctx.font = '30pt VT323';
-				ctx.fillStyle = 'black';
-				ctx.fillText('' + this.c.sock.roomID, this.center.x, this.center.y+73);
-				ctx.fillStyle = 'white';
-				ctx.fillText('' + this.c.sock.roomID, this.center.x, this.center.y+70);
-			}
-			if (this.dialogueY > 0) {
-				var y = this.size.y - this.dialogueY * DIALOGUE_HEIGHT;
-				var textX = DIALOGUE_HEIGHT;
-				var textY = y + DIALOGUE_PADDING + 30;
-				var textW = this.size.x - DIALOGUE_HEIGHT - DIALOGUE_PADDING;
-				ctx.fillStyle = 'rgba(0,0,0,0.35)';
-				ctx.fillRect(0, y, this.size.x, DIALOGUE_HEIGHT);
-				ctx.font = '30pt VT323';
-				ctx.textAlign = 'left';
-				ctx.fillStyle = 'black';
-				wrapText(ctx, this.dialogueText, textX, textY+3, textW, 38);
-				ctx.fillStyle = 'white';
-				wrapText(ctx, this.dialogueText, textX, textY, textW, 38);
-				this.dialoguePortrait.draw(ctx,
-          {x: DIALOGUE_HEIGHT/2, y: y + DIALOGUE_HEIGHT/2},
-          {x: DIALOGUE_HEIGHT - DIALOGUE_PADDING * 2, y: DIALOGUE_HEIGHT - DIALOGUE_PADDING * 2},
-          true);
-			}
+			this.states[this.state].draw.call(this, ctx);
 		},
-		update: function() {
-			if (!this.isRunning && (this.c.sock.gameStarted || this.c.inputter.isDown(83))) {
-				var surfers = this.c.entities.all(Surfer);
-				for (var s in surfers) {
-					surfers[s].die(false);
-				}
-				this.isRunning = true;
-			}
-
-			if (this.dialogueUp === true && this.dialogueY < 1) {
-				this.dialogueY += DIALOGUE_SPEED;
-			} else if (this.dialogueUp === false && this.dialogueY > 0) {
-				this.dialogueY -= DIALOGUE_SPEED;
-			}
-			if (this.dialogueY > 1) {this.dialogueY = 1;}
-			if (this.dialogueY < 0) {this.dialogueY = 0;}
+		update: function(dt) {
+			this.states[this.state].update.call(this, dt);
+		},
+		drawLargeText: function(ctx, str){
+			ctx.textAlign = 'center';
+			ctx.font = '64pt VT323';
+			ctx.fillStyle = 'black';
+			ctx.fillText(str, this.center.x, this.center.y+3);
+			ctx.fillStyle = 'white';
+			ctx.fillText(str, this.center.x, this.center.y);
 		}
 	};
 
