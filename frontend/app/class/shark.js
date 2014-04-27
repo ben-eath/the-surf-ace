@@ -1,12 +1,18 @@
 ;(function(exports) {
 
-	var SHARK_SPEED_Y_DEEP = 1.25;
-	var SHARK_SPEED_Y_SURFACE = 1;
-	var SHARK_SPEED_Y_AIR = 0.75;
+	var SHARK_SPEED_Y_DEEP = -1;
+	var SHARK_SPEED_Y_AIR = 3;
 
 	var SHARK_SPEED_X = 5;
 
-	var SPRITES_MAX = 39;
+	var SPRITES_SURFACE_MAX = 39;
+	var SPRITES_DEEP_MAX = 39;
+	var SPRITES_AIR_MAX = 1;
+
+	var STATE_SWIM_SURFACE = 0; // sitting on surface, swimmming, dont move
+	var STATE_SWIM_DEEP = 1; // dived deep, swimming, move up
+	var STATE_LAG_SURFACE = 2; //on surface, not swimming, move back
+	var STATE_CHOMPING = 3; //in air, not swimming, leap forward, lasts 1 second
 
 	exports.Shark = function(game, settings) {
 		this.c = game.c;
@@ -19,8 +25,15 @@
 			y: 1
 		};
 		this.depth = settings.depth || 0;
+		this.state = settings.state || 0;
+
 		initObject(this, settings);
-		this.sprites = new SpriteSheet('./resource/shark_swim/shark', SPRITES_MAX, settings.colorMatrix);
+
+		this.sprites[STATE_SWIM_SURFACE] = new SpriteSheet('./resource/shark_swim/shark', SPRITES_SURFACE_MAX, settings.colorMatrix);
+		this.sprites[STATE_SWIM_DEEP] = new SpriteSheet('./resource/shark_swim/shark', SPRITES_DEEP_MAX, settings.colorMatrix);
+		this.sprites[STATE_LAG_SURFACE] = new SpriteSheet('./resource/shark_bite/shark', SPRITES_AIR_MAX, settings.colorMatrix);
+		this.sprites[STATE_CHOMPING] = new SpriteSheet('./resource/shark_bite/shark', SPRITES_AIR_MAX, settings.colorMatrix);
+
 		this.boundingBox = this.c.collider.RECTANGLE;
 	};
 
@@ -31,10 +44,11 @@
 			x: 90,
 			y: 180
 		},
+		sprites: [null,null,null,null],
 		spriteNumber: 0,
 		draw: function(ctx) {
-			if(!this.sprites.isReady()) return;
-			var sprite = this.sprites.getSprite(this.spriteNumber);
+			if(!(this.sprites_surface.isReady() && this.sprites_air.isReady() && this.sprites_deep.isReady())) return;
+			var sprite = this.sprites[this.state].getSprite(this.spriteNumber);
 			ctx.drawImage(
 				sprite.source,
 				sprite.pos.x,
@@ -53,22 +67,39 @@
 			this.depth = this.calculateDepth(data.depth);
 			if(this.depth > 1) this.speed.y = SHARK_SPEED_Y_AIR;
 			else if(this.depth < 1) this.speed.y = SHARK_SPEED_Y_DEEP;
-			else this.speed.y = SHARK_SPEED_Y_SURFACE;
 
 			this.center.x += data.direction * this.speed.x * SHARK_SPEED_X * (dt/16.66);
 			this.center.y -= data.depth * this.speed.y * (dt/16.66);
 
 			this.spriteNumber += 0.5;
-			if(this.spriteNumber >= SPRITES_MAX) this.spriteNumber = 0;
+			switch(this.depth){
+				case 0:
+					if(this.spriteNumber >= SPRITES_SURFACE_MAX) this.spriteNumber = 0;
+					break;
+				case 1:
+					if(this.spriteNumber >= SPRITES_AIR_MAX) this.spriteNumber = 0;
+					break;
+				case -1:
+					if(this.spriteNumber >= SPRITES_DEEP_MAX) this.spriteNumber = 0;
+					break;
+				default:
+					console.log("shark draw error - bad depth");
+			}
 		},
 		calculateDepth: function(dd) {
 			if(dd > 0.35) {
+				if (this.depth != 1) this.newDepthState();
 				return 1;
 			} else if (dd < 0.25 && dd > -0.25 ) {
+				if (this.depth !== 0) this.newDepthState();
 				return 0;
 			} else if (dd < -0.35){
+				if (this.depth != -1) this.newDepthState();
 				return -1;
 			}
+		},
+		newDepthState: function(){
+			this.spriteNumber = 0;
 		},
 		collision: function(other, type) {
 			if(other instanceof Surfer) {

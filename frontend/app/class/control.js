@@ -39,9 +39,13 @@
 		},
 		update: function() {
 			if (!this.isRunning && this.c.inputter.isDown(83)) {
+				var surfers = this.c.entities.all(Surfer);
+				for (var s in surfers) {
+					this.c.entities.destroy(surfers[s]);
+				}
 				this.c.entities.create(Shark, {});
 				this.isRunning = true;
-			};
+			}
 		}
 	};
 

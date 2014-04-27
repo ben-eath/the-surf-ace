@@ -20,10 +20,10 @@
 			var shark = self.data.sharks[0];
 			switch(e.which) {
 				case 38:
-					shark.depth = 1;
+					shark.depth = -1;
 					break;
 				case 40:
-					shark.depth = -1;
+					shark.depth = 1;
 					break;
 				case 37:
 					shark.direction = -1;
