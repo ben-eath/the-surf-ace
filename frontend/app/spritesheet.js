@@ -25,6 +25,7 @@
 		} else {
 			this.cachedLoad(src.substring(0,20));
 			this.spritesLoaded = this.numSprites;
+			this.spriteWidth = this.blitfrom.width / this.numSprites;
 		}
 		this.spriteNumber = 0;
 	};
@@ -60,8 +61,9 @@
 			this.blitfrom.getContext("2d").drawImage(evt.target, this.spritesLoaded * evt.target.width, 0);
 			this.spritesLoaded += 1;
 			if(this.spritesLoaded == this.numSprites) {
-				this.imageCache[$(evt.target).attr('src').substring(0, 20)] = this.blitfrom;
-				this.colorMap();
+				var src = $(evt.target).attr('src').substring(0, 20);
+				this.imageCache[src] = this.blitfrom;
+				this.cachedLoad(src);
 			}
 		},
 		isReady: function() {

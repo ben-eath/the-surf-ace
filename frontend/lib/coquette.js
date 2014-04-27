@@ -614,6 +614,7 @@
   };
 
   var MouseMoveListener = function(canvas) {
+    return; //BREAK EVERYTHING LOLOLOL
     this._bindings = [];
     this._mousePosition;
     var self = this;
