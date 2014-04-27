@@ -30,10 +30,12 @@
 
 		initObject(this, settings);
 
-		this.sprites[STATE_SWIM_SURFACE] = new SpriteSheet('./resource/shark_swim/shark', SPRITES_SWIM_SURFACE_MAX, settings.colorMatrix);
-		this.sprites[STATE_SWIM_DEEP] = new SpriteSheet('./resource/shark_swim/shark', SPRITES_SWIM_DEEP_MAX, settings.colorMatrix);
-		this.sprites[STATE_LAG_SURFACE] = new SpriteSheet('./resource/shark_bite/shark', SPRITES_LAG_SURFACE_MAX, settings.colorMatrix);
-		this.sprites[STATE_CHOMPING] = new SpriteSheet('./resource/shark_bite/shark', SPRITES_CHOMPING_MAX, settings.colorMatrix);
+		this.spriteMaxes = [39, 39, 1, 1];
+
+		this.sprites[STATE_SWIM_SURFACE] = new SpriteSheet('./resource/shark_swim/shark', spriteMaxes[STATE_SWIM_SURFACE], settings.colorMatrix);
+		this.sprites[STATE_SWIM_DEEP] = new SpriteSheet('./resource/shark_swim/shark', spriteMaxes[STATE_SWIM_DEEP], settings.colorMatrix);
+		this.sprites[STATE_LAG_SURFACE] = new SpriteSheet('./resource/shark_bite/shark', spriteMaxes[STATE_LAG_SURFACE], settings.colorMatrix);
+		this.sprites[STATE_CHOMPING] = new SpriteSheet('./resource/shark_bite/shark', spriteMaxes[STATE_CHOMPING], settings.colorMatrix);
 
 		this.boundingBox = this.c.collider.RECTANGLE;
 	};
