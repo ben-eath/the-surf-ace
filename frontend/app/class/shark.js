@@ -47,7 +47,9 @@
 		sprites: [null,null,null,null],
 		spriteNumber: 0,
 		draw: function(ctx) {
-			if(!(this.sprites_surface.isReady() && this.sprites_air.isReady() && this.sprites_deep.isReady())) return;
+			for(var i = 0; i < this.sprites.length; i++) {
+				if(!this.sprites[i].isReady()) return;
+			}
 			var sprite = this.sprites[this.state].getSprite(this.spriteNumber);
 			ctx.drawImage(
 				sprite.source,
