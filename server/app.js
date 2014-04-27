@@ -121,7 +121,7 @@ io.sockets.on('connection', function(socket) {
                 players[socketId] = {};
                 players[socketId].index = index;
                 players[socketId].room = room;
-
+                socket.emit('notifyNewPlayer', index);
                 socket.on('setDepth', function(depth) {
                     if (!setDepth(room, index, depth)) {
                         socket.emit("err", "depth is not valid");
