@@ -1,6 +1,6 @@
 ;(function(exports) {
 
-	var SURFER_SPAWN_SPEED = 1000 * 3;
+	var SURFER_SPAWN_SPEED = 1000;
 
 	exports.Ocean = function(game, settings) {
 		this.c = game.c;

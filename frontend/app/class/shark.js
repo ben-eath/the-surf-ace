@@ -5,9 +5,10 @@
 
 	var SHARK_SPEED_X = 5;
 
-	var SPRITES_SURFACE_MAX = 39;
-	var SPRITES_DEEP_MAX = 39;
-	var SPRITES_AIR_MAX = 1;
+	var SPRITES_SWIM_SURFACE_MAX = 39;
+	var SPRITES_SWIM_DEEP_MAX = 39;
+	var SPRITES_LAG_SURFACE_MAX = 1;
+	var SPRITES_CHOMPING_MAX = 1;
 
 	var STATE_SWIM_SURFACE = 0; // sitting on surface, swimmming, dont move
 	var STATE_SWIM_DEEP = 1; // dived deep, swimming, move up
@@ -29,10 +30,10 @@
 
 		initObject(this, settings);
 
-		this.sprites[STATE_SWIM_SURFACE] = new SpriteSheet('./resource/shark_swim/shark', SPRITES_SURFACE_MAX, settings.colorMatrix);
-		this.sprites[STATE_SWIM_DEEP] = new SpriteSheet('./resource/shark_swim/shark', SPRITES_DEEP_MAX, settings.colorMatrix);
-		this.sprites[STATE_LAG_SURFACE] = new SpriteSheet('./resource/shark_bite/shark', SPRITES_AIR_MAX, settings.colorMatrix);
-		this.sprites[STATE_CHOMPING] = new SpriteSheet('./resource/shark_bite/shark', SPRITES_AIR_MAX, settings.colorMatrix);
+		this.sprites[STATE_SWIM_SURFACE] = new SpriteSheet('./resource/shark_swim/shark', SPRITES_SWIM_SURFACE_MAX, settings.colorMatrix);
+		this.sprites[STATE_SWIM_DEEP] = new SpriteSheet('./resource/shark_swim/shark', SPRITES_SWIM_DEEP_MAX, settings.colorMatrix);
+		this.sprites[STATE_LAG_SURFACE] = new SpriteSheet('./resource/shark_bite/shark', SPRITES_LAG_SURFACE_MAX, settings.colorMatrix);
+		this.sprites[STATE_CHOMPING] = new SpriteSheet('./resource/shark_bite/shark', SPRITES_CHOMPING_MAX, settings.colorMatrix);
 
 		this.boundingBox = this.c.collider.RECTANGLE;
 	};

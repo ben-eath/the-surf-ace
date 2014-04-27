@@ -46,6 +46,7 @@
 			return this.spritesLoaded == this.numSprites;
 		},
 		colorMap: function() {
+			if(this.colorMatrix == [[1,0,0],[0,1,0],[0,0,1]]) return;
 			var ctx = this.blitfrom.getContext("2d");
 
 			var imageData = ctx.getImageData(0, 0, this.blitfrom.width, this.blitfrom.height);

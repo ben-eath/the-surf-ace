@@ -10,7 +10,9 @@
 		this.boundingBox = this.c.collider.RECTANGLE;
 
 		var whiteness = Math.random() * 0.4 + 0.2;
-		var redness = Math.random() * 0.5 + 0.6;
+		var redness = Math.random() * 0.2 + 0.7;
+		if(whiteness < 0.4) redness -= 0.2;
+		else if(redness > 0.8) whiteness -= 0.2;
 
 		var suitcolor = [Math.random(), Math.random(), Math.random()];
 		var boardcolor = [Math.random(), Math.random(), Math.random()];
