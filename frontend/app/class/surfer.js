@@ -22,7 +22,14 @@
 			[whiteness,  boardcolor[2],  suitcolor[2]]
 		];
 		this.serpentineSpeed = Math.random() * 0.1 + 0.01;
-		this.sprites = new SpriteSheet('./resource/surfer_' + (Math.random() < 0.5 ? 'female_':'male_') + 'swim/surfer', SPRITES_MAX, this.colorMatrix);
+		switch(Math.random() * 3) {
+
+		}
+		var whichSprite = "stand";
+		if(Math.random() < 0.3) {
+			whichSprite = (Math.random() < 0.5 ? 'female_swim':'male_swim');
+		}
+		this.sprites = new SpriteSheet('./resource/surfer_' + whichSprite + '/surfer', SPRITES_MAX, this.colorMatrix);
 
 		this.shadow = this.c.entities.create(Shadow, {
 			obj: this,

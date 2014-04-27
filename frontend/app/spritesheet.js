@@ -14,13 +14,18 @@
 			this.colorMatrix = colorMatrix;
 		}
 		this.spriteSpeed = spriteSpeed || 1;
-		for(var i = 1; i <= numSprites; i++) {
-			var image = new Image();
-			image.onload = this.onImageLoad.bind(this);
-			image.src = src + padToFour(i) + ".png";
-			this.spriteWidth = 0;
+		if(this.imageCache[src.substring(0,20)] === undefined) {
+			for(var i = 1; i <= numSprites; i++) {
+				var image = new Image();
+				image.onload = this.onImageLoad.bind(this);
+				image.src = src + padToFour(i) + ".png";
+				this.spriteWidth = 0;
+			}
+			this.spritesLoaded = 0;
+		} else {
+			this.cachedLoad(src.substring(0,20));
+			this.spritesLoaded = this.numSprites;
 		}
-		this.spritesLoaded = 0;
 		this.spriteNumber = 0;
 	};
 
@@ -30,6 +35,20 @@
 			[0,1,0],
 			[0,0,1]
 		],
+		imageCache: {},
+		cachedLoad: function(src) {
+			this.blitfrom = document.createElement("canvas");
+			this.blitfrom.width = this.imageCache[src].width;
+			this.blitfrom.height = this.imageCache[src].height;
+			this.blitfrom.getContext("2d").drawImage(
+				this.imageCache[src],
+				0,
+				0,
+				this.blitfrom.width,
+				this.blitfrom.height
+			);
+			this.colorMap();
+		},
 		onImageLoad: function(evt){
 			if (!this.blitfrom) {
 				this.blitfrom = document.createElement("canvas");
@@ -41,6 +60,7 @@
 			this.blitfrom.getContext("2d").drawImage(evt.target, this.spritesLoaded * evt.target.width, 0);
 			this.spritesLoaded += 1;
 			if(this.spritesLoaded == this.numSprites) {
+				this.imageCache[$(evt.target).attr('src').substring(0, 20)] = this.blitfrom;
 				this.colorMap();
 			}
 		},
@@ -80,20 +100,6 @@
 			this.spriteNumber += this.spriteSpeed;
 			if(this.spriteNumber >= this.numSprites) this.spriteNumber = 0;
 		}
-		// getSprite: function() {
-		// 	var sprite = {
-		// 		source: this.blitfrom,
-		// 		pos : {
-		// 			x: this.spriteWidth * (this.spriteNumber | 0),
-		// 			y: 0
-		// 		},
-		// 		size: {
-		// 			x: this.spriteWidth,
-		// 			y: this.blitfrom.height
-		// 		}
-		// 	};
-		// 	return sprite;
-		// }
 	};
 
 })(window);

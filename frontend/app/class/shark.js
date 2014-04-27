@@ -37,6 +37,16 @@
 		this.sprites[STATE_CHOMPING] = new SpriteSheet('./resource/shark_bite/shark', this.spriteMaxes[STATE_CHOMPING], settings.colorMatrix, 0.5);
 
 		this.boundingBox = this.c.collider.RECTANGLE;
+
+		// this.shadow = this.c.entities.create(Shadow, {
+		// 	obj: this,
+		// 	src: 'shark.png',
+		// 	size: {
+		// 		x: this.size.x * 1.5,
+		// 		y: this.size.y * 2.2
+		// 	},
+		// 	yOffset: 73
+		// });
 	};
 
 	exports.Shark.prototype = {
