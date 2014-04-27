@@ -12,6 +12,8 @@
 
 		this.c.entities.create(Shark, { id: 0, colorMatrix: COLOR_MATRIX_RED });
 		this.c.entities.create(Shark, { id: 1, colorMatrix: COLOR_MATRIX_GREEN, spriteNumber: 10});
+
+		this.c.entities.create(Control, {center: {x:width/2, y:height/2}});
 	};
 
 	window.addEventListener('load', function() {
