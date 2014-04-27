@@ -1,4 +1,4 @@
-var io = require('socket.io').listen(3001);
+var io = require('socket.io').listen(9000);
 
 // Init variables
 var sockets = [];
@@ -12,17 +12,18 @@ var TOP = 1;
 var BOTTOM = -1;
 
 function setDepth (room, index, depth) {
-    var player = room.player[index];
+    var player = room.players[index];
     if (depth >= BOTTOM && depth <= TOP)  {
         player.depth = depth;
         room.socket.emit('updateDepth', depth);
+        console.log("new depth");
         return true;
     }
     return false;
 }
 
 function setDirection(room, index, direction) {
-    var player = room.player[index];
+    var player = room.players[index];
     if (direction >= -1 && direction <= 1) {
         player.direction = direction;
         room.socket.emit('updateDirection', direction);
@@ -32,7 +33,7 @@ function setDirection(room, index, direction) {
 }
 
 function updateScore(room, index, score) {
-    var player = room.player[index];
+    var player = room.players[index];
     player.score = score;
     player.socket.emit('updateScore', score);
 }
@@ -103,13 +104,16 @@ function addController(room, socket) {
 }
 
 io.sockets.on('connection', function(socket) {
+    console.log("connection");
     socket.on('joinRoom', function (type, id) {
-        console.log("connection");
         if (type === 'computer')  {
+            console.log("room");
             var id = getRoomID();
             createRoom(id, socket);
             socket.emit('notifyRoomID', id);
         } else if (type === 'controller') {
+            console.log("controller");
+            id = id.toUpperCase();
             var room = rooms[id];
             if (room) {
                 var socketId = socket.id;
