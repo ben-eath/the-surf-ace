@@ -1,7 +1,7 @@
 ;(function(exports) {
 	var Game = function() {
-		var width = $(window).width();
-		var height = $(window).height();
+		var width = $(document).width();
+		var height = $(document).height();
 		this.c = new Coquette(this, "canvas", width, height, "#000");
 		this.c.sock = new Sock();
 
