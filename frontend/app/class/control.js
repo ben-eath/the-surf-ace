@@ -75,7 +75,7 @@
 			if (!this.isRunning && (this.c.sock.gameStarted || this.c.inputter.isDown(83))) {
 				var surfers = this.c.entities.all(Surfer);
 				for (var s in surfers) {
-					this.c.entities.destroy(surfers[s]);
+					surfers[s].die(false);
 				}
 				this.isRunning = true;
 			}

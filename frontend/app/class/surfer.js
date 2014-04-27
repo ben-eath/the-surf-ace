@@ -23,6 +23,16 @@
 		];
 		this.serpentineSpeed = Math.random() * 0.1 + 0.01;
 		this.sprites = new SpriteSheet('./resource/surfer_' + (Math.random() < 0.5 ? 'female_':'male_') + 'swim/surfer', SPRITES_MAX, this.colorMatrix);
+
+		this.shadow = this.c.entities.create(Shadow, {
+			obj: this,
+			src: 'surfboard.png',
+			size: {
+				x: this.size.x * 1.5,
+				y: this.size.y * 2.2
+			},
+			yOffset: 73
+		});
 	};
 
 	exports.Surfer.prototype = {
@@ -48,14 +58,17 @@
 			this.center.x += Math.sin(this.serpentine) * SERPENTINE_AMOUNT;
 
 			if (this.center.y > 1000) { //PLACEHOLDER
-				this.die();
+				this.die(false);
 			}
 		},
-		die: function(){
+		die: function(showblood){
+			this.c.entities.destroy(this.shadow);
 			this.c.entities.destroy(this);
-			this.c.entities.create(Bloodstain, {
-				center: this.center
-			});
+			if(showblood) {
+				this.c.entities.create(Bloodstain, {
+					center: this.center
+				});
+			}
 		}
 	};
 

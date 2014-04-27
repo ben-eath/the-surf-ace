@@ -79,7 +79,7 @@
 				}
 			}
 			if(depth > 0.35) {
-				this.state = STATE_LAG_SURFACE;
+				this.state = STATE_SWIM_DEEP;
 			} else if (depth < 0.25 && depth > -0.25 ) {
 				if (this.state == STATE_LAG_SURFACE) {
 					this.chompTime = 0;
@@ -88,7 +88,7 @@
 					this.state = STATE_SWIM_SURFACE;
 				}
 			} else if (depth < -0.35){
-				this.state = STATE_SWIM_DEEP;
+				this.state = STATE_LAG_SURFACE;
 			}
 			if (this.state === undefined) {
 				this.state = STATE_SWIM_SURFACE;
@@ -96,7 +96,7 @@
 		},
 		collision: function(other, type) {
 			if(other instanceof Surfer && this.state == STATE_CHOMPING) {
-				other.die();
+				other.die(true);
 			}
 		}
 	};
