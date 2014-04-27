@@ -16,7 +16,6 @@
 			self.data.sharks[index].direction = dir;
 		});
 		socket.on('notifyNewPlayer', function(index) {
-			console.log(index);
 			self.data.sharks[index] = {depth: 0, direction: 0};
 			self.c.entities.create(Shark, {
 				center: {x: 100, y: 100},
@@ -43,6 +42,15 @@
 					break;
 				case 39:
 					shark.direction = 1;
+					break;
+				case 83:
+					self.data.sharks[0] = {depth: 0, direction: 0};
+					self.c.entities.create(Shark, {
+						center: {x: 100, y: 100},
+						id: 0,
+						colorMatrix: COLOR_MATRIX_RED
+					});
+					self.gameStarted = true;
 					break;
 			}
 		};
