@@ -17,7 +17,7 @@
 		if(this.imageCache[src.substring(0,25)] === undefined) {
 			for(var i = 1; i <= numSprites; i++) {
 				var image = new Image();
-				image.onload = this.onImageLoad.bind(this);
+				image.onload = this.onImageLoad.bind(this, i);
 				image.src = src + padToFour(i) + (extension === undefined ? ".png" : extension);
 				this.spriteWidth = 0;
 			}
@@ -50,7 +50,7 @@
 			);
 			this.colorMap();
 		},
-		onImageLoad: function(evt){
+		onImageLoad: function(spriteNum, evt){
 			if (!this.blitfrom) {
 				this.blitfrom = document.createElement("canvas");
 				this.spriteWidth = evt.target.width;
@@ -59,7 +59,7 @@
 				this.blitfrom.height = evt.target.height;
 				this.blitfrom.width = this.spriteWidth * this.numSprites;
 			}
-			this.blitfrom.getContext("2d").drawImage(evt.target, this.spritesLoaded * evt.target.width, 0);
+			this.blitfrom.getContext("2d").drawImage(evt.target, (spriteNum-1) * evt.target.width, 0);
 			this.spritesLoaded += 1;
 			if(this.spritesLoaded == this.numSprites) {
 				var src = $(evt.target).attr('src').substring(0,25);
