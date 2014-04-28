@@ -87,6 +87,13 @@
 
 			this.center.x += data.direction * this.speed.x * SHARK_SPEED_X * (dt/16.66);
 			this.center.y -= this.speeds[this.state] * this.speed.y * (dt/16.66);
+
+			if (this.center.x - this.size.x/2 < 0) { this.center.x = 0; } 
+			else if (this.center.x + this.size.x/2 > this.c.renderer._ctx.canvas.width) {this.center.x = this.c.renderer._ctx.canvas.width; }
+
+			if (this.center.y - this.size.y/2 < 0) { this.center.y = 0; } 
+			else if (this.center.y + this.size.y/2 > this.c.renderer._ctx.canvas.height) {this.center.y = this.c.renderer._ctx.canvas.height; }
+
 		},
 		calculateState: function(depth, dt) {
 			if(this.state == STATE_CHOMPING) {
