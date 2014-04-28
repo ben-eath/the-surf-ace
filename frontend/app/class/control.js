@@ -16,6 +16,7 @@
 		this.spawnSurferTime = 0;
 		this.boatSpawnTime = 0;
 		this.fontLoadWait = 200; //LOL HAX
+		this.timer = 0;
 	};
 
 	exports.Control.prototype = {
@@ -97,7 +98,7 @@
 				draw: function(ctx) {
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
-					if (this.highestScore() > 1000) {
+					if (this.timer > 60000) {
 						this.next();
 					}
 				},
@@ -137,7 +138,7 @@
 				draw: function(ctx) {
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
-					if (this.highestScore() > 3000) {
+					if (this.timer > 120000) {
 						this.next();
 					}
 				},
@@ -177,7 +178,7 @@
 				draw: function(ctx) {
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
-					if (this.highestScore() > 5000) {
+					if (this.timer > 120000) {
 						this.next();
 					}
 				},
@@ -251,9 +252,11 @@
 			this.states[this.state].draw.call(this, ctx);
 		},
 		update: function(dt) {
+			this.timer += dt;
 			this.states[this.state].update.call(this, dt);
 		},
 		next: function() {
+			this.timer = 0;
 			if(this.states[this.state].next) {
 				this.states[this.state].next.call(this);
 			}
