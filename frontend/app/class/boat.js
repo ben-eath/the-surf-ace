@@ -4,7 +4,7 @@
 	var SERPENTINE_AMOUNT = 0.3;
 	var SPRITES_MAX = 1;
 
-	var SHOOT_TIMER_MAX = 3000;
+	var SHOOT_TIMER_MAX = 4000;
 
 	var MAX_AGE = 60000;
 

@@ -18,7 +18,7 @@
 
 	var MAX_CHOMP_TIME = 500; //time in ms that it takes to chomp
 	var MAX_CHOMP_COOLDOWN = 1000; // cooldown of chomp time
-	var MAX_BLINK_TIME = 3000; //time in ms that you're incapacitated
+	var MAX_BLINK_TIME = 2000; //time in ms that you're incapacitated
 	var BLINK_PERIOD = 300; // duration of each blink cycle
 	var BLINK_OFF_PERIOD = 100; // duration of hidden part of blink cycle
 
@@ -36,6 +36,7 @@
 		};
 		this.state = settings.state || 0;
 		this.c.scores[settings.id] = 0;
+		this.tempremoved = false;
 
 		initObject(this, settings);
 
@@ -75,6 +76,7 @@
 		chompTime: 0,
 		blinkTime: 0,
 		draw: function(ctx) {
+			if(this.tempremoved) return;
 			for(var i = 0; i < this.sprites.length; i++) {
 				if(!this.sprites[i].isReady()) return;
 			}
@@ -91,6 +93,7 @@
 			// );
 		},
 		update: function(dt) {
+			if(this.tempremoved) return;
 			var data = this.c.sock.getSharkData(this.id);
 
 			this.calculateState(data.depth, dt);
@@ -116,6 +119,7 @@
 			else if (this.center.y + this.size.y/2 > this.c.renderer._ctx.canvas.height) {this.center.y = this.c.renderer._ctx.canvas.height - this.size.y/2; }
 		},
 		chomp: function() {
+			if(this.tempremoved) return;
 			if (this.state === STATE_CHOMPING || this.chompCooldown < MAX_CHOMP_COOLDOWN) return;
 			this.chompTime = 0;
 			this.chompCooldown = 0;
@@ -153,6 +157,7 @@
 			}
 		},
 		collision: function(other, type) {
+			if(this.tempremoved) return;
 			if(other instanceof Surfer && this.state == STATE_CHOMPING) {
 				if(
 					other.center.y < this.center.y &&

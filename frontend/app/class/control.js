@@ -31,6 +31,10 @@
 						for (var s in surfers) {
 							surfers[s].die(false);
 						}
+						var boats = this.c.entities.all(Boat);
+						for (var b in boats) {
+							boats[b].die(false);
+						}
 						this.changeState("INTRO_START");
 					}
 				},

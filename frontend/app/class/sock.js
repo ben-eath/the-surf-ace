@@ -34,6 +34,9 @@
 			var control = self.c.entities.all(Control)[0];
 			control.next();
 		});
+		socket.on("dropPlayer",  function(index) {
+			self.data.sharks[index].obj.tempRemoved = true;
+		});
 		socket.emit('joinRoom', 'computer');
 
 		this.socket = socket;
