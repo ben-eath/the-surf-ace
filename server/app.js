@@ -88,7 +88,7 @@ function removePlayers(room) {
 
 io.sockets.on('connection', function(socket) {
     socket.on('joinRoom', function (type, name, id) {
-        console.log("connected")
+        console.log("connected");
         if (type === 'computer') {
             id = getRoomID();
             createRoom(id, socket);

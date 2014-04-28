@@ -466,9 +466,9 @@
 			for (var j in this.drawnScores) {
 				ctx.font = '30pt VT323';
 				ctx.fillStyle = 'black';
-				ctx.fillText(this.c.sock.data.sharks[i].name + ": " + this.drawnScores[j], x, y+3);
+				ctx.fillText(this.c.sock.getSharkData(j).name + ": " + this.drawnScores[j], x, y+3);
 				ctx.fillStyle = PLAYER_COLORS[j];
-				ctx.fillText(this.c.sock.data.sharks[i].name + ": " + this.drawnScores[j], x, y);
+				ctx.fillText(this.c.sock.getSharkData(j).name + ": " + this.drawnScores[j], x, y);
 				x += SCORE_PADDING;
 			}
 		}
