@@ -55,8 +55,6 @@
 		color: 'yellow',
 		serpentine: 0,
 		spriteNumber: 0,
-		shoots: false,
-		shootFrequency: 0.01,
 		draw: function(ctx) {
 			if(!this.sprites.isReady()) return;
 			this.sprites.draw(ctx, this.center, this.size);
@@ -68,13 +66,6 @@
 
 			if (this.center.y > 1000) { //PLACEHOLDER
 				this.die(false);
-			}
-			if (this.shoots) {
-				if (Math.random < shootFrequency) {
-					this.c.entities.create(Sharknet, {
-						center: this.center
-					});
-				}
 			}
 		},
 		die: function(showblood){

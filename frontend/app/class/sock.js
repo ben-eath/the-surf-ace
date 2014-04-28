@@ -16,13 +16,19 @@
 			self.data.sharks[index].direction = dir;
 		});
 		socket.on('notifyNewPlayer', function(index) {
-			self.data.sharks[index] = {depth: 0, direction: 0};
-			self.c.entities.create(Shark, {
-				center: {x: 100, y: 100},
-				id: index,
-				colorMatrix: SHARK_COLOR_MATRICES[index]
-			});
+			self.data.sharks[index] = {
+				depth: 0,
+				direction: 0,
+				obj: self.c.entities.create(Shark, {
+					center: {x: 100, y: 100},
+					id: index,
+					colorMatrix: SHARK_COLOR_MATRICES[index]
+				})
+			};
 			self.gameStarted = true;
+		});
+		socket.on('chomp', function(index) {
+			self.data.sharks[index].obj.chomp();
 		});
 		socket.emit('joinRoom', 'computer');
 
@@ -43,14 +49,20 @@
 				case 39:
 					shark.direction = 1;
 					break;
+				case 32:
+					shark.obj.chomp();
+					break;
 				case 83:
 					var index = self.data.sharks.length;
-					self.data.sharks[index] = {depth: 0, direction: 0};
-					self.c.entities.create(Shark, {
-						center: {x: 100, y: 100},
-						id: index,
-						colorMatrix: SHARK_COLOR_MATRICES[index]
-					});
+					self.data.sharks[index] = {
+						depth: 0,
+						direction: 0,
+						obj: self.c.entities.create(Shark, {
+							center: {x: 100, y: 100},
+							id: index,
+							colorMatrix: SHARK_COLOR_MATRICES[index]
+						})
+					};
 					break;
 			}
 		};
