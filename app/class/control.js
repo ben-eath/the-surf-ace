@@ -1,7 +1,7 @@
 ;(function(exports) {
 	// stores things like:
 	// whether the game is running
-	var SCORE_PADDING = 150;
+	var SCORE_PADDING = 200;
 	var SCORE_MARGIN = 40;
 	var SCORE_Y = 40;
 	var DIALOGUE_MIN_TIME = 800;
