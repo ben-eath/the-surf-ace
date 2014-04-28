@@ -7,6 +7,7 @@
 	var SCORE_MARGIN = 40;
 	var SCORE_Y = 40;
 	var BOAT_SPAWN_SPEED = 1000 * 30;
+	var DIALOGUE_MIN_TIME = 800;
 
 	exports.Control = function(game, settings) {
 		this.c = game.c;
@@ -27,14 +28,7 @@
 					this.spawnSurferLoop(dt * 3);
 					this.fontLoadWait -= dt;
 					if ((this.c.sock.gameStarted || this.c.inputter.isPressed(68))) {
-						var surfers = this.c.entities.all(Surfer);
-						for (var s in surfers) {
-							surfers[s].die(false);
-						}
-						var boats = this.c.entities.all(Boat);
-						for (var b in boats) {
-							boats[b].die(false);
-						}
+						this.clearScreen();
 						this.changeState("INTRO_START");
 					}
 				},
@@ -63,7 +57,7 @@
 					}
 				},
 				next: function() {
-					if(this.age < 2000) return;
+					if(this.age < DIALOGUE_MIN_TIME) return;
 					this.changeState('INTRO_END');
 				},
 				draw: function(ctx) {
@@ -80,12 +74,12 @@
 					if(this.c.inputter.isPressed(68)){
 						this.next();
 					}
-					if(this.dialogue.length === 0) {
+					if (this.c.entities.all(BenEath).length === 0) {
 						this.changeState('ROUND_1');
 					}
 				},
 				next: function() {
-					if(this.age < 1000) return;
+					if(this.age < DIALOGUE_MIN_TIME) return;
 					this.dialogue.dialogueUp = false;
 					this.ben.onScreen = false;
 				},
@@ -103,11 +97,130 @@
 				draw: function(ctx) {
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
+					if (this.highestScore() > 1000) {
+						this.next();
+					}
 				},
 				next: function() {
-
+					this.changeState('AFTER_1');
+					this.clearScreen();
 				}
-			}
+			},
+			AFTER_1: {
+				init: function() {
+					this.age = 0;
+					this.ben = this.createBen();
+					this.dialogue = this.createDialogue("THOSE RAUNCHOUS SHARKS ARE HARSHING MY SURF! GET THEM, DUDES AND DUDETTES!");
+				},
+				update: function(dt) {
+					this.age += dt;
+					if(this.c.inputter.isPressed(68)){
+						this.next();
+					}
+				},
+				next: function() {
+					if(this.age < DIALOGUE_MIN_TIME) return;
+					this.changeState('ROUND_2');
+				},
+				draw: function(ctx) {
+					this.showServerPass(ctx);
+				}
+			},
+			ROUND_2: {
+				init: function() {
+					this.dialogue.dialogueUp = false;
+					this.ben.onScreen = false;
+				},
+				update: function(dt) {
+					this.spawnSurferLoop(dt * 1.5);
+				},
+				draw: function(ctx) {
+					this.showServerPass(ctx);
+					this.drawScores(ctx);
+					if (this.highestScore() > 3000) {
+						this.next();
+					}
+				},
+				next: function() {
+					this.changeState('AFTER_2');
+					this.clearScreen();
+				}
+			},
+			AFTER_2: {
+				init: function() {
+					this.age = 0;
+					this.ben = this.createBen();
+					this.dialogue = this.createDialogue("TOTALLY NOT TUBULES! ALL MY SURF BROS GETTING ATE. CALL THE COAST GUARD!");
+				},
+				update: function(dt) {
+					this.age += dt;
+					if(this.c.inputter.isPressed(68)){
+						this.next();
+					}
+				},
+				next: function() {
+					if(this.age < DIALOGUE_MIN_TIME) return;
+					this.changeState('ROUND_3');
+				},
+				draw: function(ctx) {
+					this.showServerPass(ctx);
+				}
+			},
+			ROUND_3: {
+				init: function() {
+					this.dialogue.dialogueUp = false;
+					this.ben.onScreen = false;
+				},
+				update: function(dt) {
+					this.spawnSurferLoop(dt * 1.5);
+				},
+				draw: function(ctx) {
+					this.showServerPass(ctx);
+					this.drawScores(ctx);
+					if (this.highestScore() > 5000) {
+						this.next();
+					}
+				},
+				next: function() {
+					this.changeState('AFTER_3');
+					this.clearScreen();
+				}
+			},
+			AFTER_3: {
+				init: function() {
+					this.age = 0;
+					this.ben = this.createBen();
+					this.dialogue = this.createDialogue("WHAT THE SURF? LOOKS LIKE IF YOU WANT SOMETHING DONE RIGHT, YOU HAVE TO SURF IT YOURSELF. I'M THE SURF ACE!");
+				},
+				update: function(dt) {
+					this.age += dt;
+					if(this.c.inputter.isPressed(68)){
+						this.next();
+					}
+				},
+				next: function() {
+					if(this.age < DIALOGUE_MIN_TIME) return;
+					this.changeState('BOSS');
+				},
+				draw: function(ctx) {
+					this.showServerPass(ctx);
+				}
+			},
+			BOSS: {
+				init: function() {
+					this.dialogue.dialogueUp = false;
+					this.ben.onScreen = false;
+				},
+				update: function(dt) {
+					this.spawnSurferLoop(dt * 1.5);
+				},
+				draw: function(ctx) {
+					this.showServerPass(ctx);
+					this.drawScores(ctx);
+				},
+				next: function() {
+				}
+			},
 		},
 		showServerPass: function(ctx) {
 			ctx.font = '20pt VT323';
@@ -116,6 +229,16 @@
 			ctx.fillText(roomID, 5, 20);
 			ctx.fillStyle = 'white';
 			ctx.fillText( roomID, 5, 20);
+		},
+		clearScreen: function() {
+			var surfers = this.c.entities.all(Surfer);
+			for (var s in surfers) {
+				surfers[s].die(false);
+			}
+			var boats = this.c.entities.all(Boat);
+			for (var b in boats) {
+				boats[b].die(false);
+			}
 		},
 		changeState: function(newState) {
 			console.log(this.state + "->" + newState);
@@ -170,6 +293,14 @@
 				onScreen: true,
 				displayOnly: true
 			});
+		},
+		highestScore: function() {
+			var scores = this.c.scores;
+			var maxScore = 0;
+			for (var i in scores) {
+				if (scores[i] > maxScore) {maxScore = scores[i];}
+			}
+			return maxScore;
 		},
 		spawnSurferLoop: function(dt){
 			this.spawnSurferTime += dt;
