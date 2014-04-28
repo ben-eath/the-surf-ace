@@ -38,8 +38,9 @@
 			var sumVecY = 0;
 			for (var s in sharks) {
 				var shark = sharks[s];
+
 				var d = distance(x, y, shark.center.x, shark.center.y);
-				if (d < threshold) {
+				if (d < threshold && shark.state !== 5) {
 
 					sumVecX += (shark.center.x - x)/d;
 					sumVecY += (shark.center.y - y)/d;

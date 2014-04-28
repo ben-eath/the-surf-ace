@@ -11,7 +11,9 @@
 			y: settings.center.y
 		};
 		this.hasRunColorMatrix = false;
-
+		if (this.type == "surfboard") {
+			this.colorMatrix = [[0, Math.random(), 0], [0, Math.random(), 0], [0, Math.random(), 0]];
+		}
 		this.sprites = new SpriteSheet('./resource/'+ this.type + '/' + this.type, this.numSprites, this.colorMatrix);
 
 		this.zindex = 100;
