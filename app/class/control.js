@@ -20,6 +20,7 @@
 		this.surferSpawnSpeed = 0;
 		this.currentLevelTime = 0;
 		this.theme = null;
+		this.muted = false;
 
 		this.states[this.state].init.call(this);
 	};
@@ -78,7 +79,7 @@
 			ORIENTATION: {
 				init: function() {
 					this.dialogue = this.createDialogue(
-						"TAP TO BITE AND CONTINUE.\nEAT EVERYTHING BUT EACH OTHER.\nYOU DIE IF YOUR SCORE HITS 0.",
+						"TAP TO BITE AND CONTINUE.\nEAT EVERYTHING BUT EACH OTHER.\nYOU DIE IF YOUR SCORE HITS 0.\nPRESS 'M' TO MUTE THIS AWESOME MUSIC.",
 						new SpriteSheet('./resource/orientation/orientation', 35, undefined, 0.2)
 					);
 					this.setSharksVisible(true);
@@ -376,10 +377,15 @@
 				}
 			}
 		},
+		muteMusic: function(muted) {
+			this.muted = muted;
+			if(this.theme) this.theme.muted = muted;
+		},
 		loopMusic: function(url) {
 			if(this.theme) this.theme.pause();
 			this.theme = new Audio(url);
 			this.theme.loop = true;
+			this.theme.muted = this.muted;
 			this.theme.play();
 		},
 		showServerPass: function(ctx) {
@@ -426,6 +432,11 @@
 		update: function(dt) {
 			this.timer += dt;
 			this.states[this.state].update.call(this, dt);
+
+			// Music muting ('M')
+			if(this.c.inputter.isPressed(77)) {
+				this.muteMusic(!this.muted);
+			}
 
 			// Check for game over (HACK)
 			if(this.c.sock.data && this.c.sock.data.sharks &&
