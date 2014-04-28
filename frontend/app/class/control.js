@@ -29,13 +29,20 @@
 			WAITING_FOR_PLAYERS: {
 				init: function() {
 					this.surferSpawnSpeed = 1000 * 3;
+					this.setSharksVisible(false);
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt);
 					this.fontLoadWait -= dt;
-					if ((this.c.sock.gameStarted || this.c.inputter.isPressed(68))) {
+					if ((this.c.inputter.isPressed(68))) {
+						this.next();
+					}
+				},
+				next: function() {
+					if(this.c.sock.data.sharks && this.c.sock.data.sharks.length) {
 						this.clearScreen();
 						this.changeState("INTRO_START");
+						this.c.sock.gameStarted = true;
 					}
 				},
 				draw: function(ctx){
@@ -55,6 +62,15 @@
 					ctx.fillText('Server Password: ' + roomID, this.center.x, this.center.y+123);
 					ctx.fillStyle = 'white';
 					ctx.fillText('Server Password: ' + roomID, this.center.x, this.center.y+120);
+
+					if(this.c.sock.data.sharks && this.c.sock.data.sharks.length) {
+						var nPlayers = this.c.sock.data.sharks.length;
+						var text = nPlayers + " players. Tap to start.";
+						ctx.fillStyle = 'black';
+						ctx.fillText('' + text, this.center.x, this.center.y+173);
+						ctx.fillStyle = '#ff0';
+						ctx.fillText('' + text, this.center.x, this.center.y+170);
+					}
 				}
 			},
 			INTRO_START: {
@@ -62,6 +78,7 @@
 					this.age = 0;
 					this.ben = this.createBen();
 					this.dialogue = this.createDialogue("SUP, DUDES AND DUDETTES! I'M BEN, AND I'M THE ACE SURFER THIS SIDE OF THE SHORELINE. LET'S RIDE SOME WAVES AND CATCH SOME SUN!");
+					this.setSharksVisible(false);
 				},
 				update: function(dt) {
 					this.age += dt;
@@ -81,6 +98,7 @@
 				init: function() {
 					this.age = 0;
 					this.dialogue.text = "WATCH OUT FOR SHARKS! I HATE SHARKS!";
+					this.setSharksVisible(false);
 				},
 				update: function(dt) {
 					this.age += dt;
@@ -105,6 +123,8 @@
 					this.currentLevelTime = 60000;
 					this.surferSpawnSpeed = 1000 * 2;
 					this.boatSpawnSpeed = 0;
+					this.setSharksVisible(true);
+					this.timer = 0;
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt);
@@ -113,13 +133,13 @@
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
 					this.drawTimer(ctx);
-					if (this.timer > this.currentLevelTime) {
-						this.next();
-					}
+					this.next();
 				},
 				next: function() {
-					this.changeState('AFTER_1');
-					this.clearScreen();
+					if (this.timer > this.currentLevelTime) {
+						this.changeState('AFTER_1');
+						this.clearScreen();
+					}
 				}
 			},
 			AFTER_1: {
@@ -127,6 +147,7 @@
 					this.age = 0;
 					this.ben = this.createBen();
 					this.dialogue = this.createDialogue("THOSE RAUNCHOUS SHARKS ARE HARSHING MY SURF! GET THEM, DUDES AND DUDETTES!");
+					this.setSharksVisible(false);
 				},
 				update: function(dt) {
 					this.age += dt;
@@ -148,6 +169,8 @@
 					this.surferSpawnSpeed = 1000 * 1.5;
 					this.boatSpawnSpeed = 1000 * 15;
 					this.currentLevelTime = 120000;
+					this.setSharksVisible(true);
+					this.timer = 0;
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt);
@@ -156,20 +179,21 @@
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
 					this.drawTimer(ctx);
-					if (this.timer > this.currentLevelTime) {
-						this.next();
-					}
+					this.next();
 				},
 				next: function() {
-					this.changeState('AFTER_2');
-					this.clearScreen();
+					if (this.timer > this.currentLevelTime) {
+						this.changeState('AFTER_2');
+						this.clearScreen();
+					}
 				}
 			},
 			AFTER_2: {
 				init: function() {
 					this.age = 0;
 					this.ben = this.createBen();
-					this.dialogue = this.createDialogue("TOTALLY NOT TUBULES! ALL MY SURF BROS GETTING ATE. CALL THE COAST GUARD!");
+					this.dialogue = this.createDialogue("TOTALLY NOT TUBULAL! ALL MY SURF BROS GETTING ATE. CALL THE COAST GUARD!");
+					this.setSharksVisible(false);
 				},
 				update: function(dt) {
 					this.age += dt;
@@ -191,6 +215,8 @@
 					this.surferSpawnSpeed = 1000 * 1.5;
 					this.boatSpawnSpeed = 1000 * 8;
 					this.currentLevelTime = 120000;
+					this.setSharksVisible(true);
+					this.timer = 0;
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt);
@@ -199,13 +225,13 @@
 					this.drawTimer(ctx);
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
-					if (this.timer > this.currentLevelTime) {
-						this.next();
-					}
+					this.next();
 				},
 				next: function() {
-					this.changeState('AFTER_3');
-					this.clearScreen();
+					if (this.timer > this.currentLevelTime) {
+						this.changeState('AFTER_3');
+						this.clearScreen();
+					}
 				}
 			},
 			AFTER_3: {
@@ -213,6 +239,7 @@
 					this.age = 0;
 					this.ben = this.createBen();
 					this.dialogue = this.createDialogue("WHAT THE SURF? LOOKS LIKE IF YOU WANT SOMETHING DONE RIGHT, YOU HAVE TO SURF IT YOURSELF. I'M THE SURF ACE!");
+					this.setSharksVisible(false);
 				},
 				update: function(dt) {
 					this.age += dt;
@@ -234,6 +261,7 @@
 					this.ben.onScreen = false;
 					this.boatSpawnSpeed = 0;
 					this.surferSpawnSpeed = 0;
+					this.setSharksVisible(true);
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt * 1.5);
@@ -271,6 +299,13 @@
 				boats[b].die(false);
 			}
 		},
+		setSharksVisible: function(bool) {
+			var sharks = this.c.entities.all(Shark);
+			for(var s in sharks) {
+				console.log(sharks[s]);
+				sharks[s].temphidden = !bool;
+			}
+		},
 		changeState: function(newState) {
 			console.log(this.state + "->" + newState);
 			this.state = newState;
@@ -286,7 +321,6 @@
 			this.states[this.state].update.call(this, dt);
 		},
 		next: function() {
-			this.timer = 0;
 			if(this.states[this.state].next) {
 				this.states[this.state].next.call(this);
 			}
