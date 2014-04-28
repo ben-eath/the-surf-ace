@@ -59,9 +59,10 @@
 		update: function(dt){
 			if (this.sizingTime > 0) this.sizingTime--;
 			var ratio = (this.sizingTime > 0) ? SIZING_RATIO : 1;
+			var nullBloods = 0;
 			for (var i in this.bloods) {
 				var b = this.bloods[i];
-				if (b === null) {continue;}
+				if (b === null) {nullBloods ++; continue;}
 				b.x += b.vx;
 				b.serp += b.vserp;
 				b.x += Math.sin(b.serp) * SERPENTINE_AMOUNT;
@@ -72,6 +73,9 @@
 				if (b.a <= 0) {
 					this.bloods[i] = null;
 				}
+			}
+			if(nullBloods == this.bloods.length) {
+				this.c.entities.destroy(this);
 			}
 		}
 	};

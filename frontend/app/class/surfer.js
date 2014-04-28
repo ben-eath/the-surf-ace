@@ -64,7 +64,7 @@
 			this.serpentine += this.serpentineSpeed;
 			this.center.x += Math.sin(this.serpentine) * SERPENTINE_AMOUNT;
 
-			if (this.center.y > 1000) { //PLACEHOLDER
+			if (this.center.y > this.c.renderer._ctx.canvas.height + this.size.y) { //PLACEHOLDER
 				this.die(false);
 			}
 		},
