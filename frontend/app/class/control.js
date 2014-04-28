@@ -8,6 +8,7 @@
 	var SCORE_Y = 40;
 	var BOAT_SPAWN_SPEED = 1000 * 30;
 	var DIALOGUE_MIN_TIME = 800;
+	var SCORE_SPEED = 1;
 
 	exports.Control = function(game, settings) {
 		this.c = game.c;
@@ -17,6 +18,7 @@
 		this.boatSpawnTime = 0;
 		this.fontLoadWait = 200; //LOL HAX
 		this.timer = 0;
+		this.drawnScores = [];
 	};
 
 	exports.Control.prototype = {
@@ -343,16 +345,28 @@
 		},
 		drawScores: function(ctx) {
 			var scores = this.c.scores;
+
+			for (var i in scores) {
+				if (this.drawnScores[i] === undefined) {
+					this.drawnScores[i] = 0;
+				} else if (this.drawnScores[i] < scores[i]) {
+					this.drawnScores[i] += SCORE_SPEED;
+					if (this.drawnScores[i] > scores[i]) this.drawnScores[i] = scores[i];
+				} else if (this.drawnScores[i] > scores[i]) {
+					this.drawnScores[i] -= SCORE_SPEED;
+					if (this.drawnScores[i] < scores[i]) this.drawnScores[i] = scores[i];
+				}
+			}
+
 			var x = SCORE_MARGIN;
 			var y = this.size.y - SCORE_Y;
-
 			ctx.textAlign = 'left';
-			for (var i in scores) {
+			for (var j in this.drawnScores) {
 				ctx.font = '30pt VT323';
 				ctx.fillStyle = 'black';
-				ctx.fillText("" + scores[i], x, y+3);
-				ctx.fillStyle = PLAYER_COLORS[i];
-				ctx.fillText("" + scores[i], x, y);
+				ctx.fillText("" + this.drawnScores[j], x, y+3);
+				ctx.fillStyle = PLAYER_COLORS[j];
+				ctx.fillText("" + this.drawnScores[j], x, y);
 				x += SCORE_PADDING;
 			}
 		}
