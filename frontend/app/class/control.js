@@ -113,6 +113,9 @@
 					if(this.age < DIALOGUE_MIN_TIME) return;
 					this.dialogue.dialogueUp = false;
 					this.ben.onScreen = false;
+					if(this.c.entities.all(BenEath).length === 0){
+						this.changeState('ROUND_1');
+					}
 				},
 				draw: function(ctx) {
 					this.showServerPass(ctx);
@@ -151,13 +154,14 @@
 				},
 				update: function(dt) {
 					this.age += dt;
-					if(this.c.inputter.isPressed(68)){
-						this.next();
-					}
+					this.next();
 				},
 				next: function() {
 					if(this.age < DIALOGUE_MIN_TIME) return;
-					this.changeState('ROUND_2');
+					this.ben.onScreen = false;
+					if(this.c.entities.all(BenEath).length === 0){
+						this.changeState('ROUND_2');
+					}
 				},
 				draw: function(ctx) {
 					this.showServerPass(ctx);
@@ -203,7 +207,10 @@
 				},
 				next: function() {
 					if(this.age < DIALOGUE_MIN_TIME) return;
-					this.changeState('ROUND_3');
+					this.ben.onScreen = false;
+					if(this.c.entities.all(BenEath).length === 0){
+						this.changeState('ROUND_3');
+					}
 				},
 				draw: function(ctx) {
 					this.showServerPass(ctx);
