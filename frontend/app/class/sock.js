@@ -29,6 +29,13 @@
 		});
 		socket.on('chomp', function(index) {
 			self.data.sharks[index].obj.chomp();
+
+			// Get rid of intro on chomp
+			var control = self.c.entities.all(Control)[0];
+			control.next();
+		});
+		socket.on("dropPlayer",  function(index) {
+			self.data.sharks[index].obj.tempRemoved = true;
 		});
 		socket.emit('joinRoom', 'computer');
 
@@ -85,7 +92,13 @@
 		getSharkData: function(sharkID) {
 			return this.data.sharks[sharkID];
 		},
-		gameStarted: false
+		gameStarted: false,
+		scoreChange: function(shark){
+			this.socket.emit("updateScore",
+				shark.id,
+				this.c.scores[shark.id]
+			);
+		}
 	};
 	exports.Sock = Sock;
 })(window);

@@ -3,7 +3,7 @@
 	exports.Ocean = function(game, settings) {
 		this.c = game.c;
 		initObject(this, settings);
-		this.spriteSheet = new SpriteSheet('./resource/ocean/maya/untitled.', 48, undefined, 0.5, '.jpg');
+		this.spriteSheet = new SpriteSheet('./resource/ocean/maya/untitled.', 45, undefined, 0.5, '.jpg');
 	};
 
 	exports.Ocean.prototype = {

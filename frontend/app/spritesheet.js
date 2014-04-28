@@ -14,7 +14,7 @@
 			this.colorMatrix = colorMatrix;
 		}
 		this.spriteSpeed = spriteSpeed || 1;
-		if(this.imageCache[src.substring(0,20)] === undefined) {
+		if(this.imageCache[src.substring(0,25)] === undefined) {
 			for(var i = 1; i <= numSprites; i++) {
 				var image = new Image();
 				image.onload = this.onImageLoad.bind(this);
@@ -23,7 +23,7 @@
 			}
 			this.spritesLoaded = 0;
 		} else {
-			this.cachedLoad(src.substring(0,20));
+			this.cachedLoad(src.substring(0,25));
 			this.spritesLoaded = this.numSprites;
 			this.spriteWidth = this.blitfrom.width / this.numSprites;
 		}
@@ -62,7 +62,7 @@
 			this.blitfrom.getContext("2d").drawImage(evt.target, this.spritesLoaded * evt.target.width, 0);
 			this.spritesLoaded += 1;
 			if(this.spritesLoaded == this.numSprites) {
-				var src = $(evt.target).attr('src').substring(0, 20);
+				var src = $(evt.target).attr('src').substring(0,25);
 				this.imageCache[src] = this.blitfrom;
 				this.cachedLoad(src);
 			}
