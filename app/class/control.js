@@ -80,6 +80,7 @@
 						new SpriteSheet('./resource/orientation/orientation', 35, undefined, 0.2)
 					);
 					this.setSharksVisible(true);
+					this.age = 0;
 				},
 				update: function(dt) {
 					this.age += dt;
