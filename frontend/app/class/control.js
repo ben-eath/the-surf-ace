@@ -52,41 +52,9 @@
 			},
 			INTRO_START: {
 				init: function() {
-					var height = this.c.renderer._ctx.canvas.height;
-					var width = this.c.renderer._ctx.canvas.width;
-					this.c.entities.create(BenEath, {
-						center: {
-							x: width,
-							y: height / 3
-						},
-						target: [
-							{
-								x: width / 2,
-								y: width / 3
-							},
-							{
-								x: - 200,
-								y: width / 3
-							},
-						],
-						onScreen: true,
-						displayOnly: true
-					});
-					this.c.entities.create(DialogueBox, {
-						text: "SUP, DUDES AND DUDETTES! I'M BEN, AND I'M THE ACE SURFER THIS SIDE OF THE SHORELINE. LET'S RIDE SOME WAVES AND CATCH SOME SUN!",
-						center: {
-							x: width / 2,
-							y: height + 100
-						},
-						size: {
-							x: width,
-							y: 200
-						},
-						finalY: height - 200
-					});
 					this.age = 0;
 					this.ben = this.createBen();
-					this.dialogue = this.createDialogue("SUP, DUDES AND DUDETTES! I'M BEN, AND I'M THE ACE SURFER THIS SIDE OF THE SHORELINE. LET'S RIDE SOME WAVES AND CATCH SOME SUN!")
+					this.dialogue = this.createDialogue("SUP, DUDES AND DUDETTES! I'M BEN, AND I'M THE ACE SURFER THIS SIDE OF THE SHORELINE. LET'S RIDE SOME WAVES AND CATCH SOME SUN!");
 				},
 				update: function(dt) {
 					this.age += dt;
