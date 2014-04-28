@@ -85,6 +85,8 @@
 						finalY: height - 200
 					});
 					this.age = 0;
+					this.ben = this.createBen();
+					this.dialogue = this.createDialogue("SUP, DUDES AND DUDETTES! I'M BEN, AND I'M THE ACE SURFER THIS SIDE OF THE SHORELINE. LET'S RIDE SOME WAVES AND CATCH SOME SUN!")
 				},
 				update: function(dt) {
 					this.age += dt;
@@ -102,23 +104,22 @@
 			},
 			INTRO_END: {
 				init: function() {
-					this.c.entities.all(DialogueBox)[0].text = "WATCH OUT FOR SHARKS! I HATE SHARKS!";
 					this.age = 0;
+					this.dialogue.text = "WATCH OUT FOR SHARKS! I HATE SHARKS!";
 				},
 				update: function(dt) {
 					this.age += dt;
 					if(this.c.inputter.isPressed(68)){
 						this.next();
 					}
-
-					if(this.c.entities.all(BenEath).length === 0) {
+					if(this.dialogue.length === 0) {
 						this.changeState('ROUND_1');
 					}
 				},
 				next: function() {
 					if(this.age < 1000) return;
-					this.c.entities.all(DialogueBox)[0].dialogueUp = false;
-					this.c.entities.all(BenEath)[0].onScreen = false;
+					this.dialogue.dialogueUp = false;
+					this.ben.onScreen = false;
 				},
 				draw: function(ctx) {
 					this.showServerPass(ctx);
@@ -134,6 +135,9 @@
 				draw: function(ctx) {
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
+				},
+				next: function() {
+
 				}
 			}
 		},
@@ -162,6 +166,42 @@
 			if(this.states[this.state].next) {
 				this.states[this.state].next.call(this);
 			}
+		},
+		createDialogue: function(text) {
+			return this.c.entities.create(DialogueBox, {
+				text: text,
+				center: {
+					x: this.size.x / 2,
+					y: this.size.y + 100
+				},
+				size: {
+					x: this.size.x,
+					y: 200
+				},
+				finalY: this.size.y - 200
+			});
+		},
+		createBen: function() {
+			var width = this.size.x;
+			var height = this.size.y;
+			return this.c.entities.create(BenEath, {
+				center: {
+					x: width,
+					y: height / 3
+				},
+				target: [
+					{
+						x: width / 2,
+						y: width / 3
+					},
+					{
+						x: - 200,
+						y: width / 3
+					},
+				],
+				onScreen: true,
+				displayOnly: true
+			});
 		},
 		spawnSurferLoop: function(dt){
 			this.spawnSurferTime += dt;
