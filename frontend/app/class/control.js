@@ -84,13 +84,16 @@
 						},
 						finalY: height - 200
 					});
+					this.age = 0;
 				},
 				update: function(dt) {
+					this.age += dt;
 					if(this.c.inputter.isPressed(68)){
 						this.next();
 					}
 				},
 				next: function() {
+					if(this.age < 2000) return;
 					this.changeState('INTRO_END');
 				},
 				draw: function(ctx) {
@@ -100,8 +103,10 @@
 			INTRO_END: {
 				init: function() {
 					this.c.entities.all(DialogueBox)[0].text = "WATCH OUT FOR SHARKS! I HATE SHARKS!";
+					this.age = 0;
 				},
 				update: function(dt) {
+					this.age += dt;
 					if(this.c.inputter.isPressed(68)){
 						this.next();
 					}
@@ -111,6 +116,7 @@
 					}
 				},
 				next: function() {
+					if(this.age < 1000) return;
 					this.c.entities.all(DialogueBox)[0].dialogueUp = false;
 					this.c.entities.all(BenEath)[0].onScreen = false;
 				},
