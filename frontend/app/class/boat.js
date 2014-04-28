@@ -124,7 +124,7 @@
 				if (this.health === 0) {
 					this.die(true);
 					this.c.scores[shark] += 150;
-					this.c.sock.scoreChange();
+					this.c.sock.scoreChange(shark);
 				}
 			}
 		},
