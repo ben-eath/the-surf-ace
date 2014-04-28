@@ -19,6 +19,7 @@
 		this.boatSpawnSpeed = 0;
 		this.surferSpawnSpeed = 0;
 		this.currentLevelTime = 0;
+		this.theme = null;
 
 		this.states[this.state].init.call(this);
 	};
@@ -30,6 +31,7 @@
 				init: function() {
 					this.surferSpawnSpeed = 1000 * 3;
 					this.setSharksVisible(true);
+					this.loopMusic('resource/music/titletheme.ogg');
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt);
@@ -99,6 +101,7 @@
 			},
 			INTRO_START: {
 				init: function() {
+					this.loopMusic('resource/music/leveltheme.ogg');
 					this.age = 0;
 					this.setSharksVisible(false);
 					this.ben = this.createBen(true);
@@ -279,6 +282,7 @@
 			},
 			AFTER_3: {
 				init: function() {
+					this.loopMusic('resource/music/bosstheme.ogg');
 					this.age = 0;
 					this.ben = this.createBen(true);
 					this.dialogue = this.createDialogue("WHAT THE SURF? LOOKS LIKE IF YOU WANT SOMETHING DONE RIGHT, YOU HAVE TO SURF IT YOURSELF. I'M THE SURF ACE!");
@@ -326,6 +330,7 @@
 			},
 			VICTORY: {
 				init: function() {
+					this.loopMusic('resource/music/titletheme.ogg');
 					var sharkIds = [];
 					var maxScore = 0;
 					for (var i=0; i<this.c.sock.data.sharks.length; i++) {
@@ -350,6 +355,7 @@
 			},
 			GAME_OVER: {
 				init: function() {
+					this.loopMusic('resource/music/leveltheme.ogg');
 					this.c.sock.notifyGameOver();
 				},
 				update: function(dt) {
@@ -368,6 +374,12 @@
 				next: function() {
 				}
 			}
+		},
+		loopMusic: function(url) {
+			if(this.theme) this.theme.pause();
+			this.theme = new Audio(url);
+			this.theme.loop = true;
+			this.theme.play();
 		},
 		showServerPass: function(ctx) {
 			ctx.font = '20pt VT323';
