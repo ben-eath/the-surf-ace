@@ -326,6 +326,16 @@
 			},
 			VICTORY: {
 				init: function() {
+					var sharkIds = [];
+					var maxScore = 0;
+					for (var i=0; i<this.c.sock.data.sharks.length; i++) {
+						var sharkId = this.c.sock.data.sharks[i].obj.id;
+						if(this.c.scores[sharkId] >= maxScore) {
+							sharkIds.push(sharkId);
+						}
+					}
+					console.log('winning sharks: ' + sharkIds);
+					this.c.sock.notifyVictory(sharkIds);
 					this.setSharksVisible(false);
 				},
 				update: function(dt) {
@@ -340,6 +350,7 @@
 			},
 			GAME_OVER: {
 				init: function() {
+					this.c.sock.notifyGameOver();
 				},
 				update: function(dt) {
 				},

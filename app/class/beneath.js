@@ -29,7 +29,7 @@
 			y: 180
 		},
 		projectiles: 1,
-		health: 15,
+		health: 1,
 		shootTimer: 0,
 		invincible: 0,
 		getDistance: function(x, y, threshold) {
