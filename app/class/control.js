@@ -82,6 +82,7 @@
 						new SpriteSheet('./resource/orientation/orientation', 35, undefined, 0.2)
 					);
 					this.setSharksVisible(true);
+					this.age = 0;
 				},
 				update: function(dt) {
 					this.age += dt;
@@ -496,7 +497,7 @@
 			this.surferSpawnTime += dt;
 			this.boatSpawnTime += dt;
 			if (this.boatSpawnSpeed && this.boatSpawnTime >= this.boatSpawnSpeed) {
-				this.boatSpawnTime = -100 * Math.random();
+				this.boatSpawnTime = -Math.random()*100;
 				this.c.entities.create(Boat, {
 					center: {
 						x: Math.random() * (this.size.x - 50) + 25,
