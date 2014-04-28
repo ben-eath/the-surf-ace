@@ -50,7 +50,6 @@
 						id: 0,
 						colorMatrix: COLOR_MATRIX_RED
 					});
-					self.gameStarted = true;
 					break;
 			}
 		};

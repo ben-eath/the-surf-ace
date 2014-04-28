@@ -1,7 +1,5 @@
 ;(function(exports) {
 
-	var SURFER_SPAWN_SPEED = 1000;
-
 	exports.Ocean = function(game, settings) {
 		this.c = game.c;
 		initObject(this, settings);
@@ -32,16 +30,7 @@
 				this.size.y);
 		},
 		update: function(dt) {
-			this.time += dt;
-			if (this.time >= SURFER_SPAWN_SPEED) {
-				this.time = 0;
-				this.c.entities.create(Surfer, {
-					center: {
-						x: Math.random() * this.size.x,
-						y: -100
-					}
-				});
-			}
+
 		}
 	};
 

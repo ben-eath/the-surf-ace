@@ -40,6 +40,7 @@
 			},
 			yOffset: 73
 		});
+		this.zindex = Math.random();
 	};
 
 	exports.Surfer.prototype = {
@@ -51,7 +52,6 @@
 			x: 60,
 			y: 120
 		},
-		zindex: 0,
 		color: 'yellow',
 		serpentine: 0,
 		spriteNumber: 0,

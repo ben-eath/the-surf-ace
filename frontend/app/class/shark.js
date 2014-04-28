@@ -31,10 +31,14 @@
 
 		initObject(this, settings);
 
-		this.sprites[STATE_SWIM_SURFACE] = new SpriteSheet('./resource/shark_swim/shark', this.spriteMaxes[STATE_SWIM_SURFACE], settings.colorMatrix, 0.5);
-		this.sprites[STATE_SWIM_DEEP] = new SpriteSheet('./resource/shark_swim/shark', this.spriteMaxes[STATE_SWIM_DEEP], settings.colorMatrix, 0.5);
-		this.sprites[STATE_LAG_SURFACE] = new SpriteSheet('./resource/shark_swim/shark', this.spriteMaxes[STATE_LAG_SURFACE], settings.colorMatrix, 0.5);
-		this.sprites[STATE_CHOMPING] = new SpriteSheet('./resource/shark_bite/shark', this.spriteMaxes[STATE_CHOMPING], settings.colorMatrix, 0.5);
+		this.sprites = [
+			new SpriteSheet('./resource/shark_swim/shark', this.spriteMaxes[STATE_SWIM_SURFACE], settings.colorMatrix, 0.5),
+			new SpriteSheet('./resource/shark_swim/shark', this.spriteMaxes[STATE_SWIM_DEEP], settings.colorMatrix, 0.5),
+			new SpriteSheet('./resource/shark_lag/shark', this.spriteMaxes[STATE_LAG_SURFACE], settings.colorMatrix, 0.5),
+			new SpriteSheet('./resource/shark_bite/shark', this.spriteMaxes[STATE_CHOMPING], settings.colorMatrix, 0.5),
+		];
+
+		console.log(this.sprites);
 
 		this.boundingBox = this.c.collider.RECTANGLE;
 
@@ -56,11 +60,9 @@
 			x: 90,
 			y: 180
 		},
-		sprites: [null,null,null,null],
 		spriteMaxes: [39, 39, 1, 1],
 		speeds: [-0.5,3,-2,3],
 		zindexes: [-20, -50, -20, 20],
-		spriteNumber: 0,
 		chompTime: 0,
 		draw: function(ctx) {
 			for(var i = 0; i < this.sprites.length; i++) {
