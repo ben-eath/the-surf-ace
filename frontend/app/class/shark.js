@@ -11,7 +11,7 @@
 	var STATE_SWIM_DEEP = 1; // dived deep, swimming, move up
 	var STATE_LAG_SURFACE = 2; //on surface, not swimming, move back
 	var STATE_CHOMPING = 3; //in air, not swimming, leap forward, lasts 1 second
-  var STATE_SHOT = 4 //shot by a sharknet
+	var STATE_SHOT = 4; //shot by a sharknet
 
 	var DRIFT_SPEED = 2;
 	var DRIFT_PADDING = 30;
@@ -91,41 +91,41 @@
 			this.center.x += data.direction * this.speed.x * SHARK_SPEED_X * (dt/16.66);
 			this.center.y -= this.speeds[this.state] * this.speed.y * (dt/16.66);
 
-			if (this.center.x - this.size.x/2 < 0) { this.center.x = 0; } 
+			if (this.center.x - this.size.x/2 < 0) { this.center.x = 0; }
 			else if (this.center.x + this.size.x/2 > this.c.renderer._ctx.canvas.width) {this.center.x = this.c.renderer._ctx.canvas.width; }
 
-			if (this.center.y - this.size.y/2 < 0) { this.center.y = 0; } 
+			if (this.center.y - this.size.y/2 < 0) { this.center.y = 0; }
 			else if (this.center.y + this.size.y/2 > this.c.renderer._ctx.canvas.height) {this.center.y = this.c.renderer._ctx.canvas.height; }
 
 		},
 		calculateState: function(depth, dt) {
-      if(this.state !== STATE_SHOT) {
-        this.shotTime =
-      } else {
-        if(this.state == STATE_CHOMPING) {
-          if (this.chompTime < MAX_CHOMP_TIME) {
-            this.chompTime += dt;
-            return;
-          } else {
-            this.state = STATE_SWIM_SURFACE;
-          }
-        }
-        if(depth > 0.35) {
-          this.state = STATE_SWIM_DEEP;
-        } else if (depth < 0.25 && depth > -0.25 ) {
-          if (this.state == STATE_LAG_SURFACE) {
-            this.chompTime = 0;
-            this.state = STATE_CHOMPING;
-          } else {
-            this.state = STATE_SWIM_SURFACE;
-          }
-        } else if (depth < -0.35){
-          this.state = STATE_LAG_SURFACE;
-        }
-        if (this.state === undefined) {
-          this.state = STATE_SWIM_SURFACE;
-        }
-      }
+		if(this.state !== STATE_SHOT) {
+
+		} else {
+		if(this.state == STATE_CHOMPING) {
+			if (this.chompTime < MAX_CHOMP_TIME) {
+			this.chompTime += dt;
+			return;
+			} else {
+			this.state = STATE_SWIM_SURFACE;
+			}
+		}
+		if(depth > 0.35) {
+			this.state = STATE_SWIM_DEEP;
+		} else if (depth < 0.25 && depth > -0.25 ) {
+			if (this.state == STATE_LAG_SURFACE) {
+			this.chompTime = 0;
+			this.state = STATE_CHOMPING;
+			} else {
+			this.state = STATE_SWIM_SURFACE;
+			}
+		} else if (depth < -0.35){
+			this.state = STATE_LAG_SURFACE;
+		}
+		if (this.state === undefined) {
+			this.state = STATE_SWIM_SURFACE;
+		}
+		}
 		},
 		collision: function(other, type) {
 			if(other instanceof Surfer && this.state == STATE_CHOMPING) {
@@ -137,7 +137,9 @@
 					other.die(true);
 				}
 			}
-      if(other instanceof Sharknet)
+			if(other instanceof Sharknet) {
+
+			}
 		}
 	};
 

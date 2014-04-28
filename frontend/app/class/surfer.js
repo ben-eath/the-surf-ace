@@ -17,9 +17,9 @@
 		var suitcolor = [Math.random(), Math.random(), Math.random()];
 		var boardcolor = [Math.random(), Math.random(), Math.random()];
 		this.colorMatrix = [
-			[redness,  boardcolor[0],  suitcolor[0]],
-			[whiteness,  boardcolor[1],  suitcolor[1]],
-			[whiteness,  boardcolor[2],  suitcolor[2]]
+			[redness,	boardcolor[0],	suitcolor[0]],
+			[whiteness,	boardcolor[1],	suitcolor[1]],
+			[whiteness,	boardcolor[2],	suitcolor[2]]
 		];
 		this.serpentineSpeed = Math.random() * 0.1 + 0.01;
 		switch(Math.random() * 3) {
@@ -55,8 +55,8 @@
 		color: 'yellow',
 		serpentine: 0,
 		spriteNumber: 0,
-    shoots: false,
-    shootFrequency = 0.01
+		shoots: false,
+		shootFrequency: 0.01,
 		draw: function(ctx) {
 			if(!this.sprites.isReady()) return;
 			this.sprites.draw(ctx, this.center, this.size);
@@ -65,17 +65,17 @@
 			this.center.y += SPEED;
 			this.serpentine += this.serpentineSpeed;
 			this.center.x += Math.sin(this.serpentine) * SERPENTINE_AMOUNT;
-      
+
 			if (this.center.y > 1000) { //PLACEHOLDER
 				this.die(false);
 			}
-      if (this.shoots) {
-        if (Math.random < shootFrequency) {
-          this.c.entities.create(Sharknet, {
-            center: this.center
-          });
-        }
-      }
+			if (this.shoots) {
+				if (Math.random < shootFrequency) {
+					this.c.entities.create(Sharknet, {
+						center: this.center
+					});
+				}
+			}
 		},
 		die: function(showblood){
 			this.c.entities.destroy(this.shadow);
