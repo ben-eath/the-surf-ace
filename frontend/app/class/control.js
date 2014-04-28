@@ -78,8 +78,11 @@
 				},
 				update: function(dt) {
 					if(this.c.inputter.isPressed(68)){
-						this.changeState("INTRO_END");
+						this.next();
 					}
+				},
+				next: function() {
+					this.changeState('INTRO_END');
 				},
 				draw: function(ctx) {
 					this.showServerPass(ctx);
@@ -91,12 +94,16 @@
 				},
 				update: function(dt) {
 					if(this.c.inputter.isPressed(68)){
-						this.c.entities.all(DialogueBox)[0].dialogueUp = false;
-						this.c.entities.all(BenEath)[0].onScreen = false;
+						this.next();
 					}
+
 					if(this.c.entities.all(BenEath).length === 0) {
 						this.changeState('ROUND_1');
 					}
+				},
+				next: function() {
+					this.c.entities.all(DialogueBox)[0].dialogueUp = false;
+					this.c.entities.all(BenEath)[0].onScreen = false;
 				},
 				draw: function(ctx) {
 					this.showServerPass(ctx);
@@ -138,6 +145,11 @@
 		},
 		update: function(dt) {
 			this.states[this.state].update.call(this, dt);
+		},
+		next: function() {
+			if(this.states[this.state].next) {
+				this.states[this.state].next.call(this);
+			}
 		},
 		spawnSurferLoop: function(dt){
 			this.spawnSurferTime += dt;

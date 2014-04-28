@@ -29,6 +29,10 @@
 		});
 		socket.on('chomp', function(index) {
 			self.data.sharks[index].obj.chomp();
+
+			// Get rid of intro on chomp
+			var control = self.c.entities.all(Control)[0];
+			control.next();
 		});
 		socket.emit('joinRoom', 'computer');
 
