@@ -30,7 +30,6 @@
 				init: function() {
 					this.surferSpawnSpeed = 1000 * 3;
 					this.setSharksVisible(true);
-					this.changeState('VICTORY');
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt);
