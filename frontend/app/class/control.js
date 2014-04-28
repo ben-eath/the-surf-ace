@@ -3,12 +3,17 @@
 	// whether the game is running
 
 	var SURFER_SPAWN_SPEED = 1000 * 3;
+	var SCORE_PADDING = 70;
+	var SCORE_MARGIN = 40;
+	var SCORE_Y = 40;
+	var BOAT_SPAWN_SPEED = 1000 * 30;
 
 	exports.Control = function(game, settings) {
 		this.c = game.c;
 		initObject(this, settings);
 		this.state = "WAITING_FOR_PLAYERS";
 		this.spawnSurferTime = 0;
+		this.boatSpawnTime = 0;
 		this.fontLoadWait = 200; //LOL HAX
 	};
 
@@ -114,11 +119,11 @@
 
 				},
 				update: function(dt) {
-					this.spawnSurferTime += dt;
-					this.spawnSurferLoop(dt * 0.8);
+					this.spawnSurferLoop(dt * 1.5);
 				},
 				draw: function(ctx) {
 					this.showServerPass(ctx);
+					this.drawScores(ctx);
 				}
 			}
 		},
@@ -153,7 +158,16 @@
 		},
 		spawnSurferLoop: function(dt){
 			this.spawnSurferTime += dt;
-			if (this.spawnSurferTime >= SURFER_SPAWN_SPEED) {
+			this.boatSpawnTime += dt;
+			if (this.boatSpawnTime >= BOAT_SPAWN_SPEED) {
+				this.boatSpawnTime = 0;
+				this.c.entities.create(Boat, {
+					center: {
+						x: Math.random() * this.size.x,
+						y: 1
+					}
+				});
+			} else if (this.spawnSurferTime >= SURFER_SPAWN_SPEED) {
 				this.spawnSurferTime = 0;
 				this.c.entities.create(Surfer, {
 					center: {
@@ -170,6 +184,21 @@
 			ctx.fillText(str, this.center.x, this.center.y+3);
 			ctx.fillStyle = 'white';
 			ctx.fillText(str, this.center.x, this.center.y);
+		},
+		drawScores: function(ctx) {
+			var scores = this.c.scores;
+			var x = SCORE_MARGIN;
+			var y = this.size.y - SCORE_Y;
+
+			ctx.textAlign = 'left';
+			for (var i in scores) {
+				ctx.font = '30pt VT323';
+				ctx.fillStyle = 'black';
+				ctx.fillText("" + scores[i], x, y+3);
+				ctx.fillStyle = PLAYER_COLORS[i];
+				ctx.fillText("" + scores[i], x, y);
+				x += SCORE_PADDING;
+			}
 		}
 	};
 
