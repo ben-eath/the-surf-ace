@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <title>Sharky Shark Controller</title>
+  <style>
+    html, body {
+      height: 100%;
+    }
+    body {
+      position: relative;
+      color: white;
+      background: #03a;
+    }
+    input, button {
+      display: block;
+      width: 80%;
+      max-width: 240px;
+      margin: .6em auto 1em;
+      padding: .2em;
+      border: 1px solid #888;
+      outline: 0;
+      text-transform: uppercase;
+      text-align: center;
+      font-size: 24px;
+      font-family: VT323, monospace;
+    }
+    #joinRoom {
+      padding-bottom: 1em;
+    }
+    button {
+      padding: .4em;
+      border-radius: 10%/50%;
+      cursor: pointer;
+      background: #fff;
+    }
+    p {
+      height: 150px;
+      line-height: 150px;
+      margin: 0;
+      font-size: 48px;
+    }
+    #playScreen * {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      -o-user-select: none;
+      user-select: none;
+    }
+    #playScreen p {
+      display: none;
+    }
+    #playScreen.touchdown #playName,
+    #playScreen.touchdown #playScore,
+    #playScreen.touchup .thumbMessage {
+      display: block;
+    }
+    body>div {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: none;
+      font-family: VT323, monospace;
+      -moz-text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      text-align: center;
+    }
+    .inner {
+      position: absolute;
+      top: 50%; left: 0; right: 0;
+      height: 300px;
+      margin-top: -150px;
+    }
+    .lobbyScreen #lobbyScreen,
+    .waitScreen #waitScreen,
+    .playScreen #playScreen {
+      display: block;
+    }
+
+    #waitScreen {
+      z-index: 100;
+      top: 50%;
+      height: 180px;
+      left: 10%;
+      right: 10%;
+      margin-top: -90px;
+      border: 2px solid black;
+      background: white;
+      box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.8);
+    }
+    #waitScreen h1 {
+      height: 90px;
+      line-height: 90px;
+      font-size: 36px;
+      color: black;
+    }
+    #waitScreen span {
+      display: block;
+      font-size: 18px;
+    }
+    .waiting #button {
+      /* load animation, if we have time */
+    }
+  </style>
+  <link href='http://fonts.googleapis.com/css?family=VT323' rel='stylesheet' type='text/css'>
+</head>
+
+<body class="lobbyScreen">
+
+  <div id="lobbyScreen">
+    <div class="inner">
+      <h1>Ben Eath: the Surf Ace</h1>
+      <form id="joinRoom">
+        <input id="playerName" type="text" name="playerName" placeholder="name">
+        <input id="roomId" type="text" name="roomId" placeholder="Room ID">
+        <button id="button" type="submit" name="submit">Surf's up!</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="waitScreen">
+    <h1>Waiting <span id="waitReason"></span></h1>
+  </div>
+
+  <div class="touchup" id="playScreen">
+    <div class="inner">
+      <p class="thumbMessage">Tilt to move, tap to chomp!</p>
+      <p id="playName"></p>
+      <p id="playScore">0</p>
+    </div>
+  </div>
+
+  <script src="socket.io.js"></script>
+
+  <script>
+    // This entire thing seriously needs some (refactoring)
+    ;(function(global) {
+      var socket;
+
+      var connectSocket = function() {
+        socket = io.connect('http://surf.rl.io:9000', {
+          'reconnection delay': 400,
+          'max reconnection attempts': 10
+        });
+      };
+      connectSocket();
+
+      var joinRoom = function(nameValue, idValue) {
+        socket.emit('joinRoom', 'controller', nameValue, idValue);
+      };
+
+      navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+
+      var vibratePhone = function(duration) {
+        if (navigator.vibrate) {
+          if(typeof duration !== 'number') {
+            duration = 600;
+          }
+          navigator.vibrate(duration);
+        }
+      };
+
+      // DOM elements
+      var body = document.body;
+      var form = document.getElementById('joinRoom');
+      var playerName = document.getElementById('playerName');
+      var roomId = document.getElementById('roomId');
+      var button = document.getElementById('button');
+      var playScreen = document.getElementById('playScreen');
+      var scores = [
+        document.getElementById('playScore')
+      ];
+      var names = [
+        document.getElementById('playName')
+      ];
+
+      var reconnectName, reconnectId;
+
+      var shark = {
+        direction: 0,
+        depth: 0,
+        score: 0
+      };
+
+      var playerColors = [
+        '#f00',
+        '#00f',
+        '#0f0',
+        '#ff0',
+        '#f88',
+        '#80f',
+        '#fff',
+        '#000'
+      ];
+
+      var addClass = (function() {
+        if (body.classList) {
+          return function(el, className) {
+            el.classList.add(className);
+          };
+        } else {
+          return function(el, className) {
+            el.className += ' ' + className;
+          };
+        }
+      })();
+
+      var changeScreen = function(name) {
+        body.className = name + 'Screen';
+      };
+
+      // updated: now using dynamic latching, meaning that any value
+      // [-1, 1] can be sent instead of a finite set of values
+      var latchDegrees = 3;
+      var maxDegrees = 30;
+      var latch = latchDegrees / maxDegrees;
+
+      function bounded(angle, max) {
+        return Math.min(Math.max(angle, -max), max);
+      }
+
+      function latchCheck(measurement, metric, fn) {
+        // normalize to [-1, 1]
+        measurement = bounded(measurement, maxDegrees) / maxDegrees;
+        // only sends if their thumb is on the device
+        if (Math.abs(measurement - shark[metric]) >= latch) {
+          shark[metric] = measurement;
+          socket.emit(fn, measurement);
+        }
+      }
+
+      form.addEventListener("submit", function(e) {
+        var nameValue = playerName.value;
+        var idValue = roomId.value;
+
+        if (nameValue && idValue) {
+          addClass(body, 'waiting');
+          joinRoom(nameValue, idValue);
+          reconnectName = nameValue;
+          reconnectId = idValue;
+        }
+
+        e.preventDefault();
+        return false;
+      }, false);
+
+      socket.on('verifyRoom', function(roomExists, index) {
+        if(roomExists) {
+          changeScreen('wait');
+          changeScreen('play');
+          body.style.backgroundColor = playerColors[index];
+          names.forEach(function(el) {
+            el.textContent = reconnectName;
+          });
+
+          socket.on('updateScore', function(score) {
+            shark.score = score;
+            scores.forEach(function(el) {
+              el.textContent = score;
+            });
+            vibratePhone();
+          });
+
+          socket.on('startRound', function() {
+            changeScreen('play');
+            vibratePhone();
+          });
+
+          socket.on('finishRound', function() {
+            changeScreen('wait');
+            vibratePhone();
+          });
+
+          // Add other socket listeners here (blood, etc)
+          global.addEventListener('deviceorientation', function(eventData) {
+            // gamma: left-to-right tilt, right is positive;
+            // handles depth, -90deg to 90deg
+            var gamma = eventData.gamma;
+
+            // beta: front-to-back tilt, front is positive;
+            // handles direction, -90deg to 90deg
+            var beta = eventData.beta;
+
+            latchCheck(gamma, 'depth', 'setDepth');
+            latchCheck(beta, 'direction', 'setDirection');
+          }, false);
+
+          playScreen.addEventListener('mousedown', function() {
+            playScreen.className = 'touchdown';
+            socket.emit('chomp');
+          }, false);
+          playScreen.addEventListener('touchstart', function() {
+            playScreen.className = 'touchdown';
+            socket.emit('chomp');
+          }, false);
+          playScreen.addEventListener('pointerdown', function() {
+            playScreen.className = 'touchdown';
+            socket.emit('chomp');
+          }, false);
+          playScreen.addEventListener('mouseup', function() {
+            playScreen.className = 'touchup';
+          }, false);
+          playScreen.addEventListener('touchend', function() {
+            playScreen.className = 'touchup';
+          }, false);
+          playScreen.addEventListener('pointerup', function() {
+            playScreen.className = 'touchup';
+          }, false);
+        }
+      });
+
+      socket.on('error', function(e) {
+        socket.socket.connect();
+        joinRoom(reconnectName, reconnectId);
+      });
+
+      socket.on('disconnect', function() {
+        socket.socket.connect();
+        changeScreen('lobby');
+      });
+
+    })(this);
+  </script>
+
+</body>
+</html>
