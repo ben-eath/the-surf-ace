@@ -15,9 +15,11 @@
 		socket.on('updateDirection', function(index, dir) {
 			self.data.sharks[index].direction = dir;
 		});
-		socket.on('notifyNewPlayer', function(index) {
+		socket.on('notifyNewPlayer', function(index, name, score) {
+			this.c.scores[index] = score;
 			self.data.sharks[index] = {
 				depth: 0,
+				name: name,
 				direction: 0,
 				obj: self.c.entities.create(Shark, {
 					center: {x: 100, y: 100},
@@ -34,7 +36,7 @@
 			control.next();
 		});
 		socket.on("dropPlayer",  function(index) {
-			self.data.sharks[index].obj.tempRemoved = true;
+			this.c.entities.destroy(self.data.sharks[index]);
 		});
 		socket.emit('joinRoom', 'computer');
 
@@ -61,6 +63,7 @@
 				case 83:
 					var index = self.data.sharks.length;
 					self.data.sharks[index] = {
+						name: "MOCK",
 						depth: 0,
 						direction: 0,
 						obj: self.c.entities.create(Shark, {

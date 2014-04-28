@@ -1,7 +1,7 @@
 ;(function(exports) {
 	// stores things like:
 	// whether the game is running
-	var SCORE_PADDING = 70;
+	var SCORE_PADDING = 150;
 	var SCORE_MARGIN = 40;
 	var SCORE_Y = 40;
 	var DIALOGUE_MIN_TIME = 800;
@@ -131,6 +131,9 @@
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt);
+					if(this.c.inputter.isPressed(68)){
+						this.timer = this.currentLevelTime;
+					}
 				},
 				draw: function(ctx) {
 					this.showServerPass(ctx);
@@ -149,7 +152,7 @@
 				init: function() {
 					this.age = 0;
 					this.ben = this.createBen(true);
-					this.dialogue = this.createDialogue("THOSE RAUNCHOUS SHARKS ARE HARSHING MY SURF! GET THEM, DUDES AND DUDETTES!");
+					this.dialogue = this.createDialogue("TOTALLY NOT TUBULAR! ALL MY SURF BROS GETTING ATE. CALL THE COAST GUARD!");
 					this.setSharksVisible(false);
 				},
 				update: function(dt) {
@@ -157,13 +160,14 @@
 					if(this.c.inputter.isPressed(68)){
 						this.next();
 					}
+					if(this.c.entities.all(BenEath).length === 0){
+						this.changeState('ROUND_2');
+					}
 				},
 				next: function() {
 					if(this.age < DIALOGUE_MIN_TIME) return;
 					this.ben.onScreen = false;
-					if(this.c.entities.all(BenEath).length === 0){
-						this.changeState('ROUND_2');
-					}
+
 				},
 				draw: function(ctx) {
 					this.showServerPass(ctx);
@@ -180,6 +184,9 @@
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt);
+					if(this.c.inputter.isPressed(68)){
+						this.timer = this.currentLevelTime;
+					}
 				},
 				draw: function(ctx) {
 					this.showServerPass(ctx);
@@ -198,7 +205,7 @@
 				init: function() {
 					this.age = 0;
 					this.ben = this.createBen(true);
-					this.dialogue = this.createDialogue("TOTALLY NOT TUBULAR! ALL MY SURF BROS GETTING ATE. CALL THE COAST GUARD!");
+					this.dialogue = this.createDialogue("THOSE RAUNCHOUS SHARKS ARE HARSHING MY SURF! GET THEM, DUDES AND DUDETTES!");
 					this.setSharksVisible(false);
 				},
 				update: function(dt) {
@@ -206,13 +213,14 @@
 					if(this.c.inputter.isPressed(68)){
 						this.next();
 					}
+					if(this.c.entities.all(BenEath).length === 0){
+						this.changeState('ROUND_3');
+					}
 				},
 				next: function() {
 					if(this.age < DIALOGUE_MIN_TIME) return;
 					this.ben.onScreen = false;
-					if(this.c.entities.all(BenEath).length === 0){
-						this.changeState('ROUND_3');
-					}
+
 				},
 				draw: function(ctx) {
 					this.showServerPass(ctx);
@@ -229,6 +237,9 @@
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt);
+					if(this.c.inputter.isPressed(68)){
+						this.timer = this.currentLevelTime;
+					}
 				},
 				draw: function(ctx) {
 					this.drawTimer(ctx);
@@ -255,10 +266,13 @@
 					if(this.c.inputter.isPressed(68)){
 						this.next();
 					}
+					if(this.c.entities.all(BenEath).length === 0){
+						this.changeState('BOSS');
+					}
 				},
 				next: function() {
 					if(this.age < DIALOGUE_MIN_TIME) return;
-					this.changeState('BOSS');
+					this.ben.onScreen = false;
 				},
 				draw: function(ctx) {
 					this.showServerPass(ctx);
@@ -429,9 +443,9 @@
 			for (var j in this.drawnScores) {
 				ctx.font = '30pt VT323';
 				ctx.fillStyle = 'black';
-				ctx.fillText("" + this.drawnScores[j], x, y+3);
+				ctx.fillText(this.c.sock.data.sharks[i].name + ": " + this.drawnScores[j], x, y+3);
 				ctx.fillStyle = PLAYER_COLORS[j];
-				ctx.fillText("" + this.drawnScores[j], x, y);
+				ctx.fillText(this.c.sock.data.sharks[i].name + ": " + this.drawnScores[j], x, y);
 				x += SCORE_PADDING;
 			}
 		}

@@ -1,6 +1,7 @@
 ;(function(exports){
 
-	var FLY_SPEED = 5;
+	var FIGHT_SPEED = 5;
+	var FLY_SPEED = 10;
 	var BOB_STRENGTH = 1;
 	var BOB_SPEED = 0.04;
 	var FEAR_THRESHOLD = 200;
@@ -18,8 +19,8 @@
 	};
 
 	function distance(x1,y1,x2,y2) {
-		var distance = Math.sqrt(Math.pow(Math.abs(x1-x2), 2) + Math.pow(Math.abs(y1-y2), 2));
-		return distance;
+		var dist = Math.sqrt(Math.pow(Math.abs(x1-x2), 2) + Math.pow(Math.abs(y1-y2), 2));
+		return dist;
 	}
 
 	exports.BenEath.prototype = {
@@ -74,12 +75,12 @@
 				theta += BOB_SPEED;
 				vector = this.getDistance(this.center.x, this.center.y, FEAR_THRESHOLD);
 				if (vector) {
-					this.center.x -= (FLY_SPEED)*(vector.x);
-					this.center.y -= (FLY_SPEED)*(vector.y);
+					this.center.x -= (FIGHT_SPEED)*(vector.x);
+					this.center.y -= (FIGHT_SPEED)*(vector.y);
 				}
 				var d = distance(this.center.x, this.center.y, newX, newY);
-				this.center.x += (newX - this.center.x) * FLY_SPEED / ((d)+0.01);
-				this.center.y += (newY - this.center.y) * FLY_SPEED / ((d)+0.01);
+				this.center.x += (newX - this.center.x) * FIGHT_SPEED / ((d)+0.01);
+				this.center.y += (newY - this.center.y) * FIGHT_SPEED / ((d)+0.01);
 				this.shootTimer += dt;
 				if (this.invincible > 0) {
 					this.invincible -= dt;
@@ -87,7 +88,7 @@
 				} else {
 					this.invincible = 0;
 				}
-					
+
 				if (this.shootTimer > SHOOT_TIMER_MAX) {
 					this.shootTimer = 0;
 					var baseTheta = Math.random() * 2 * Math.PI;
@@ -103,7 +104,7 @@
 							numSprites: 29
 						});
 					}
-				}	
+				}
 			}
 
 		},

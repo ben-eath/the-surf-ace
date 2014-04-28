@@ -37,7 +37,6 @@
 		this.state = settings.state || 0;
 		this.c.scores[settings.id] = 0;
 
-		this.tempremoved = false;
 		this.temphidden = false;
 
 		initObject(this, settings);
@@ -78,7 +77,7 @@
 		chompTime: 0,
 		blinkTime: 0,
 		draw: function(ctx) {
-			if(this.tempremoved || this.temphidden) return;
+			if(this.temphidden) return;
 			for(var i = 0; i < this.sprites.length; i++) {
 				if(!this.sprites[i].isReady()) return;
 			}
@@ -95,7 +94,7 @@
 			// );
 		},
 		update: function(dt) {
-			if(this.tempremoved || this.temphidden) return;
+			if(this.temphidden) return;
 			var data = this.c.sock.getSharkData(this.id);
 
 			this.calculateState(data.depth, dt);
@@ -121,7 +120,7 @@
 			else if (this.center.y + this.size.y/2 > this.c.renderer._ctx.canvas.height) {this.center.y = this.c.renderer._ctx.canvas.height - this.size.y/2; }
 		},
 		chomp: function() {
-			if(this.tempremoved || this.temphidden) return;
+			if(this.temphidden) return;
 			if (this.state === STATE_CHOMPING || this.chompCooldown < MAX_CHOMP_COOLDOWN) return;
 			this.chompTime = 0;
 			this.chompCooldown = 0;
@@ -159,7 +158,7 @@
 			}
 		},
 		collision: function(other, type) {
-			if(this.tempremoved || this.temphidden) return;
+			if(this.temphidden) return;
 			if(other instanceof Surfer && this.state == STATE_CHOMPING) {
 				if(
 					other.center.y < this.center.y &&
@@ -196,7 +195,7 @@
 					other.center.x > this.center.x - this.size.x / 3
 				) {
 					other.hurt(this); //ben handles score
-				}		
+				}
 			}
 
 		}
