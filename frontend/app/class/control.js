@@ -30,10 +30,14 @@
 				update: function(dt) {
 					this.spawnSurferLoop(dt * 3);
 					this.fontLoadWait -= dt;
-					if ((this.c.sock.gameStarted || this.c.inputter.isPressed(68))) {
-						this.clearScreen();
-						this.changeState("INTRO_START");
+					if ((this.c.inputter.isPressed(68))) {
+						this.next();
 					}
+				},
+				next: function() {
+					this.clearScreen();
+					this.changeState("INTRO_START");
+					this.c.sock.gameStarted = true;
 				},
 				draw: function(ctx){
 					if(this.fontLoadWait < 0) { //LOL HAX
@@ -52,6 +56,15 @@
 					ctx.fillText('Server Password: ' + roomID, this.center.x, this.center.y+123);
 					ctx.fillStyle = 'white';
 					ctx.fillText('Server Password: ' + roomID, this.center.x, this.center.y+120);
+
+					if(this.c.sock.data.sharks && this.c.sock.data.sharks.length) {
+						var nPlayers = this.c.sock.data.sharks.length;
+						var text = nPlayers + " players. Tap to start.";
+						ctx.fillStyle = 'black';
+						ctx.fillText('' + text, this.center.x, this.center.y+173);
+						ctx.fillStyle = '#ff0';
+						ctx.fillText('' + text, this.center.x, this.center.y+170);
+					}
 				}
 			},
 			INTRO_START: {
@@ -108,12 +121,11 @@
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
 					if (this.timer > 60000) {
-						this.next();
+						this.changeState('AFTER_1');
+						this.clearScreen();
 					}
 				},
 				next: function() {
-					this.changeState('AFTER_1');
-					this.clearScreen();
 				}
 			},
 			AFTER_1: {
@@ -148,12 +160,11 @@
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
 					if (this.timer > 120000) {
-						this.next();
+						this.changeState('AFTER_2');
+						this.clearScreen();
 					}
 				},
 				next: function() {
-					this.changeState('AFTER_2');
-					this.clearScreen();
 				}
 			},
 			AFTER_2: {
@@ -188,12 +199,11 @@
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
 					if (this.timer > 120000) {
-						this.next();
+						this.changeState('AFTER_3');
+						this.clearScreen();
 					}
 				},
 				next: function() {
-					this.changeState('AFTER_3');
-					this.clearScreen();
 				}
 			},
 			AFTER_3: {

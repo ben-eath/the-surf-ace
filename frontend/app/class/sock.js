@@ -25,7 +25,6 @@
 					colorMatrix: SHARK_COLOR_MATRICES[index]
 				})
 			};
-			self.gameStarted = true;
 		});
 		socket.on('chomp', function(index) {
 			self.data.sharks[index].obj.chomp();
