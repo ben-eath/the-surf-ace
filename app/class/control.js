@@ -484,7 +484,7 @@
 			this.surferSpawnTime += dt;
 			this.boatSpawnTime += dt;
 			if (this.boatSpawnSpeed && this.boatSpawnTime >= this.boatSpawnSpeed) {
-				this.boatSpawnTime = 0;
+				this.boatSpawnTime = -100 * Math.random();
 				this.c.entities.create(Boat, {
 					center: {
 						x: Math.random() * (this.size.x - 50) + 25,
