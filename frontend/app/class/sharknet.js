@@ -21,8 +21,8 @@
 
 	exports.Sharknet.prototype = {
 		size: {
-			x: 128,
-			y: 128
+			x: 100,
+			y: 100
 		},
 		speed: {
 			x: 5,
