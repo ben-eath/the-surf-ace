@@ -92,7 +92,13 @@
 		getSharkData: function(sharkID) {
 			return this.data.sharks[sharkID];
 		},
-		gameStarted: false
+		gameStarted: false,
+		scoreChange: function(shark){
+			this.socket.emit("updateScore",
+				shark.id,
+				this.c.scores[shark.id]
+			);
+		}
 	};
 	exports.Sock = Sock;
 })(window);

@@ -165,6 +165,7 @@
 					other.center.x > this.center.x - this.size.x / 3
 				) {
 					this.c.scores[this.id] += 1;
+					this.c.sock.scoreChange();
 					other.die(true);
 				}
 			}
@@ -183,7 +184,7 @@
 					other.center.x < this.center.x + this.size.x / 3 &&
 					other.center.x > this.center.x - this.size.x / 3
 				) {
-				other.hurt();
+				other.hurt(this);
 				}
 			}
 
