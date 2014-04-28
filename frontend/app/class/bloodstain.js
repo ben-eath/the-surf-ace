@@ -32,12 +32,6 @@
 				vserp: Math.random() * 0.03 + 0.003
 			});
 		}
-		this.color = {
-			r: 100,
-			g: 0,
-			b: 0,
-			a: 1
-		};
 	};
 
 	exports.Bloodstain.prototype = {

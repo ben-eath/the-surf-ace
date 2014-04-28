@@ -3,10 +3,12 @@
 	var SPEED = 1;
 	var SERPENTINE_AMOUNT = 0.3;
 	var SPRITES_MAX = 1;
+
+	var SHOOT_TIMER_MAX = 3000;
 	var getDirectionToNearestShark = function(center, sharks) {
 		var oldSharkSqDist = Infinity;
 		var finalSharkDir = {x: 5, y: 0};
-		for (shark in sharks) {
+		for (var shark in sharks) {
 			var sharkDistX = sharks[shark].center.x - center.x;
 			var sharkDistY = sharks[shark].center.y - center.y;
 			var newSharkSqDist = Math.pow(sharkDistX, 2) + Math.pow(sharkDistY, 2);
@@ -19,7 +21,7 @@
 
 		}
 		return finalSharkDir;
-	}
+	};
 
 	exports.Boat = function(game, settings) {
 		this.c = game.c;
@@ -42,13 +44,16 @@
 		switch(Math.random() * 3) {
 
 		}
-		this.sprites = new SpriteSheet('./resource/boat', SPRITES_MAX, this.colorMatrix);
+		this.sprites = new SpriteSheet('./resource/boat/boat', SPRITES_MAX, this.colorMatrix);
+
+		this.direction = 1;
 
 		this.shadow = this.c.entities.create(Shadow, {
 			obj: this,
-			src: 'board.png',
+			src: 'surfboard.png',
 			size: {
 				x: this.size.x * 1.5,
+
 				y: this.size.y * 2.2
 			},
 			yOffset: 73
@@ -69,48 +74,50 @@
 		color: 'yellow',
 		serpentine: 0,
 		spriteNumber: 0,
-		shootFrequency: 0.01,
+		shootTimer: 0,
 		invincible: 0,
 		draw: function(ctx) {
 			if(!this.sprites.isReady()) return;
-			this.sprites.draw(ctx, this.center, this.size);
+			if(this.invincible % 100 < 50) {
+				this.sprites.draw(ctx, this.center, this.size);
+			}
 		},
 		update: function(dt) {
-			this.center.y += SPEED;
+			this.center.y += SPEED * this.direction;
 			this.serpentine += this.serpentineSpeed;
 			this.center.x += Math.sin(this.serpentine) * SERPENTINE_AMOUNT;
-      			if (this.invincible > 0) {
+			if (this.invincible > 0) {
 				this.invincible -= dt;
 			} else {
 				this.invincible = 0;
 			}
-			if (this.center.y > 1000) { //PLACEHOLDER
-				this.die(false);
+			if (this.center.y > this.c.renderer._ctx.canvas.height - this.size.y || this.center.y < 0) {
+				this.direction *= -1;
 			}
-			if (Math.random < shootFrequency) {
+			this.shootTimer += dt;
+			if (this.shootTimer > SHOOT_TIMER_MAX) {
+				this.shootTimer = 0;
 				this.c.entities.create(Sharknet, {
 					center: this.center,
-					speed: nearestSharkSpeed(this.center, c.entities.all(Shark))
-					}
+					speed: getDirectionToNearestShark(this.center, this.c.entities.all(Shark))
 				});
 			}
 		},
 		hurt: function() {
-			if (this.invincible == 0){
+			if (this.invincible === 0){
 				this.health -= 1;
 				this.invincible = 1000;
-				if (this.health == 0) {
-					this.die(true);	
+				if (this.health === 0) {
+					this.die(true);
 				}
 			}
-		}
+		},
 		die: function(showblood){
 			this.c.entities.destroy(this.shadow);
 			this.c.entities.destroy(this);
 			if(showblood) {
 				this.c.entities.create(Bloodstain, {
-					center: this.center
-
+					center: this.center,
 				});
 			}
 		}

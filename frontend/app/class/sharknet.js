@@ -1,31 +1,34 @@
 ;(function(exports) {
 
 	var SPRITES_MAX = 29;
+	var MIN_EFFECTIVENESS = -1000;
 
 	exports.Sharknet = function(game, settings) {
 		this.c = game.c;
 		initObject(this, settings);
 		this.boundingBox = this.c.collider.RECTANGLE;
 
-		this.sprites = new SpriteSheet('./resource/net', SPRITES_MAX, this.colorMatrix);
+		this.center = {
+			x: settings.center.x,
+			y: settings.center.y
+		};
+		this.hasRunColorMatrix = false;
+
+		this.sprites = new SpriteSheet('./resource/net/net', SPRITES_MAX, this.colorMatrix);
 
 		this.zindex = 100;
 	};
 
 	exports.Sharknet.prototype = {
-		center: {
-			x: 100,
-			y: 0
-		},
 		size: {
-			x: 8,
-			y: 12
+			x: 128,
+			y: 128
 		},
 		speed: {
 			x: 5,
 			y: 5
 		},
-		effectiveness: 6000,
+		effectiveness: 500,
 		color: 'yellow',
 		spriteNumber: 0,
 		draw: function(ctx) {
@@ -35,13 +38,19 @@
 		update: function(dt) {
 			this.center.y += this.speed.y * (dt/16.66);
 			this.center.x += this.speed.x * (dt/16.66);
-			if (effectiveness > 0) {
-      				this.effectiveness -= dt;
-			} else {
-				this.effectiveness = 0;
+			this.effectiveness -= dt;
+
+			if (this.effectiveness <= 0) {
+				if (!this.hasRunColorMatrix) {
+					this.hasRunColorMatrix = true;
+					this.zindex = -60;
+					this.speed = {
+						x: this.speed.x / 2,
+						y: 1
+					};
+				}
 			}
-			if (this.center.y > 1000 || this.center.x > 2000 || this.center.x < -100 || this.center.y < -100
-			) { //PLACEHOLDER
+			if (this.effectiveness <= MIN_EFFECTIVENESS) {
 				this.die();
 			}
 		},
