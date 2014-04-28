@@ -34,9 +34,15 @@
 				update: function(dt) {
 					this.spawnSurferLoop(dt);
 					this.fontLoadWait -= dt;
-					if ((this.c.sock.gameStarted || this.c.inputter.isPressed(68))) {
+					if ((this.c.inputter.isPressed(68))) {
+						this.next();
+					}
+				},
+				next: function() {
+					if(this.c.sock.data.sharks && this.c.sock.data.sharks.length) {
 						this.clearScreen();
 						this.changeState("INTRO_START");
+						this.c.sock.gameStarted = true;
 					}
 				},
 				draw: function(ctx){
@@ -56,6 +62,15 @@
 					ctx.fillText('Server Password: ' + roomID, this.center.x, this.center.y+123);
 					ctx.fillStyle = 'white';
 					ctx.fillText('Server Password: ' + roomID, this.center.x, this.center.y+120);
+
+					if(this.c.sock.data.sharks && this.c.sock.data.sharks.length) {
+						var nPlayers = this.c.sock.data.sharks.length;
+						var text = nPlayers + " players. Tap to start.";
+						ctx.fillStyle = 'black';
+						ctx.fillText('' + text, this.center.x, this.center.y+173);
+						ctx.fillStyle = '#ff0';
+						ctx.fillText('' + text, this.center.x, this.center.y+170);
+					}
 				}
 			},
 			INTRO_START: {
@@ -109,6 +124,7 @@
 					this.surferSpawnSpeed = 1000 * 2;
 					this.boatSpawnSpeed = 0;
 					this.setSharksVisible(true);
+					this.timer = 0;
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt);
@@ -117,13 +133,13 @@
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
 					this.drawTimer(ctx);
-					if (this.timer > this.currentLevelTime) {
-						this.next();
-					}
+					this.next();
 				},
 				next: function() {
-					this.changeState('AFTER_1');
-					this.clearScreen();
+					if (this.timer > this.currentLevelTime) {
+						this.changeState('AFTER_1');
+						this.clearScreen();
+					}
 				}
 			},
 			AFTER_1: {
@@ -154,6 +170,7 @@
 					this.boatSpawnSpeed = 1000 * 15;
 					this.currentLevelTime = 120000;
 					this.setSharksVisible(true);
+					this.timer = 0;
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt);
@@ -162,13 +179,13 @@
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
 					this.drawTimer(ctx);
-					if (this.timer > this.currentLevelTime) {
-						this.next();
-					}
+					this.next();
 				},
 				next: function() {
-					this.changeState('AFTER_2');
-					this.clearScreen();
+					if (this.timer > this.currentLevelTime) {
+						this.changeState('AFTER_2');
+						this.clearScreen();
+					}
 				}
 			},
 			AFTER_2: {
@@ -199,6 +216,7 @@
 					this.boatSpawnSpeed = 1000 * 8;
 					this.currentLevelTime = 120000;
 					this.setSharksVisible(true);
+					this.timer = 0;
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt);
@@ -207,13 +225,13 @@
 					this.drawTimer(ctx);
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
-					if (this.timer > this.currentLevelTime) {
-						this.next();
-					}
+					this.next();
 				},
 				next: function() {
-					this.changeState('AFTER_3');
-					this.clearScreen();
+					if (this.timer > this.currentLevelTime) {
+						this.changeState('AFTER_3');
+						this.clearScreen();
+					}
 				}
 			},
 			AFTER_3: {
@@ -303,7 +321,6 @@
 			this.states[this.state].update.call(this, dt);
 		},
 		next: function() {
-			this.timer = 0;
 			if(this.states[this.state].next) {
 				this.states[this.state].next.call(this);
 			}
