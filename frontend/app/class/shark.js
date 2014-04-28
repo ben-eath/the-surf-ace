@@ -184,7 +184,7 @@
 					other.center.x < this.center.x + this.size.x / 3 &&
 					other.center.x > this.center.x - this.size.x / 3
 				) {
-				other.hurt(this); //boat handles score
+					other.hurt(this); //boat handles score
 				}
 			}
 

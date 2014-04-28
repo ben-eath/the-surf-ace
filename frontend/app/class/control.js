@@ -131,9 +131,6 @@
 				}
 			}
 		},
-		showScores: function(ctx) {
-
-		},
 		showServerPass: function(ctx) {
 			ctx.font = '20pt VT323';
 			ctx.fillStyle = 'black';
