@@ -16,11 +16,6 @@
 			x: 800,
 			y: 600
 		},
-		color: {
-			r: 0,
-			g: 68,
-			b: 100
-		},
 		time: 0,
 		draw: function(ctx) {
 			this.spriteSheet.draw(ctx, this.center, this.size);

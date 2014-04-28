@@ -8,6 +8,7 @@
 		this.c.renderer._ctx.imageSmoothingEnabled = false;
 
 		this.c.entities.create(Ocean, {size: { x:width, y:height }, center: {x: width / 2, y: height / 2}});
+		this.c.entities.create(OceanSurface, {size: { x:width, y:height }, center: {x: width / 2, y: height / 2}});
 
 		this.c.entities.create(Surfer, {});
 
