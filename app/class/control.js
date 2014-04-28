@@ -59,9 +59,9 @@
 					//SERVER PASS
 					ctx.fillStyle = 'black';
 					var roomID = this.c.sock.roomID === null ? "Connecting to server..." : this.c.sock.roomID;
-					ctx.fillText('Server Password: ' + roomID, this.center.x, this.center.y+123);
-					ctx.fillStyle = 'white';
-					ctx.fillText('Server Password: ' + roomID, this.center.x, this.center.y+120);
+					ctx.fillText('Room ID: ' + roomID, this.center.x, this.center.y+123);
+					ctx.fillStyle = 'yellow';
+					ctx.fillText('Room ID: ' + roomID, this.center.x, this.center.y+120);
 
 					if(this.c.sock.data.sharks && this.c.sock.data.sharks.length) {
 						var nPlayers = this.c.sock.data.sharks.length;
