@@ -175,7 +175,7 @@
 				init: function() {
 					this.age = 0;
 					this.ben = this.createBen(true);
-					this.dialogue = this.createDialogue("TOTALLY NOT TUBULAR! ALL MY SURF BROS GETTING ATE. CALL THE COAST GUARD!");
+					this.dialogue = this.createDialogue("TOTALLY NOT TUBULAR! ALL MY SURF BROS GETTIN' ATE. CALL THE COAST GUARD!");
 					this.setSharksVisible(false);
 				},
 				update: function(dt) {
