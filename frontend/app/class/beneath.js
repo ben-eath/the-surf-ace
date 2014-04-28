@@ -27,8 +27,8 @@
 			x: 180,
 			y: 180
 		},
-		projectiles: 1;
-		health: 15;
+		projectiles: 1,
+		health: 15,
 		shootTimer: 0,
 		invincible: 0,
 		getDistance: function(x, y, threshold) {
@@ -84,7 +84,7 @@
 				if (this.shootTimer > SHOOT_TIMER_MAX) {
 					this.shootTimer = 0;
 					var baseTheta = Math.random() * 2 * Math.PI;
-					for (var i = 0; i < this.projectiles;i++;) {
+					for (var i = 0; i < this.projectiles;i++) {
 						var curAngle = (i * 2 * Math.PI/this.projectiles);
 						this.c.entities.create(Sharknet,
 						{

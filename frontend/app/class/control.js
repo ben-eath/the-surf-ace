@@ -76,7 +76,7 @@
 			INTRO_START: {
 				init: function() {
 					this.age = 0;
-					this.ben = this.createBen();
+					this.ben = this.createBen(true);
 					this.dialogue = this.createDialogue("SUP, DUDES AND DUDETTES! I'M BEN, AND I'M THE ACE SURFER THIS SIDE OF THE SHORELINE. LET'S RIDE SOME WAVES AND CATCH SOME SUN!");
 					this.setSharksVisible(false);
 				},
@@ -145,7 +145,7 @@
 			AFTER_1: {
 				init: function() {
 					this.age = 0;
-					this.ben = this.createBen();
+					this.ben = this.createBen(true);
 					this.dialogue = this.createDialogue("THOSE RAUNCHOUS SHARKS ARE HARSHING MY SURF! GET THEM, DUDES AND DUDETTES!");
 					this.setSharksVisible(false);
 				},
@@ -191,7 +191,7 @@
 			AFTER_2: {
 				init: function() {
 					this.age = 0;
-					this.ben = this.createBen();
+					this.ben = this.createBen(true);
 					this.dialogue = this.createDialogue("TOTALLY NOT TUBULAL! ALL MY SURF BROS GETTING ATE. CALL THE COAST GUARD!");
 					this.setSharksVisible(false);
 				},
@@ -237,7 +237,7 @@
 			AFTER_3: {
 				init: function() {
 					this.age = 0;
-					this.ben = this.createBen();
+					this.ben = this.createBen(true);
 					this.dialogue = this.createDialogue("WHAT THE SURF? LOOKS LIKE IF YOU WANT SOMETHING DONE RIGHT, YOU HAVE TO SURF IT YOURSELF. I'M THE SURF ACE!");
 					this.setSharksVisible(false);
 				},
@@ -259,6 +259,7 @@
 				init: function() {
 					this.dialogue.dialogueUp = false;
 					this.ben.onScreen = false;
+					this.ben = this.createBen(false);
 					this.boatSpawnSpeed = 0;
 					this.surferSpawnSpeed = 0;
 					this.setSharksVisible(true);
@@ -339,7 +340,7 @@
 				finalY: this.size.y - 200
 			});
 		},
-		createBen: function() {
+		createBen: function(displayOnly) {
 			var width = this.size.x;
 			var height = this.size.y;
 			return this.c.entities.create(BenEath, {
@@ -358,7 +359,7 @@
 					},
 				],
 				onScreen: true,
-				displayOnly: true
+				displayOnly: displayOnly
 			});
 		},
 		highestScore: function() {
