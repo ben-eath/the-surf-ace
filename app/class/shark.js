@@ -172,6 +172,7 @@
 					this.c.scores[this.id] += 50;
 					this.c.sock.scoreChange(this);
 					other.die(true);
+					this.c.jukebox.playChomp();
 				}
 			}
 			if (other instanceof Sharknet && this.state != STATE_SHOT && other.effectiveness <= 0) {
@@ -191,6 +192,7 @@
 				this.c.sock.scoreChange(this);
 				this.blinkTime = 0;
 				this.state = STATE_SHOT;
+				this.c.jukebox.playHurt();
 
 			}
 			if (other instanceof Boat && this.state == STATE_CHOMPING) {

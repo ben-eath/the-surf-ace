@@ -107,7 +107,7 @@
 					speed: getDirectionToNearestShark(this.center, this.c.entities.all(Shark)),
 					type: "net",
 					numSprites: 29,
-				        lethality: 100	
+					lethality: 100
 				});
 			}
 
@@ -123,6 +123,7 @@
 		},
 		hurt: function(shark) {
 			if (this.invincible === 0){
+				this.c.jukebox.playChomp();
 				this.health -= 1;
 				this.invincible = 1000;
 				if (this.health === 0) {
