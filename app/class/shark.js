@@ -187,6 +187,7 @@
 				if (this.c.scores[this.id] < 0) {
 					this.state = STATE_DEAD;
 					this.c.scores[this.id] = 0;
+					this.c.sock.notifyDeath(this.id);
 					return;
 				}
 				this.c.sock.scoreChange(this);

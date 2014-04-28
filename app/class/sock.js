@@ -100,6 +100,11 @@
 				shark.id,
 				this.c.scores[shark.id]
 			);
+		},
+		notifyDeath: function(sharkId) {
+			this.socket.emit("notifyDeath",
+				sharkId
+			);
 		}
 	};
 	exports.Sock = Sock;
