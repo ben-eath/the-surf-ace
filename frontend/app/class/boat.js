@@ -6,7 +6,7 @@
 
 	var SHOOT_TIMER_MAX = 3000;
 
-	var MAX_AGE = 30000;
+	var MAX_AGE = 60000;
 
 	var getDirectionToNearestShark = function(center, sharks) {
 		var oldSharkSqDist = Infinity;
@@ -108,6 +108,10 @@
 			}
 
 			//prevent infinite boats
+			if(this.age > MAX_AGE - 2000) {
+				this.zindex = -60;
+				this.shootTimer = -9999;
+			}
 			this.age += dt;
 			if (this.age > MAX_AGE) {
 				this.die(false);
