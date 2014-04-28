@@ -148,8 +148,6 @@
 					other.center.x > this.center.x - this.size.x / 3
 				) {
 					other.die(true);
-					this.blinkTime = 0;
-					this.state = STATE_SHOT;
 				}
 			}
 		}
