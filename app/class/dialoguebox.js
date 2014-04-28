@@ -38,9 +38,9 @@
 			}
 		},
 		draw: function(ctx) {
-			var textX = PADDING_LEFT + DIALOGUE_PADDING;
+			var textX = this.size.y + DIALOGUE_PADDING;
 			var textY = (this.center.y) + DIALOGUE_PADDING;
-			var textW = this.size.x - PADDING_LEFT - DIALOGUE_PADDING;
+			var textW = this.size.x - this.size.y - DIALOGUE_PADDING;
 			ctx.fillStyle = 'rgba(0,0,0,0.35)';
 			ctx.fillRect(this.center.x - this.size.x / 2, this.center.y, this.size.x , this.size.y);
 			ctx.font = '30pt VT323';
@@ -51,11 +51,11 @@
 			wrapText(ctx, "\n" +this.text, textX, textY, textW, 38);
 			this.dialoguePortrait.draw(ctx,
 				{
-					x: PADDING_LEFT / 2,
+					x: this.size.y / 2 + DIALOGUE_PADDING,
 					y: this.center.y + this.size.y / 2
 				},
 				{
-					x: PADDING_LEFT,
+					x: this.size.y - (DIALOGUE_PADDING * 2),
 					y: this.size.y - (DIALOGUE_PADDING * 2)
 				}
 			);
