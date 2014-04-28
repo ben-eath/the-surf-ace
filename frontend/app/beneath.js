@@ -18,6 +18,7 @@
 	window.addEventListener('load', function() {
 		game = new Game();
 		theme = new Audio('resource/theme.ogg');
+		theme.loop = true;
 		theme.play();
 	});
 })();
