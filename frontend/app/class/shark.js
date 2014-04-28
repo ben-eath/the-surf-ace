@@ -162,7 +162,26 @@
 					this.c.scores[this.id] += 1;
 					other.die(true);
 				}
+			} 
+			if (other instanceof Sharknet && this.state != STATE_SHOT && !other.effectiveness) {
+				
+				other.die();
+				
+				this.blinkTime = 0;
+				this.state = STATE_SHOT;
+				
 			}
+			if (other instanceof Boat && this.state == STATE_CHOMPING) {
+
+				if(
+					other.center.y < this.center.y &&
+					other.center.x < this.center.x + this.size.x / 3 &&
+					other.center.x > this.center.x - this.size.x / 3
+				) {
+				other.hurt();
+				}	
+			}
+
 		}
 	};
 
