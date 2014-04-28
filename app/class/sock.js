@@ -16,7 +16,7 @@
 			self.data.sharks[index].direction = dir;
 		});
 		socket.on('notifyNewPlayer', function(index, name, score) {
-			this.c.scores[index] = score;
+			self.c.scores[index] = score;
 			self.data.sharks[index] = {
 				depth: 0,
 				name: name,
