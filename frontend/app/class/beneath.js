@@ -81,6 +81,13 @@
 				this.center.x += (newX - this.center.x) * FLY_SPEED / ((d)+0.01);
 				this.center.y += (newY - this.center.y) * FLY_SPEED / ((d)+0.01);
 				this.shootTimer += dt;
+				if (this.invincible > 0) {
+					this.invincible -= dt;
+
+				} else {
+					this.invincible = 0;
+				}
+					
 				if (this.shootTimer > SHOOT_TIMER_MAX) {
 					this.shootTimer = 0;
 					var baseTheta = Math.random() * 2 * Math.PI;
@@ -108,7 +115,7 @@
 		hurt: function(shark) {
 			if (this.invincible === 0){
 				this.health -= 1;
-				this.projectiles = 5 - Math.floor(this.health/3)
+				this.projectiles = 5 - Math.floor(this.health/3);
 				this.c.entities.create(Bloodstain, {
 					center: this.center,
 				});

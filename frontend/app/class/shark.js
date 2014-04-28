@@ -189,6 +189,15 @@
 					other.hurt(this); //boat handles score
 				}
 			}
+			if (other instanceof BenEath && this.state == STATE_CHOMPING) {
+				if(
+					other.center.y < this.center.y &&
+					other.center.x < this.center.x + this.size.x / 3 &&
+					other.center.x > this.center.x - this.size.x / 3
+				) {
+					other.hurt(this); //ben handles score
+				}		
+			}
 
 		}
 	};
