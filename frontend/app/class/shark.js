@@ -11,7 +11,8 @@
 	var STATE_SWIM_DEEP = 1; // dived deep, swimming, move up
 	var STATE_LAG_SURFACE = 2; //on surface, not swimming, move back
 	var STATE_CHOMPING = 3; //in air, not swimming, leap forward, lasts 1 second
-	var STATE_SHOT = 4; //shot by a sharknet
+	var STATE_SHOT = 4; //shot by a shark
+	var STATE_DEAD = 5;
 
 	var DRIFT_SPEED = 2;
 	var DRIFT_PADDING = 30;
@@ -47,6 +48,8 @@
 			new SpriteSheet('./resource/shark_lag/shark', this.spriteMaxes[STATE_LAG_SURFACE], settings.colorMatrix, 0.5),
 			new SpriteSheet('./resource/shark_bite/shark', this.spriteMaxes[STATE_CHOMPING], settings.colorMatrix, 0.5),
 			new SpriteSheet('./resource/shark_lag/shark', this.spriteMaxes[STATE_LAG_SURFACE], settings.colorMatrix, 0.5),
+			new SpriteSheet('./resource/shark_lag/shark', this.spriteMaxes[STATE_LAG_SURFACE], [[0,0,0],[0,0,0],[0,0,0]], 0.5),
+
 		];
 
 		this.boundingBox = this.c.collider.RECTANGLE;
@@ -69,15 +72,14 @@
 			x: 90,
 			y: 180
 		},
-		sprites: [null,null,null,null,null],
-		spriteMaxes: [39, 39, 1, 1, 1],
-		speeds: [-0.5,3,-3,3,-0.5],
-		zindexes: [-50, -50, -50, 20, -50],
+		sprites: [null,null,null,null,null,null],
+		spriteMaxes: [39, 39, 1, 1, 1,1],
+		speeds: [-0.5,3,-3,3,-0.5,0],
+		zindexes: [-50, -50, -50, 20, -50,-200],
 		spriteNumber: 0,
 		chompTime: 0,
 		blinkTime: 0,
 		draw: function(ctx) {
-			if(this.temphidden) return;
 			for(var i = 0; i < this.sprites.length; i++) {
 				if(!this.sprites[i].isReady()) return;
 			}
@@ -94,7 +96,7 @@
 			// );
 		},
 		update: function(dt) {
-			if(this.temphidden) return;
+			if(this.tempremoved || this.state === STATE_DEAD) return;
 			var data = this.c.sock.getSharkData(this.id);
 
 			this.calculateState(data.depth, dt);
@@ -120,7 +122,7 @@
 			else if (this.center.y + this.size.y/2 > this.c.renderer._ctx.canvas.height) {this.center.y = this.c.renderer._ctx.canvas.height - this.size.y/2; }
 		},
 		chomp: function() {
-			if(this.temphidden) return;
+			if(this.tempremoved || this.state === STATE_DEAD) return;
 			if (this.state === STATE_CHOMPING || this.chompCooldown < MAX_CHOMP_COOLDOWN) return;
 			this.chompTime = 0;
 			this.chompCooldown = 0;
@@ -158,7 +160,7 @@
 			}
 		},
 		collision: function(other, type) {
-			if(this.temphidden) return;
+			if(this.tempremoved || this.state === STATE_DEAD) return;
 			if(other instanceof Surfer && this.state == STATE_CHOMPING) {
 				if(
 					other.center.y < this.center.y &&
@@ -173,7 +175,12 @@
 			if (other instanceof Sharknet && this.state != STATE_SHOT && other.effectiveness <= 0) {
 
 				other.die();
-
+				this.c.scores[this.id] -= other.lethality;
+				if (this.c.scores[this.id] < 0) {
+					this.state = STATE_DEAD;
+					this.c.scores[this.id] = 0;
+				}
+				this.c.sock.scoreChange(this);
 				this.blinkTime = 0;
 				this.state = STATE_SHOT;
 

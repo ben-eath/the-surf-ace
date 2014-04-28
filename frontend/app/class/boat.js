@@ -105,7 +105,8 @@
 					center: this.center,
 					speed: getDirectionToNearestShark(this.center, this.c.entities.all(Shark)),
 					type: "net",
-					numSprites: 29 
+					numSprites: 29,
+				        lethality: 100	
 				});
 			}
 

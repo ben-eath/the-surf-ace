@@ -101,7 +101,9 @@
 								y : 5 * Math.cos(curAngle)
 							},
 							type: "surfboard",
-							numSprites: 29
+							numSprites: 29,
+							lethality: 300
+
 						});
 					}
 				}
