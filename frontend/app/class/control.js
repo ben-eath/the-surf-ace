@@ -81,7 +81,9 @@
 						this.changeState("INTRO_END");
 					}
 				},
-				draw: function(ctx) {}
+				draw: function(ctx) {
+					this.showServerPass(ctx);
+				}
 			},
 			INTRO_END: {
 				init: function() {
@@ -96,7 +98,9 @@
 						this.changeState('ROUND_1');
 					}
 				},
-				draw: function(ctx) {}
+				draw: function(ctx) {
+					this.showServerPass(ctx);
+				}
 			},
 			ROUND_1: {
 				init: function() {
@@ -106,8 +110,18 @@
 					this.spawnSurferTime += dt;
 					this.spawnSurferLoop(dt * 0.8);
 				},
-				draw: function(ctx) {}
+				draw: function(ctx) {
+					this.showServerPass(ctx);
+				}
 			}
+		},
+		showServerPass: function(ctx) {
+			ctx.font = '20pt VT323';
+			ctx.fillStyle = 'black';
+			var roomID = this.c.sock.roomID === null ? "Unknown!" : this.c.sock.roomID;
+			ctx.fillText(roomID, 5, 20);
+			ctx.fillStyle = 'white';
+			ctx.fillText( roomID, 5, 20);
 		},
 		changeState: function(newState) {
 			console.log(this.state + "->" + newState);
