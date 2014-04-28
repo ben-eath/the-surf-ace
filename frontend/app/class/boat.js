@@ -12,6 +12,7 @@
 		var oldSharkSqDist = Infinity;
 		var finalSharkDir = {x: 5, y: 0};
 		for (var shark in sharks) {
+			if (sharks[shark].state === 5) break;
 			var sharkDistX = sharks[shark].center.x - center.x;
 			var sharkDistY = sharks[shark].center.y - center.y;
 			var newSharkSqDist = Math.pow(sharkDistX, 2) + Math.pow(sharkDistY, 2);

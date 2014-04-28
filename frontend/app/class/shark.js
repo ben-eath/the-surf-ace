@@ -130,6 +130,7 @@
 			this.lockedDir = this.c.sock.getSharkData(this.id).direction;
 		},
 		calculateState: function(depth, dt) {
+			if(this.state === STATE_DEAD) return;
 			if(this.state === STATE_SHOT) {
 				if (this.blinkTime < MAX_BLINK_TIME) {
 					this.blinkTime += dt;
@@ -179,6 +180,7 @@
 				if (this.c.scores[this.id] < 0) {
 					this.state = STATE_DEAD;
 					this.c.scores[this.id] = 0;
+					return;
 				}
 				this.c.sock.scoreChange(this);
 				this.blinkTime = 0;
