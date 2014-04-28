@@ -1,22 +1,24 @@
 ;(function(exports) {
 	// stores things like:
 	// whether the game is running
-
-	var SURFER_SPAWN_SPEED = 1000 * 3;
 	var SCORE_PADDING = 70;
 	var SCORE_MARGIN = 40;
 	var SCORE_Y = 40;
-	var BOAT_SPAWN_SPEED = 1000 * 30;
 	var DIALOGUE_MIN_TIME = 800;
 
 	exports.Control = function(game, settings) {
 		this.c = game.c;
 		initObject(this, settings);
 		this.state = "WAITING_FOR_PLAYERS";
-		this.spawnSurferTime = 0;
+		this.surferSpawnTime = 0;
 		this.boatSpawnTime = 0;
 		this.fontLoadWait = 200; //LOL HAX
 		this.timer = 0;
+		this.boatSpawnSpeed = 0;
+		this.surferSpawnSpeed = 0;
+		this.currentLevelTime = 0;
+
+		this.states[this.state].init.call(this);
 	};
 
 	exports.Control.prototype = {
@@ -24,9 +26,10 @@
 		states: {
 			WAITING_FOR_PLAYERS: {
 				init: function() {
+					this.surferSpawnSpeed = 1000 * 3;
 				},
 				update: function(dt) {
-					this.spawnSurferLoop(dt * 3);
+					this.spawnSurferLoop(dt);
 					this.fontLoadWait -= dt;
 					if ((this.c.sock.gameStarted || this.c.inputter.isPressed(68))) {
 						this.clearScreen();
@@ -97,15 +100,18 @@
 			},
 			ROUND_1: {
 				init: function() {
-
+					this.currentLevelTime = 60000;
+					this.surferSpawnSpeed = 1000 * 2;
+					this.boatSpawnSpeed = 0;
 				},
 				update: function(dt) {
-					this.spawnSurferLoop(dt * 1.5);
+					this.spawnSurferLoop(dt);
 				},
 				draw: function(ctx) {
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
-					if (this.timer > 60000) {
+					this.drawTimer(ctx);
+					if (this.timer > this.currentLevelTime) {
 						this.next();
 					}
 				},
@@ -137,15 +143,18 @@
 			ROUND_2: {
 				init: function() {
 					this.dialogue.dialogueUp = false;
-					this.ben.onScreen = false;
+					this.surferSpawnSpeed = 1000 * 1.5;
+					this.boatSpawnSpeed = 1000 * 15;
+					this.currentLevelTime = 120000;
 				},
 				update: function(dt) {
-					this.spawnSurferLoop(dt * 1.5);
+					this.spawnSurferLoop(dt);
 				},
 				draw: function(ctx) {
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
-					if (this.timer > 120000) {
+					this.drawTimer(ctx);
+					if (this.timer > this.currentLevelTime) {
 						this.next();
 					}
 				},
@@ -177,15 +186,18 @@
 			ROUND_3: {
 				init: function() {
 					this.dialogue.dialogueUp = false;
-					this.ben.onScreen = false;
+					this.surferSpawnSpeed = 1000 * 1.5;
+					this.boatSpawnSpeed = 1000 * 8;
+					this.currentLevelTime = 120000;
 				},
 				update: function(dt) {
-					this.spawnSurferLoop(dt * 1.5);
+					this.spawnSurferLoop(dt);
 				},
 				draw: function(ctx) {
+					this.drawTimer(ctx);
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
-					if (this.timer > 120000) {
+					if (this.timer > this.currentLevelTime) {
 						this.next();
 					}
 				},
@@ -218,6 +230,8 @@
 				init: function() {
 					this.dialogue.dialogueUp = false;
 					this.ben.onScreen = false;
+					this.boatSpawnSpeed = 0;
+					this.surferSpawnSpeed = 0;
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt * 1.5);
@@ -237,6 +251,13 @@
 			ctx.fillText(roomID, 5, 20);
 			ctx.fillStyle = 'white';
 			ctx.fillText( roomID, 5, 20);
+		},
+		drawTimer: function(ctx) {
+			ctx.font = '20pt VT323';
+			ctx.fillStyle = 'black';
+			ctx.fillText(((this.currentLevelTime - this.timer) / 1000) | 0, this.center.x, 20);
+			ctx.fillStyle = 'white';
+			ctx.fillText(((this.currentLevelTime - this.timer) / 1000) | 0, this.center.x, 20);
 		},
 		clearScreen: function() {
 			var surfers = this.c.entities.all(Surfer);
@@ -313,9 +334,9 @@
 			return maxScore;
 		},
 		spawnSurferLoop: function(dt){
-			this.spawnSurferTime += dt;
+			this.surferSpawnTime += dt;
 			this.boatSpawnTime += dt;
-			if (this.boatSpawnTime >= BOAT_SPAWN_SPEED) {
+			if (this.boatSpawnSpeed && this.boatSpawnTime >= this.boatSpawnSpeed) {
 				this.boatSpawnTime = 0;
 				this.c.entities.create(Boat, {
 					center: {
@@ -323,8 +344,8 @@
 						y: 1
 					}
 				});
-			} else if (this.spawnSurferTime >= SURFER_SPAWN_SPEED) {
-				this.spawnSurferTime = 0;
+			} else if (this.surferSpawnSpeed && this.surferSpawnTime >= this.surferSpawnSpeed) {
+				this.surferSpawnTime = 0;
 				this.c.entities.create(Surfer, {
 					center: {
 						x: Math.random() * this.size.x,
