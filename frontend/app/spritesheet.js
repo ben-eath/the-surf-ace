@@ -8,7 +8,7 @@
 		return str;
 	};
 
-	exports.SpriteSheet = function(src, numSprites, colorMatrix, spriteSpeed) {
+	exports.SpriteSheet = function(src, numSprites, colorMatrix, spriteSpeed, extension) {
 		this.numSprites = numSprites;
 		if(colorMatrix !== undefined) {
 			this.colorMatrix = colorMatrix;
@@ -18,7 +18,7 @@
 			for(var i = 1; i <= numSprites; i++) {
 				var image = new Image();
 				image.onload = this.onImageLoad.bind(this);
-				image.src = src + padToFour(i) + ".png";
+				image.src = src + padToFour(i) + (extension === undefined ? ".png" : extension);
 				this.spriteWidth = 0;
 			}
 			this.spritesLoaded = 0;

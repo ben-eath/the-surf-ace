@@ -3,6 +3,7 @@
 	exports.Ocean = function(game, settings) {
 		this.c = game.c;
 		initObject(this, settings);
+		this.spriteSheet = new SpriteSheet('./resource/ocean/maya/untitled.', 48, undefined, 0.5, '.jpg');
 	};
 
 	exports.Ocean.prototype = {
@@ -22,12 +23,7 @@
 		},
 		time: 0,
 		draw: function(ctx) {
-			ctx.setFillColor(colorFromObject(this.color));
-			ctx.fillRect(
-				this.center.x,
-				this.center.y,
-				this.size.x,
-				this.size.y);
+			this.spriteSheet.draw(ctx, this.center, this.size);
 		},
 		update: function(dt) {
 
