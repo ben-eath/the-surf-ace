@@ -76,9 +76,9 @@
 				if (vector) {
 					this.center.x -= (FLY_SPEED)*(vector.x);
 					this.center.y -= (FLY_SPEED)*(vector.y);
-				}  
+				}
 				var d = distance(this.center.x, this.center.y, newX, newY);
-				this.center.x += (newX - this.center.x) * FLY_SPEED / ((d)+0.0s1);
+				this.center.x += (newX - this.center.x) * FLY_SPEED / ((d)+0.01);
 				this.center.y += (newY - this.center.y) * FLY_SPEED / ((d)+0.01);
 				this.shootTimer += dt;
 				if (this.shootTimer > SHOOT_TIMER_MAX) {

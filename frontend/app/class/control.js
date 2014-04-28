@@ -1,21 +1,26 @@
 ;(function(exports) {
 	// stores things like:
 	// whether the game is running
-
-	var SURFER_SPAWN_SPEED = 1000 * 3;
 	var SCORE_PADDING = 70;
 	var SCORE_MARGIN = 40;
 	var SCORE_Y = 40;
-	var BOAT_SPAWN_SPEED = 1000 * 30;
 	var DIALOGUE_MIN_TIME = 800;
+	var SCORE_SPEED = 1;
 
 	exports.Control = function(game, settings) {
 		this.c = game.c;
 		initObject(this, settings);
 		this.state = "WAITING_FOR_PLAYERS";
-		this.spawnSurferTime = 0;
+		this.surferSpawnTime = 0;
 		this.boatSpawnTime = 0;
 		this.fontLoadWait = 200; //LOL HAX
+		this.timer = 0;
+		this.drawnScores = [];
+		this.boatSpawnSpeed = 0;
+		this.surferSpawnSpeed = 0;
+		this.currentLevelTime = 0;
+
+		this.states[this.state].init.call(this);
 	};
 
 	exports.Control.prototype = {
@@ -23,9 +28,10 @@
 		states: {
 			WAITING_FOR_PLAYERS: {
 				init: function() {
+					this.surferSpawnSpeed = 1000 * 3;
 				},
 				update: function(dt) {
-					this.spawnSurferLoop(dt * 3);
+					this.spawnSurferLoop(dt);
 					this.fontLoadWait -= dt;
 					if ((this.c.sock.gameStarted || this.c.inputter.isPressed(68))) {
 						this.clearScreen();
@@ -38,10 +44,17 @@
 					}
 					ctx.font = '30pt VT323';
 					ctx.fillStyle = 'black';
-					var roomID = this.c.sock.roomID === null ? "Connecting to server..." : this.c.sock.roomID;
-					ctx.fillText('Server Password: ' + roomID, this.center.x, this.center.y+73);
+					//SERVER URL
+					var url = "Visit HTTP://BEN.RL.IO on your mobile phone";
+					ctx.fillText('' + url, this.center.x, this.center.y+73);
 					ctx.fillStyle = 'white';
-					ctx.fillText('Server Password: ' + roomID, this.center.x, this.center.y+70);
+					ctx.fillText('' + url, this.center.x, this.center.y+70);
+					//SERVER PASS
+					ctx.fillStyle = 'black';
+					var roomID = this.c.sock.roomID === null ? "Connecting to server..." : this.c.sock.roomID;
+					ctx.fillText('Server Password: ' + roomID, this.center.x, this.center.y+123);
+					ctx.fillStyle = 'white';
+					ctx.fillText('Server Password: ' + roomID, this.center.x, this.center.y+120);
 				}
 			},
 			INTRO_START: {
@@ -89,15 +102,18 @@
 			},
 			ROUND_1: {
 				init: function() {
-
+					this.currentLevelTime = 60000;
+					this.surferSpawnSpeed = 1000 * 2;
+					this.boatSpawnSpeed = 0;
 				},
 				update: function(dt) {
-					this.spawnSurferLoop(dt * 1.5);
+					this.spawnSurferLoop(dt);
 				},
 				draw: function(ctx) {
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
-					if (this.highestScore() > 1000) {
+					this.drawTimer(ctx);
+					if (this.timer > this.currentLevelTime) {
 						this.next();
 					}
 				},
@@ -129,15 +145,18 @@
 			ROUND_2: {
 				init: function() {
 					this.dialogue.dialogueUp = false;
-					this.ben.onScreen = false;
+					this.surferSpawnSpeed = 1000 * 1.5;
+					this.boatSpawnSpeed = 1000 * 15;
+					this.currentLevelTime = 120000;
 				},
 				update: function(dt) {
-					this.spawnSurferLoop(dt * 1.5);
+					this.spawnSurferLoop(dt);
 				},
 				draw: function(ctx) {
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
-					if (this.highestScore() > 3000) {
+					this.drawTimer(ctx);
+					if (this.timer > this.currentLevelTime) {
 						this.next();
 					}
 				},
@@ -169,15 +188,18 @@
 			ROUND_3: {
 				init: function() {
 					this.dialogue.dialogueUp = false;
-					this.ben.onScreen = false;
+					this.surferSpawnSpeed = 1000 * 1.5;
+					this.boatSpawnSpeed = 1000 * 8;
+					this.currentLevelTime = 120000;
 				},
 				update: function(dt) {
-					this.spawnSurferLoop(dt * 1.5);
+					this.spawnSurferLoop(dt);
 				},
 				draw: function(ctx) {
+					this.drawTimer(ctx);
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
-					if (this.highestScore() > 5000) {
+					if (this.timer > this.currentLevelTime) {
 						this.next();
 					}
 				},
@@ -210,6 +232,8 @@
 				init: function() {
 					this.dialogue.dialogueUp = false;
 					this.ben.onScreen = false;
+					this.boatSpawnSpeed = 0;
+					this.surferSpawnSpeed = 0;
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt * 1.5);
@@ -229,6 +253,13 @@
 			ctx.fillText(roomID, 5, 20);
 			ctx.fillStyle = 'white';
 			ctx.fillText( roomID, 5, 20);
+		},
+		drawTimer: function(ctx) {
+			ctx.font = '20pt VT323';
+			ctx.fillStyle = 'black';
+			ctx.fillText(((this.currentLevelTime - this.timer) / 1000) | 0, this.center.x, 20);
+			ctx.fillStyle = 'white';
+			ctx.fillText(((this.currentLevelTime - this.timer) / 1000) | 0, this.center.x, 20);
 		},
 		clearScreen: function() {
 			var surfers = this.c.entities.all(Surfer);
@@ -251,9 +282,11 @@
 			this.states[this.state].draw.call(this, ctx);
 		},
 		update: function(dt) {
+			this.timer += dt;
 			this.states[this.state].update.call(this, dt);
 		},
 		next: function() {
+			this.timer = 0;
 			if(this.states[this.state].next) {
 				this.states[this.state].next.call(this);
 			}
@@ -303,18 +336,18 @@
 			return maxScore;
 		},
 		spawnSurferLoop: function(dt){
-			this.spawnSurferTime += dt;
+			this.surferSpawnTime += dt;
 			this.boatSpawnTime += dt;
-			if (this.boatSpawnTime >= BOAT_SPAWN_SPEED) {
+			if (this.boatSpawnSpeed && this.boatSpawnTime >= this.boatSpawnSpeed) {
 				this.boatSpawnTime = 0;
 				this.c.entities.create(Boat, {
 					center: {
-						x: Math.random() * this.size.x,
+						x: Math.random() * (this.size.x - 50) + 25,
 						y: 1
 					}
 				});
-			} else if (this.spawnSurferTime >= SURFER_SPAWN_SPEED) {
-				this.spawnSurferTime = 0;
+			} else if (this.surferSpawnSpeed && this.surferSpawnTime >= this.surferSpawnSpeed) {
+				this.surferSpawnTime = 0;
 				this.c.entities.create(Surfer, {
 					center: {
 						x: Math.random() * this.size.x,
@@ -333,16 +366,28 @@
 		},
 		drawScores: function(ctx) {
 			var scores = this.c.scores;
+
+			for (var i in scores) {
+				if (this.drawnScores[i] === undefined) {
+					this.drawnScores[i] = 0;
+				} else if (this.drawnScores[i] < scores[i]) {
+					this.drawnScores[i] += SCORE_SPEED;
+					if (this.drawnScores[i] > scores[i]) this.drawnScores[i] = scores[i];
+				} else if (this.drawnScores[i] > scores[i]) {
+					this.drawnScores[i] -= SCORE_SPEED;
+					if (this.drawnScores[i] < scores[i]) this.drawnScores[i] = scores[i];
+				}
+			}
+
 			var x = SCORE_MARGIN;
 			var y = this.size.y - SCORE_Y;
-
 			ctx.textAlign = 'left';
-			for (var i in scores) {
+			for (var j in this.drawnScores) {
 				ctx.font = '30pt VT323';
 				ctx.fillStyle = 'black';
-				ctx.fillText("" + scores[i], x, y+3);
-				ctx.fillStyle = PLAYER_COLORS[i];
-				ctx.fillText("" + scores[i], x, y);
+				ctx.fillText("" + this.drawnScores[j], x, y+3);
+				ctx.fillStyle = PLAYER_COLORS[j];
+				ctx.fillText("" + this.drawnScores[j], x, y);
 				x += SCORE_PADDING;
 			}
 		}
