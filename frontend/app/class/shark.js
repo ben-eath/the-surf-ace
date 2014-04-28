@@ -165,7 +165,7 @@
 					other.center.x > this.center.x - this.size.x / 3
 				) {
 					this.c.scores[this.id] += 50;
-					this.c.sock.scoreChange();
+					this.c.sock.scoreChange(this);
 					other.die(true);
 				}
 			}
