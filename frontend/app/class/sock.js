@@ -5,7 +5,7 @@
 		this.c = game.c;
 		this.roomID = null;
 		this.data = {sharks: []};
-		var socket = io.connect('http://ace:9000');
+		var socket = io.connect('http://surf.rl.io:9000');
 		socket.on('notifyRoomID', function(id) {
 			self.roomID = id;
 		});
@@ -20,7 +20,7 @@
 			self.c.entities.create(Shark, {
 				center: {x: 100, y: 100},
 				id: index,
-				colorMatrix: COLOR_MATRIX_RED
+				colorMatrix: SHARK_COLOR_MATRICES[index]
 			});
 			self.gameStarted = true;
 		});
@@ -44,13 +44,13 @@
 					shark.direction = 1;
 					break;
 				case 83:
-					self.data.sharks[0] = {depth: 0, direction: 0};
+					var index = self.data.sharks.length;
+					self.data.sharks[index] = {depth: 0, direction: 0};
 					self.c.entities.create(Shark, {
 						center: {x: 100, y: 100},
-						id: 0,
-						colorMatrix: COLOR_MATRIX_RED
+						id: index,
+						colorMatrix: SHARK_COLOR_MATRICES[index]
 					});
-					self.gameStarted = true;
 					break;
 			}
 		};

@@ -38,8 +38,49 @@
 		}
 	};
 
+	// thanks to http://creativejs.com/2012/01/day-10-drawing-rotated-images-into-canvas/
+	exports.drawRotatedImage = function(context, image, x, y, angle, sx, sy) {
+		// save the current co-ordinate system
+		// before we screw with it
+		context.save();
+
+		// move to the middle of where we want to draw our image
+		context.translate(x, y);
+
+		// rotate around that point, converting our
+		// angle from degrees to radians
+		context.rotate(angle);
+
+		// draw it up and to the left by half the width
+		// and height of the image
+		context.drawImage(image, -((sx || image.width)/2), -((sy || image.height)/2), sx, sy);
+
+		// and restore the co-ords to how they were when we began
+		context.restore();
+	};
+
 	exports.COLOR_MATRIX_IDENTITY = [[1,0,0], [0,1,0], [0,0,1]];
 	exports.COLOR_MATRIX_RED = [[1,0,0], [0,1,0], [0,0,1]];
 	exports.COLOR_MATRIX_BLUE = [[0,0,1], [0,1,0], [1,0,0]];
 	exports.COLOR_MATRIX_GREEN = [[0,1,0], [1,0,0], [1,0,0]];
+	exports.SHARK_COLOR_MATRICES = [
+		[[1,0,0], [0,1,0], [0,0,1]],
+		[[0,1,0], [0,0,1], [1,0,0]],
+		[[0,0,1], [1,0,0], [0,1,0]],
+		[[1,0,0], [1,1,0], [0,0,1]],
+		[[1,0,0], [0.5,1,0], [0.5,0,1]],
+		[[0.5,0,0], [0,1,0], [1,0,1]],
+		[[1,0,0], [1,1,0], [1,0,1]],
+		[[0.2,0,0], [0.2,1,0], [0.2,0,1]],
+	];
+	// var playerColors = [
+	//    '#f00',
+	//    '#00f',
+	//    '#0f0',
+	//    '#ff0',
+	//    '#f88',
+	//    '#80f',
+	//    '#fff',
+	//    '#000'
+	//  ];
 })(window);

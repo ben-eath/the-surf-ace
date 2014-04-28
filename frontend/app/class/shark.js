@@ -11,6 +11,7 @@
 	var STATE_SWIM_DEEP = 1; // dived deep, swimming, move up
 	var STATE_LAG_SURFACE = 2; //on surface, not swimming, move back
 	var STATE_CHOMPING = 3; //in air, not swimming, leap forward, lasts 1 second
+  var STATE_SHOT = 4 //shot by a sharknet
 
 	var DRIFT_SPEED = 2;
 	var DRIFT_PADDING = 30;
@@ -31,10 +32,14 @@
 
 		initObject(this, settings);
 
-		this.sprites[STATE_SWIM_SURFACE] = new SpriteSheet('./resource/shark_swim/shark', this.spriteMaxes[STATE_SWIM_SURFACE], settings.colorMatrix, 0.5);
-		this.sprites[STATE_SWIM_DEEP] = new SpriteSheet('./resource/shark_swim/shark', this.spriteMaxes[STATE_SWIM_DEEP], settings.colorMatrix, 0.5);
-		this.sprites[STATE_LAG_SURFACE] = new SpriteSheet('./resource/shark_swim/shark', this.spriteMaxes[STATE_LAG_SURFACE], settings.colorMatrix, 0.5);
-		this.sprites[STATE_CHOMPING] = new SpriteSheet('./resource/shark_bite/shark', this.spriteMaxes[STATE_CHOMPING], settings.colorMatrix, 0.5);
+		this.sprites = [
+			new SpriteSheet('./resource/shark_swim/shark', this.spriteMaxes[STATE_SWIM_SURFACE], settings.colorMatrix, 0.5),
+			new SpriteSheet('./resource/shark_swim/shark', this.spriteMaxes[STATE_SWIM_DEEP], settings.colorMatrix, 0.5),
+			new SpriteSheet('./resource/shark_lag/shark', this.spriteMaxes[STATE_LAG_SURFACE], settings.colorMatrix, 0.5),
+			new SpriteSheet('./resource/shark_bite/shark', this.spriteMaxes[STATE_CHOMPING], settings.colorMatrix, 0.5),
+		];
+
+		console.log(this.sprites);
 
 		this.boundingBox = this.c.collider.RECTANGLE;
 
@@ -56,10 +61,10 @@
 			x: 90,
 			y: 180
 		},
-		sprites: [null,null,null,null],
+		sprites: [null,null,null,null,null],
 		spriteMaxes: [39, 39, 1, 1],
-		speeds: [-0.5,3,-2,3],
-		zindexes: [-20, -50, -20, 20],
+		speeds: [-0.5,3,-2,3,-0.5],
+		zindexes: [-20, -50, -20, 20, -50],
 		spriteNumber: 0,
 		chompTime: 0,
 		draw: function(ctx) {
@@ -96,29 +101,33 @@
 
 		},
 		calculateState: function(depth, dt) {
-			if(this.state == STATE_CHOMPING) {
-				if (this.chompTime < MAX_CHOMP_TIME) {
-					this.chompTime += dt;
-					return;
-				} else {
-					this.state = STATE_SWIM_SURFACE;
-				}
-			}
-			if(depth > 0.35) {
-				this.state = STATE_SWIM_DEEP;
-			} else if (depth < 0.25 && depth > -0.25 ) {
-				if (this.state == STATE_LAG_SURFACE) {
-					this.chompTime = 0;
-					this.state = STATE_CHOMPING;
-				} else {
-					this.state = STATE_SWIM_SURFACE;
-				}
-			} else if (depth < -0.35){
-				this.state = STATE_LAG_SURFACE;
-			}
-			if (this.state === undefined) {
-				this.state = STATE_SWIM_SURFACE;
-			}
+      if(this.state !== STATE_SHOT) {
+        this.shotTime =
+      } else {
+        if(this.state == STATE_CHOMPING) {
+          if (this.chompTime < MAX_CHOMP_TIME) {
+            this.chompTime += dt;
+            return;
+          } else {
+            this.state = STATE_SWIM_SURFACE;
+          }
+        }
+        if(depth > 0.35) {
+          this.state = STATE_SWIM_DEEP;
+        } else if (depth < 0.25 && depth > -0.25 ) {
+          if (this.state == STATE_LAG_SURFACE) {
+            this.chompTime = 0;
+            this.state = STATE_CHOMPING;
+          } else {
+            this.state = STATE_SWIM_SURFACE;
+          }
+        } else if (depth < -0.35){
+          this.state = STATE_LAG_SURFACE;
+        }
+        if (this.state === undefined) {
+          this.state = STATE_SWIM_SURFACE;
+        }
+      }
 		},
 		collision: function(other, type) {
 			if(other instanceof Surfer && this.state == STATE_CHOMPING) {
@@ -130,6 +139,7 @@
 					other.die(true);
 				}
 			}
+      if(other instanceof Sharknet)
 		}
 	};
 
