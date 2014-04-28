@@ -102,11 +102,39 @@ io.sockets.on('connection', function(socket) {
             });
 
             socket.on("updateScore", function(index, score) {
-                updateScore(rooms[id], index, score);
+                if (index && score) {
+                    updateScore(rooms[id], index, score);
+                } else {
+                    socket.emit('err', "score or index not valid for updateScore.")
+                }
             });
 
             socket.on("notifyDeath", function(index) {
-                rooms[id].players[index].socket.emit("notifyDeath");
+                if (index) {
+                    rooms[id].players[index].socket.emit("notifyDeath");
+                } else {
+                    socket.emit("err", "index is not valid for death.")
+                }
+            });
+
+            socket.on("notifyGameOver", function() {
+                rooms[id].players.forEach(function(player) {
+                    player.socket.emit("notifyGameOver");
+                });
+            });
+
+            socket.on("notifyVictory", function(indexes) {
+                if (indexes) {
+                    rooms[id].players.forEach(function(player, index) {
+                        if (index in indexes) {
+                            player.socket.emit("notifyVictory");
+                        } else {
+                            player.socket.emit("notifyLoss");
+                        }
+                    });
+                } else {
+                    socket.emit("err", "indexes are not valid for notifyVictory.")    
+                }
             });
 
         } else if (type === 'controller') {
