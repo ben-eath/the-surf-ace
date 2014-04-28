@@ -16,9 +16,9 @@
 
 		this.c.entities.create(Control, {center: {x:width/2, y:height/2}, size: {x:width, y:height}});
 
-		// theme = new Audio('resource/music/bosstheme.mp3');
-		// theme.loop = true;
-		// theme.play();
+		theme = new Audio('resource/music/bosstheme.mp3');
+		theme.loop = true;
+		theme.play();
 	};
 
 	window.addEventListener('load', function() {
