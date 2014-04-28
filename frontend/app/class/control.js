@@ -154,7 +154,9 @@
 				},
 				update: function(dt) {
 					this.age += dt;
-					this.next();
+					if(this.c.inputter.isPressed(68)){
+						this.next();
+					}
 				},
 				next: function() {
 					if(this.age < DIALOGUE_MIN_TIME) return;
@@ -195,7 +197,7 @@
 			AFTER_2: {
 				init: function() {
 					this.age = 0;
-					this.ben = this.createBen();
+					this.ben = this.createBen(true);
 					this.dialogue = this.createDialogue("TOTALLY NOT TUBULAR! ALL MY SURF BROS GETTING ATE. CALL THE COAST GUARD!");
 					this.setSharksVisible(false);
 				},
