@@ -104,6 +104,11 @@ io.sockets.on('connection', function(socket) {
             socket.on("updateScore", function(index, score) {
                 updateScore(rooms[id], index, score);
             });
+
+            socket.on("notifyDeath", function(index) {
+                rooms[id].players[index].socket.emit("notifyDeath");
+            });
+
         } else if (type === 'controller') {
             id = id.toUpperCase();
             var room = rooms[id];
