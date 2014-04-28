@@ -1,8 +1,9 @@
 ;(function(exports){
 
-	var FLY_SPEED = 10;
+	var FLY_SPEED = 5;
 	var BOB_STRENGTH = 1;
 	var BOB_SPEED = 0.04;
+	var FEAR_THRESHOLD = 200;
 
 	var theta;
 	var radias;
@@ -23,8 +24,8 @@
 
 	exports.BenEath.prototype = {
 		size: {
-			x: 256,
-			y: 256
+			x: 180,
+			y: 180
 		},
 		getDistance: function(x, y, threshold) {
 			var sharks = this.c.entities.all(Shark);
@@ -68,16 +69,14 @@
 				var newX = (Math.cos(theta) * radias) + this.c.renderer._ctx.canvas.width/2;
 				var newY = (Math.sin(theta) * radias) + this.c.renderer._ctx.canvas.height/2;
 				theta += BOB_SPEED;
-				vector = this.getDistance(this.center.x, this.center.y, 300);
+				vector = this.getDistance(this.center.x, this.center.y, FEAR_THRESHOLD);
 				if (vector) {
-					this.center.x += -vector.x * FLY_SPEED;
-					this.center.y += -vector.y * FLY_SPEED;
-				} else {
-					var d = distance(this.center.x, this.center.y, newX, newY);
-
-					this.center.x += (newX - this.center.x) * FLY_SPEED / d;
-					this.center.y += (newY - this.center.y) * FLY_SPEED / d;
-				}
+					this.center.x -= (FLY_SPEED)*(vector.x);
+					this.center.y -= (FLY_SPEED)*(vector.y);
+				}  
+				var d = distance(this.center.x, this.center.y, newX, newY);
+				this.center.x += (newX - this.center.x) * FLY_SPEED / ((d)+0.0s1);
+				this.center.y += (newY - this.center.y) * FLY_SPEED / ((d)+0.01);
 				
 			}
 
