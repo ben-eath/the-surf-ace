@@ -175,6 +175,11 @@
 			}
 			if (other instanceof Sharknet && this.state != STATE_SHOT && other.effectiveness <= 0) {
 
+				if(other.type == "surfboard") {
+					if(other.center.x + other.size.x / 3 < this.center.x - this.size.x / 3) return;
+					if(other.center.x + other.size.x * 2 / 3 > this.center.x + this.size.x / 3) return;
+				}
+
 				other.die();
 				this.c.scores[this.id] -= other.lethality;
 				if (this.c.scores[this.id] < 0) {

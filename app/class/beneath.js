@@ -103,8 +103,7 @@
 							},
 							type: "surfboard",
 							numSprites: 29,
-							lethality: 300
-
+							lethality: 300,
 						});
 					}
 				}
