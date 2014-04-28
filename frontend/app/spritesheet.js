@@ -55,6 +55,7 @@
 				this.blitfrom = document.createElement("canvas");
 				this.spriteWidth = evt.target.width;
 				this.blitfrom.getContext("2d").imageSmoothingEnabled = false;
+				this.blitfrom.getContext("2d").webkitImageSmoothingEnabled=false;
 				this.blitfrom.height = evt.target.height;
 				this.blitfrom.width = this.spriteWidth * this.numSprites;
 			}
