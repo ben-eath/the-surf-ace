@@ -39,10 +39,17 @@
 					}
 					ctx.font = '30pt VT323';
 					ctx.fillStyle = 'black';
-					var roomID = this.c.sock.roomID === null ? "Connecting to server..." : this.c.sock.roomID;
-					ctx.fillText('Server Password: ' + roomID, this.center.x, this.center.y+73);
+					//SERVER URL
+					var url = "Visit HTTP://BEN.RL.IO on your mobile phone";
+					ctx.fillText('' + url, this.center.x, this.center.y+73);
 					ctx.fillStyle = 'white';
-					ctx.fillText('Server Password: ' + roomID, this.center.x, this.center.y+70);
+					ctx.fillText('' + url, this.center.x, this.center.y+70);
+					//SERVER PASS
+					ctx.fillStyle = 'black';
+					var roomID = this.c.sock.roomID === null ? "Connecting to server..." : this.c.sock.roomID;
+					ctx.fillText('Server Password: ' + roomID, this.center.x, this.center.y+123);
+					ctx.fillStyle = 'white';
+					ctx.fillText('Server Password: ' + roomID, this.center.x, this.center.y+120);
 				}
 			},
 			INTRO_START: {
@@ -312,7 +319,7 @@
 				this.boatSpawnTime = 0;
 				this.c.entities.create(Boat, {
 					center: {
-						x: Math.random() * this.size.x,
+						x: Math.random() * (this.size.x - 50) + 25,
 						y: 1
 					}
 				});
