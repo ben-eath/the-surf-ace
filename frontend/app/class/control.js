@@ -36,9 +36,9 @@
 					ctx.font = '30pt VT323';
 					ctx.fillStyle = 'black';
 					var roomID = this.c.sock.roomID === null ? "Connecting to server..." : this.c.sock.roomID;
-					ctx.fillText('' + roomID, this.center.x, this.center.y+73);
+					ctx.fillText('Server Password: ' + roomID, this.center.x, this.center.y+73);
 					ctx.fillStyle = 'white';
-					ctx.fillText('' + roomID, this.center.x, this.center.y+70);
+					ctx.fillText('Server Password: ' + roomID, this.center.x, this.center.y+70);
 				}
 			},
 			INTRO_START: {
