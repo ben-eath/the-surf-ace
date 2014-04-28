@@ -35,6 +35,7 @@
 			y: 1
 		};
 		this.state = settings.state || 0;
+		this.c.scores[settings.id] = 0;
 
 		initObject(this, settings);
 
@@ -158,6 +159,7 @@
 					other.center.x < this.center.x + this.size.x / 3 &&
 					other.center.x > this.center.x - this.size.x / 3
 				) {
+					this.c.scores[this.id] += 1;
 					other.die(true);
 				}
 			}

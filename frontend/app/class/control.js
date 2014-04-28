@@ -3,6 +3,9 @@
 	// whether the game is running
 
 	var SURFER_SPAWN_SPEED = 1000 * 3;
+	var SCORE_PADDING = 70;
+	var SCORE_MARGIN = 40;
+	var SCORE_Y = 40;
 
 	exports.Control = function(game, settings) {
 		this.c = game.c;
@@ -112,6 +115,7 @@
 				},
 				draw: function(ctx) {
 					this.showServerPass(ctx);
+					this.drawScores(ctx);
 				}
 			}
 		},
@@ -158,6 +162,21 @@
 			ctx.fillText(str, this.center.x, this.center.y+3);
 			ctx.fillStyle = 'white';
 			ctx.fillText(str, this.center.x, this.center.y);
+		},
+		drawScores: function(ctx) {
+			var scores = this.c.scores;
+			var x = SCORE_MARGIN;
+			var y = this.size.y - SCORE_Y;
+
+			ctx.textAlign = 'left';
+			for (var i in scores) {
+				ctx.font = '30pt VT323';
+				ctx.fillStyle = 'black';
+				ctx.fillText("" + scores[i], x, y+3);
+				ctx.fillStyle = PLAYER_COLORS[i];
+				ctx.fillText("" + scores[i], x, y);
+				x += SCORE_PADDING;
+			}
 		}
 	};
 
