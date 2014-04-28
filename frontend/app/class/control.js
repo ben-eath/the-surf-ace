@@ -64,7 +64,7 @@
 						displayOnly: true
 					});
 					this.c.entities.create(DialogueBox, {
-						text: "HA HA HA I'M BEN EATH AND I HATE SHARKS. BOO YAH! SURF'S UP! LET'S GRAB SOME GNARLY WAVES, DUDES!",
+						text: "SUP, DUDES AND DUDETTES! I'M BEN, AND I'M THE ACE SURFER THIS SIDE OF THE SHORELINE. LET'S RIDE SOME WAVES AND CATCH SOME SUN!",
 						center: {
 							x: width / 2,
 							y: height + 100
@@ -78,22 +78,33 @@
 				},
 				update: function(dt) {
 					if(this.c.inputter.isPressed(68)){
-						this.c.entities.all(DialogueBox)[0].dialogueUp = false;
-						this.c.entities.all(BenEath)[0].onScreen = false;
-					}
-					if(this.c.entities.all(BenEath).length == 0) {
-						this.changeState('PLAY');
+						this.changeState("INTRO_END");
 					}
 				},
 				draw: function(ctx) {}
 			},
-			PLAY: {
+			INTRO_END: {
+				init: function() {
+					this.c.entities.all(DialogueBox)[0].text = "WATCH OUT FOR SHARKS! I HATE SHARKS!";
+				},
+				update: function(dt) {
+					if(this.c.inputter.isPressed(68)){
+						this.c.entities.all(DialogueBox)[0].dialogueUp = false;
+						this.c.entities.all(BenEath)[0].onScreen = false;
+					}
+					if(this.c.entities.all(BenEath).length === 0) {
+						this.changeState('ROUND_1');
+					}
+				},
+				draw: function(ctx) {}
+			},
+			ROUND_1: {
 				init: function() {
 
 				},
 				update: function(dt) {
 					this.spawnSurferTime += dt;
-					this.spawnSurferLoop(dt);
+					this.spawnSurferLoop(dt * 0.8);
 				},
 				draw: function(ctx) {}
 			}

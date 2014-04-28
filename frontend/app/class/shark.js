@@ -39,8 +39,6 @@
 			new SpriteSheet('./resource/shark_bite/shark', this.spriteMaxes[STATE_CHOMPING], settings.colorMatrix, 0.5),
 		];
 
-		console.log(this.sprites);
-
 		this.boundingBox = this.c.collider.RECTANGLE;
 
 		// this.shadow = this.c.entities.create(Shadow, {
