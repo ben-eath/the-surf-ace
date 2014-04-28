@@ -1,20 +1,18 @@
 ;(function(exports) {
 
-	var SPRITES_MAX = 29;
 	var MIN_EFFECTIVENESS = -1000;
 
 	exports.Sharknet = function(game, settings) {
 		this.c = game.c;
 		initObject(this, settings);
 		this.boundingBox = this.c.collider.RECTANGLE;
-
 		this.center = {
 			x: settings.center.x,
 			y: settings.center.y
 		};
 		this.hasRunColorMatrix = false;
 
-		this.sprites = new SpriteSheet('./resource/net/net', SPRITES_MAX, this.colorMatrix);
+		this.sprites = new SpriteSheet('./resource/'+ this.type + '/' + this.type, this.numSprites, this.colorMatrix);
 
 		this.zindex = 100;
 	};

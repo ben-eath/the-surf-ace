@@ -103,7 +103,9 @@
 				this.shootTimer = 0;
 				this.c.entities.create(Sharknet, {
 					center: this.center,
-					speed: getDirectionToNearestShark(this.center, this.c.entities.all(Shark))
+					speed: getDirectionToNearestShark(this.center, this.c.entities.all(Shark)),
+					type: "net",
+					numSprites: 29 
 				});
 			}
 

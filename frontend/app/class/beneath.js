@@ -4,7 +4,7 @@
 	var BOB_STRENGTH = 1;
 	var BOB_SPEED = 0.04;
 	var FEAR_THRESHOLD = 200;
-
+        var SHOOT_TIMER_MAX = 4000;
 	var theta;
 	var radias;
 
@@ -27,6 +27,10 @@
 			x: 180,
 			y: 180
 		},
+		projectiles: 1;
+		health: 15;
+		shootTimer: 0,
+		invincible: 0,
 		getDistance: function(x, y, threshold) {
 			var sharks = this.c.entities.all(Shark);
 			var sumVecX = 0;
@@ -48,7 +52,6 @@
 				return {x: sumVecX/totalDist, y: sumVecY/totalDist};
 			}
 		},
-
 		update: function(dt) {
 			if(this.displayOnly) {
 				if(this.onScreen){
@@ -77,12 +80,53 @@
 				var d = distance(this.center.x, this.center.y, newX, newY);
 				this.center.x += (newX - this.center.x) * FLY_SPEED / ((d)+0.0s1);
 				this.center.y += (newY - this.center.y) * FLY_SPEED / ((d)+0.01);
-				
+				this.shootTimer += dt;
+				if (this.shootTimer > SHOOT_TIMER_MAX) {
+					this.shootTimer = 0;
+					var baseTheta = Math.random() * 2 * Math.PI;
+					for (var i = 0; i < this.projectiles;i++;) {
+						var curAngle = (i * 2 * Math.PI/this.projectiles);
+						this.c.entities.create(Sharknet,
+						{
+							center: this.center,
+							speed: { x : 5 * Math.sin(curAngle),
+								y : 5 * Math.cos(curAngle)
+							},
+							type: "surfboard",
+							numSprites: 29
+						});
+					}
+				}	
 			}
 
 		},
 		draw: function(ctx) {
-			this.spriteSheet.draw(ctx, this.center, this.size);
+			if(this.invincible % 100 < 50) {
+				this.spriteSheet.draw(ctx, this.center, this.size);
+			}
+		},
+		hurt: function(shark) {
+			if (this.invincible === 0){
+				this.health -= 1;
+				this.projectiles = 5 - Math.floor(this.health/3)
+				this.c.entities.create(Bloodstain, {
+					center: this.center,
+				});
+				this.invincible = 1000;
+				if (this.health === 0) {
+					this.die(true);
+					this.c.scores[shark.id] += 10000;
+					this.c.sock.scoreChange(shark);
+				}
+			}
+		},
+		die: function(showblood){
+			this.c.entities.destroy(this);
+			if(showblood) {
+				this.c.entities.create(Bloodstain, {
+					center: this.center,
+				});
+			}
 		}
 	};
 
