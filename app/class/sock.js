@@ -105,6 +105,14 @@
 			this.socket.emit("notifyDeath",
 				sharkId
 			);
+		},
+		notifyGameOver: function() {
+			this.socket.emit("notifyGameOver");
+		},
+		notifyVictory: function(sharkIds) {
+			this.socket.emit("notifyVictory",
+				sharkIds
+			);
 		}
 	};
 	exports.Sock = Sock;
