@@ -17,12 +17,15 @@
 	var DRIFT_PADDING = 30;
 
 	var MAX_CHOMP_TIME = 500; //time in ms that it takes to chomp
-	var MAX_BLINK_TIME = 2000; //time in ms that you're incapacitated
+	var MAX_CHOMP_COOLDOWN = 1000; // cooldown of chomp time
+	var MAX_BLINK_TIME = 3000; //time in ms that you're incapacitated
 	var BLINK_PERIOD = 300; // duration of each blink cycle
 	var BLINK_OFF_PERIOD = 100; // duration of hidden part of blink cycle
 
 	exports.Shark = function(game, settings) {
 		this.c = game.c;
+		this.lockedDir = 0;
+		this.chompCooldown = 0;
 		this.center = settings.center || {
 			x: 0,
 			y: 300
@@ -65,7 +68,7 @@
 		},
 		sprites: [null,null,null,null,null],
 		spriteMaxes: [39, 39, 1, 1, 1],
-		speeds: [-0.5,3,-2,3,-0.5],
+		speeds: [-0.5,3,-3,3,-0.5],
 		zindexes: [-20, -50, -20, 20, -50],
 		spriteNumber: 0,
 		chompTime: 0,
@@ -94,21 +97,29 @@
 			this.speeds[STATE_SWIM_SURFACE] = DRIFT_SPEED * -(this.c.entities.all(Control)[0].size.y - this.center.y - DRIFT_PADDING) / this.c.entities.all(Control)[0].size.y;
 			this.zindex = this.zindexes[this.state];
 
-			if (this.state !== STATE_SHOT) {
+			if (this.state === STATE_CHOMPING) {
+				this.center.x += this.lockedDir * this.speed.x * SHARK_SPEED_X * (dt/16.66);
+			} else if (this.state !== STATE_SHOT) {
 				this.center.x += data.direction * this.speed.x * SHARK_SPEED_X * (dt/16.66);
 			}
 			this.center.y -= this.speeds[this.state] * this.speed.y * (dt/16.66);
+
+			if (this.chompCooldown < MAX_CHOMP_COOLDOWN && this.state !== STATE_CHOMPING) {
+				this.chompCooldown += dt;
+			}
 
 			if (this.center.x - this.size.x/2 < 0) { this.center.x = this.size.x/2; }
 			else if (this.center.x + this.size.x/2 > this.c.renderer._ctx.canvas.width) {this.center.x = this.c.renderer._ctx.canvas.width - this.size.x/2; }
 
 			if (this.center.y - this.size.y/2 < 0) { this.center.y = this.size.y/2; }
 			else if (this.center.y + this.size.y/2 > this.c.renderer._ctx.canvas.height) {this.center.y = this.c.renderer._ctx.canvas.height - this.size.y/2; }
-
 		},
 		chomp: function() {
-				this.chompTime = 0;
-				this.state = STATE_CHOMPING;
+			if (this.state === STATE_CHOMPING || this.chompCooldown < MAX_CHOMP_COOLDOWN) return;
+			this.chompTime = 0;
+			this.chompCooldown = 0;
+			this.state = STATE_CHOMPING;
+			this.lockedDir = this.c.sock.getSharkData(this.id).direction;
 		},
 		calculateState: function(depth, dt) {
 			if(this.state === STATE_SHOT) {
