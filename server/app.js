@@ -81,6 +81,7 @@ function addController(room, socket) {
 function removePlayers(room) {
     room.players.forEach(function(player) {
         if (player) {
+            player.socket.emit('bootPlayer');
             players[player.socket.id] = undefined;
         }
     });
