@@ -7,7 +7,9 @@
 	exports.DialogueBox = function(game, settings) {
 		this.c = game.c;
 		initObject(this, settings);
-		this.dialoguePortrait = new SpriteSheet('./resource/ben_eath_portrait/ben_eath', 2, COLOR_MATRIX_IDENTITY, 0.07);
+		if(settings.dialoguePortrait === undefined) {
+			this.dialoguePortrait = new SpriteSheet('./resource/ben_eath_portrait/ben_eath', 2, COLOR_MATRIX_IDENTITY, 0.07);
+		}
 		this.initialY = settings.center.y;
 	};
 

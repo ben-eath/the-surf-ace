@@ -29,7 +29,7 @@
 			WAITING_FOR_PLAYERS: {
 				init: function() {
 					this.surferSpawnSpeed = 1000 * 3;
-					this.setSharksVisible(false);
+					this.setSharksVisible(true);
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt);
@@ -41,7 +41,7 @@
 				next: function() {
 					if(this.c.sock.data.sharks && this.c.sock.data.sharks.length) {
 						this.clearScreen();
-						this.changeState("INTRO_START");
+						this.changeState("ORIENTATION");
 						this.c.sock.gameStarted = true;
 					}
 				},
@@ -73,12 +73,36 @@
 					}
 				}
 			},
+			ORIENTATION: {
+				init: function() {
+					this.dialogue = this.createDialogue(
+						"TAP TO BITE AND CONTINUE.\nEAT EVERYTHING BUT EACH OTHER.\nYOU DIE IF YOUR SCORE HITS 0.",
+						new SpriteSheet('./resource/orientation/orientation', 35, undefined, 0.2)
+					);
+					this.setSharksVisible(true);
+				},
+				update: function(dt) {
+					this.age += dt;
+					if(this.c.inputter.isPressed(68)){
+						this.next();
+					}
+				},
+				next: function() {
+					if(this.age < DIALOGUE_MIN_TIME * 2) return;
+					this.dialogue.dialogueUp = false;
+					delete this.orientationSprite;
+					this.changeState('INTRO_START');
+				},
+				draw: function(ctx) {
+
+				}
+			},
 			INTRO_START: {
 				init: function() {
 					this.age = 0;
+					this.setSharksVisible(false);
 					this.ben = this.createBen(true);
 					this.dialogue = this.createDialogue("SUP, DUDES AND DUDETTES! I'M BEN, AND I'M THE ACE SURFER THIS SIDE OF THE SHORELINE. LET'S RIDE SOME WAVES AND CATCH SOME SUN!");
-					this.setSharksVisible(false);
 				},
 				update: function(dt) {
 					this.age += dt;
@@ -88,6 +112,7 @@
 				},
 				next: function() {
 					if(this.age < DIALOGUE_MIN_TIME) return;
+					this.dialogue.dialogueUp = false;
 					this.changeState('INTRO_END');
 				},
 				draw: function(ctx) {
@@ -98,6 +123,7 @@
 				init: function() {
 					this.age = 0;
 					this.dialogue.text = "WATCH OUT FOR SHARKS! I HATE SHARKS!";
+					this.dialogue.dialogueUp = true;
 					this.setSharksVisible(false);
 				},
 				update: function(dt) {
@@ -113,9 +139,6 @@
 					if(this.age < DIALOGUE_MIN_TIME) return;
 					this.dialogue.dialogueUp = false;
 					this.ben.onScreen = false;
-					if(this.c.entities.all(BenEath).length === 0){
-						this.changeState('ROUND_1');
-					}
 				},
 				draw: function(ctx) {
 					this.showServerPass(ctx);
@@ -326,7 +349,6 @@
 		setSharksVisible: function(bool) {
 			var sharks = this.c.entities.all(Shark);
 			for(var s in sharks) {
-				console.log(sharks[s]);
 				sharks[s].temphidden = !bool;
 			}
 		},
@@ -349,8 +371,9 @@
 				this.states[this.state].next.call(this);
 			}
 		},
-		createDialogue: function(text) {
+		createDialogue: function(text, spriteSheet) {
 			return this.c.entities.create(DialogueBox, {
+				dialoguePortrait: spriteSheet,
 				text: text,
 				center: {
 					x: this.size.x / 2,
