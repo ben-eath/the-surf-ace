@@ -5,6 +5,9 @@
 	var SPRITES_MAX = 1;
 
 	var SHOOT_TIMER_MAX = 3000;
+
+	var MAX_AGE = 30000;
+
 	var getDirectionToNearestShark = function(center, sharks) {
 		var oldSharkSqDist = Infinity;
 		var finalSharkDir = {x: 5, y: 0};
@@ -62,6 +65,7 @@
 	};
 
 	exports.Boat.prototype = {
+		age: 0,
 		center: {
 			x: 100,
 			y: 0
@@ -101,6 +105,12 @@
 					center: this.center,
 					speed: getDirectionToNearestShark(this.center, this.c.entities.all(Shark))
 				});
+			}
+
+			//prevent infinite boats
+			this.age += dt;
+			if (this.age > MAX_AGE) {
+				this.die(false);
 			}
 		},
 		hurt: function() {
