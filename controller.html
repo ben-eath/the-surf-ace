@@ -77,10 +77,17 @@
     #playScreen p {
       display: none;
     }
-    #playScreen.touchdown #playName,
-    #playScreen.touchdown #playScore,
+    #playScreen.touchup #playName,
+    #playScreen.touchup #playScore
+    {
+      display: inline;
+    }
+    #playScreen.touchdown #chomping, 
     #playScreen.touchup .thumbMessage {
       display: block;
+    }
+    #deadScreen {
+      background-color: #000000;
     }
     body>div {
       position: absolute;
@@ -101,7 +108,8 @@
     }
     .lobbyScreen #lobbyScreen,
     .waitScreen #waitScreen,
-    .playScreen #playScreen {
+    .playScreen #playScreen,
+    .deadScreen #deadScreen {
       display: block;
     }
 
@@ -164,9 +172,15 @@
   <div class="touchup" id="playScreen">
     <div class="inner">
       <p class="thumbMessage">Tilt to move, tap to chomp!</p>
-      <p id="playName"></p>
-      <p id="playScore">0</p>
+      <p class="thumbMessage"><span id="playName"></span>
+      <span id="playScore">0</span></p>
+      <p class="chomping">CHOMP!</p>
     </div>
+  </div>
+     
+
+  <div id="deadScreen">
+    <h1>You have died! Thanks for sharking!</h1>
   </div>
 
   <script src="./lib/socket.io.js"></script>
@@ -289,9 +303,12 @@
           changeScreen('play');
           body.style.backgroundColor = playerColors[index];
           names.forEach(function(el) {
-            el.textContent = reconnectName;
+            el.textContent = reconnectName + ":";
           });
-
+          socket.on('notifyDeath', function() {
+	    changeScreen('dead');
+	    vibratePhone();
+	  });
           socket.on('updateScore', function(score) {
             shark.score = score;
             scores.forEach(function(el) {

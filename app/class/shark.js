@@ -130,6 +130,9 @@
 			this.state = STATE_CHOMPING;
 			this.lockedDir = this.c.sock.getSharkData(this.id).direction;
 		},
+		isDead: function() {
+			return this.state === STATE_DEAD;
+		},
 		calculateState: function(depth, dt) {
 			if(this.state === STATE_DEAD) return;
 			if(this.state === STATE_SHOT) {
@@ -187,6 +190,7 @@
 				if (this.c.scores[this.id] < 0) {
 					this.state = STATE_DEAD;
 					this.c.scores[this.id] = 0;
+					this.c.sock.notifyDeath(this.id);
 					return;
 				}
 				this.c.sock.scoreChange(this);

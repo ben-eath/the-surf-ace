@@ -312,14 +312,51 @@
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt * 1.5);
+					this.next();
 				},
 				draw: function(ctx) {
 					this.showServerPass(ctx);
 					this.drawScores(ctx);
 				},
 				next: function() {
+					if(this.c.entities.all(BenEath).length === 0){
+						this.changeState('VICTORY');
+					}
 				}
 			},
+			VICTORY: {
+				init: function() {
+					this.setSharksVisible(false);
+				},
+				update: function(dt) {
+				},
+				draw: function(ctx) {
+					this.drawLargeText(ctx, "VICTORY", '#33f');
+					ctx.font = '30pt VT323';
+					ctx.fillStyle = 'black';
+				},
+				next: function() {
+				}
+			},
+			GAME_OVER: {
+				init: function() {
+				},
+				update: function(dt) {
+				},
+				draw: function(ctx) {
+					this.drawLargeText(ctx, "GAME OVER, BRAH", '#f33');
+					ctx.font = '30pt VT323';
+					ctx.fillStyle = 'black';
+
+					var text = "2 (bit)coins to continue.";
+					ctx.fillStyle = 'black';
+					ctx.fillText('' + text, this.center.x, this.center.y+138);
+					ctx.fillStyle = '#ff0';
+					ctx.fillText('' + text, this.center.x, this.center.y+135);
+				},
+				next: function() {
+				}
+			}
 		},
 		showServerPass: function(ctx) {
 			ctx.font = '20pt VT323';
@@ -365,6 +402,22 @@
 		update: function(dt) {
 			this.timer += dt;
 			this.states[this.state].update.call(this, dt);
+
+			// Check for game over (HACK)
+			if(this.c.sock.data && this.c.sock.data.sharks &&
+				this.state !== 'WAITING_FOR_PLAYERS' &&
+				this.state !== 'GAME_OVER' &&
+				this.state !== 'VICTORY') {
+				var alive = 0;
+				for (var i=0; i<this.c.sock.data.sharks.length; i++) {
+					if(!this.c.sock.data.sharks[i].obj.isDead()) {
+						alive++;
+					}
+				}
+				if(!alive) {
+					this.changeState('GAME_OVER');
+				}
+			}
 		},
 		next: function() {
 			if(this.states[this.state].next) {
@@ -420,7 +473,7 @@
 			this.surferSpawnTime += dt;
 			this.boatSpawnTime += dt;
 			if (this.boatSpawnSpeed && this.boatSpawnTime >= this.boatSpawnSpeed) {
-				this.boatSpawnTime = 0;
+				this.boatSpawnTime = -100 * Math.random();
 				this.c.entities.create(Boat, {
 					center: {
 						x: Math.random() * (this.size.x - 50) + 25,
@@ -437,12 +490,13 @@
 				});
 			}
 		},
-		drawLargeText: function(ctx, str){
+		drawLargeText: function(ctx, str, fillColor){
+			fillColor = fillColor || 'white';
 			ctx.textAlign = 'center';
 			ctx.font = '64pt VT323';
 			ctx.fillStyle = 'black';
 			ctx.fillText(str, this.center.x, this.center.y+3);
-			ctx.fillStyle = 'white';
+			ctx.fillStyle = fillColor;
 			ctx.fillText(str, this.center.x, this.center.y);
 		},
 		drawScores: function(ctx) {
