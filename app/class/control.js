@@ -157,6 +157,7 @@
 					this.boatSpawnSpeed = 0;
 					this.setSharksVisible(true);
 					this.timer = 0;
+					this.sock.socket.emit("startRound", 1);
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt);
@@ -173,6 +174,7 @@
 				next: function() {
 					if (this.timer > this.currentLevelTime) {
 						this.changeState('AFTER_1');
+						this.sock.socket.emit("finishRound", 1, "This is sharky");
 						this.clearScreen();
 					}
 				}
@@ -210,6 +212,7 @@
 					this.currentLevelTime = 60000;
 					this.setSharksVisible(true);
 					this.timer = 0;
+					this.sock.socket.emit("startRound", 2);
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt);
@@ -226,6 +229,7 @@
 				next: function() {
 					if (this.timer > this.currentLevelTime) {
 						this.changeState('AFTER_2');
+						this.sock.socket.emit("finishRound", 2, "This is sharky");
 						this.clearScreen();
 					}
 				}
@@ -263,6 +267,8 @@
 					this.currentLevelTime = 100000;
 					this.setSharksVisible(true);
 					this.timer = 0;
+					this.sock.socket.emit("startRound", 3);
+
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt);
@@ -279,6 +285,7 @@
 				next: function() {
 					if (this.timer > this.currentLevelTime) {
 						this.changeState('AFTER_3');
+						this.sock.socket.emit("finishRound", 3, "This is sharky");
 						this.clearScreen();
 					}
 				}
