@@ -78,8 +78,9 @@
 			},
 			ORIENTATION: {
 				init: function() {
+					var multiplayer = this.c.sock.data.sharks.length > 1 ? "EAT EVERYTHING BUT EACH OTHER.\n" : "EAT EVERYTHING.\n";
 					this.dialogue = this.createDialogue(
-						"TAP TO BITE AND CONTINUE.\nEAT EVERYTHING BUT EACH OTHER.\nYOU DIE IF YOUR SCORE HITS 0.\nPRESS 'M' TO MUTE THIS AWESOME MUSIC.",
+						"TAP TO BITE AND CONTINUE.\n" + multiplayer + "YOU DIE IF YOUR SCORE HITS 0.\nPRESS 'M' TO MUTE THIS AWESOME MUSIC.",
 						new SpriteSheet('./resource/orientation/orientation', 35, undefined, 0.2)
 					);
 					this.setSharksVisible(true);
@@ -332,6 +333,7 @@
 			},
 			VICTORY: {
 				init: function() {
+					this.age = 0;
 					this.loopMusic('resource/music/titletheme.ogg');
 					var sharkIds = [];
 					var maxScore = 0;
@@ -357,9 +359,28 @@
 				},
 				draw: function(ctx) {
 					this.sharkSprite.draw(ctx, {x: this.center.x, y: this.center.y + 150}, {x: 39 * 2, y: 76 * 2});
-					this.drawLargeText(ctx, "VICTORY", '#33f');
+					this.drawLargeText(ctx, "VICTORY", '#f33');
 					ctx.font = '30pt VT323';
 					ctx.fillStyle = 'black';
+				},
+				next: function() {
+					if (this.age < DIALOGUE_MIN_TIME) return;
+					this.changeState("CREDITS");
+				}
+			},
+			CREDITS: {
+				init: function() {
+				},
+				update: function(dt) {
+				},
+				draw: function(ctx) {
+					var text = "CREDITS\nAndree @andreemonette\nBhushan\nChen\nErty @ertyseidel\nJeff @jeffowler\nLita @litacho\nNeeraj @neerajwahi\nPaul-Jean @rule142\nRiley @rileyjshaw\nRobert @rlordio\n\nFOR THE COQUETTE GAME ENGINE\nMary Rose Cook @maryrosecook\n\nRELOAD PAGE TO RESTART GAME";
+					ctx.textAlign = 'left';
+					ctx.font = '20pt VT323';
+					ctx.fillStyle = 'black';
+					wrapText(ctx, text, 10, 28, this.size.y - 10, 30);
+					ctx.fillStyle = 'white';
+					wrapText(ctx, text, 10, 25, this.size.y - 10, 30);
 				},
 				next: function() {
 				}
@@ -376,7 +397,7 @@
 					ctx.font = '30pt VT323';
 					ctx.fillStyle = 'black';
 
-					var text = "2 (bit)coins to continue.";
+					var text = "2 bitcoins to continue (or press refresh)";
 					ctx.fillStyle = 'black';
 					ctx.fillText('' + text, this.center.x, this.center.y+138);
 					ctx.fillStyle = '#ff0';
