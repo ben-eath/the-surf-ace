@@ -205,8 +205,8 @@
 				init: function() {
 					this.dialogue.dialogueUp = false;
 					this.surferSpawnSpeed = 1000 * 1.5;
-					this.boatSpawnSpeed = 1000 * 15;
-					this.currentLevelTime = 120000;
+					this.boatSpawnSpeed = 1000 * 10;
+					this.currentLevelTime = 60000;
 					this.setSharksVisible(true);
 					this.timer = 0;
 				},
@@ -258,8 +258,8 @@
 				init: function() {
 					this.dialogue.dialogueUp = false;
 					this.surferSpawnSpeed = 1000 * 1.5;
-					this.boatSpawnSpeed = 1000 * 8;
-					this.currentLevelTime = 120000;
+					this.boatSpawnSpeed = 1000 * 7;
+					this.currentLevelTime = 100000;
 					this.setSharksVisible(true);
 					this.timer = 0;
 				},
