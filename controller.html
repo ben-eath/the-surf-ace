@@ -228,6 +228,7 @@
         });
       };
       connectSocket();
+      socket.on('startRound', function(round) {alert('hello')});
 
       var joinRoom = function(nameValue, idValue) {
         socket.emit('joinRoom', 'controller', nameValue, idValue);
@@ -354,7 +355,7 @@
             playScreen.className = "roundNo";
             actualRoundNumber.textContent = round;
             setTimeout(function() {
-              playscreen.className = "touchup";
+              playScreen.className = "touchup";
             }, 1600);
             changeScreen('play');
             vibratePhone();
