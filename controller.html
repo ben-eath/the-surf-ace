@@ -250,6 +250,7 @@
       var playerName = document.getElementById('playerName');
       var roomId = document.getElementById('roomId');
       var button = document.getElementById('button');
+      var waitScreen = document.getElementById('waitScreen');
       var waitMessage = document.getElementById('waitMessage');
       var playScreen = document.getElementById('playScreen');
       var actualRoundNumber = document.getElementById('actualRoundNumber');
@@ -378,6 +379,17 @@
             latchCheck(gamma, 'depth', 'setDepth');
             latchCheck(beta, 'direction', 'setDirection');
           }, false);
+
+          waitScreen.addEventListener('mousedown', function() {
+            socket.emit('chomp');
+          };
+          waitScreen.addEventListener('touchstart', function() {
+            socket.emit('chomp');
+          };
+          waitScreen.addEventListener('pointerdown', function() {
+            socket.emit('chomp');
+          };
+
 
           playScreen.addEventListener('mousedown', function() {
             playScreen.className = 'touchdown';
