@@ -138,6 +138,18 @@ io.sockets.on('connection', function(socket) {
                 }
             });
 
+            socket.on("startRound", function(round_number) {
+                rooms[id].players.forEach(function(player) {
+                    player.socket.emit('startRound', round_number);
+                });
+            });
+
+            socket.on("finishRound", function(round_number, message) {
+                rooms[id].players.forEach(function(player) {
+                    player.socket.emit("finishRound", round_number, message);
+                });
+            });
+
         } else if (type === 'controller') {
             id = id.toUpperCase();
             var room = rooms[id];

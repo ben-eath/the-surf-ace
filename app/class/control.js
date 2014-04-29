@@ -151,6 +151,7 @@
 					this.boatSpawnSpeed = 0;
 					this.setSharksVisible(true);
 					this.timer = 0;
+					this.c.sock.socket.emit("startRound", 1);
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt);
@@ -167,6 +168,7 @@
 				next: function() {
 					if (this.timer > this.currentLevelTime) {
 						this.changeState('AFTER_1');
+						this.c.sock.socket.emit("finishRound", 1, "Sharks are as tough as those football fans who take their shirts off during games in Chicago in January, only more intelligent. - Dave Barry");
 						this.clearScreen();
 					}
 				}
@@ -185,6 +187,7 @@
 					}
 					if(this.c.entities.all(BenEath).length === 0){
 						this.changeState('ROUND_2');
+						this.c.sock.socket.emit("finishRound", 2);
 					}
 				},
 				next: function() {
