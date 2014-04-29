@@ -149,11 +149,15 @@ io.sockets.on('connection', function(socket) {
             });
 
             socket.on("startRound", function(round_num) {
-                socket.emit("startRound", round_num);
+                rooms[id].players.forEach(function(player) {
+                    player.socket.emit("startRound", round_num);
+                });
             });
 
             socket.on("finishRound", function(round_num, message) {
-                socket.emit("finishRound", round_num, message);
+                rooms[id].players.forEach(function(player) {
+                    player.socket.emit("finishRound", round_num, message);
+                });
             });
 
         } else if (type === 'controller') {
