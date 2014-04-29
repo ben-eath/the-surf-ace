@@ -250,6 +250,7 @@
       var playerName = document.getElementById('playerName');
       var roomId = document.getElementById('roomId');
       var button = document.getElementById('button');
+      var waitMessage = document.getElementById('waitMessage');
       var playScreen = document.getElementById('playScreen');
       var actualRoundNumber = document.getElementById('actualRoundNumber');
       var scores = [
@@ -359,6 +360,7 @@
           });
 
           socket.on('finishRound', function(message) {
+            waitMessage.innerText = message;
             changeScreen('wait');
             vibratePhone();
           });
