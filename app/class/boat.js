@@ -37,6 +37,8 @@
 		if(whiteness < 0.4) redness -= 0.2;
 		else if(redness > 0.8) whiteness -= 0.2;
 
+		this.shootTimer = (Math.random() * SHOOT_TIMER_MAX)  | 0;
+
 		var suitcolor = [Math.random(), Math.random(), Math.random()];
 		var boardcolor = [Math.random(), Math.random(), Math.random()];
 		this.colorMatrix = [
