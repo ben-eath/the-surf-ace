@@ -80,6 +80,7 @@ function addController(room, socket) {
 }
 
 function isPlayerInRoom(room, socket) {
+    if(!room) return false;
     for (var i = 0, _len = room.players.length; i < _len; i++) {
         if (player.socket === socket) {
             return true;
