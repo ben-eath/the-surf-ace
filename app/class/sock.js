@@ -36,7 +36,7 @@
 			control.next();
 		});
 		socket.on("dropPlayer",  function(index) {
-			this.c.entities.destroy(self.data.sharks[index]);
+			self.c.entities.destroy(self.data.sharks[index].obj);
 		});
 		socket.emit('joinRoom', 'computer');
 

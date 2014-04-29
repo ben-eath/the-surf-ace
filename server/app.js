@@ -78,6 +78,16 @@ function addController(room, socket) {
     return room.players.push(player) - 1;
 }
 
+function isPlayerInRoom(room, socket) {
+    for (var i = 0, _len = room.players.length; i < _len; i++) {
+        if (player.socket === socket) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 function removePlayers(room) {
     room.players.forEach(function(player) {
         if (player) {
@@ -142,12 +152,9 @@ io.sockets.on('connection', function(socket) {
             id = id.toUpperCase();
             var room = rooms[id];
 
-            if (players[socket.id]) {
+            if (isPlayerInRoom(room, socket)) {
                 socket.emit('warn', 'user already in room');
-                return;
-            }
-
-            if (room) {
+            } else if (room) {
                 console.log("controller code")
                 var socketId = socket.id;
                 var index = addController(room, socket);
@@ -182,6 +189,7 @@ io.sockets.on('connection', function(socket) {
                 });
 
                 socket.on("disconnect", function() {
+                    console.log("bug");
                     if (room.players[index]) {
                         room.deadPlayers[name] = room.players[index].score;
                         room.players[index] = undefined;
