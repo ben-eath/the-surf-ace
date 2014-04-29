@@ -144,7 +144,7 @@ io.sockets.on('connection', function(socket) {
                         }
                     });
                 } else {
-                    socket.emit("err", "indexes are not valid for notifyVictory.")    
+                    socket.emit("err", "indexes are not valid for notifyVictory.")
                 }
             });
 
@@ -163,6 +163,8 @@ io.sockets.on('connection', function(socket) {
             });
 
         } else if (type === 'controller') {
+            if (typeof id !== "string") return;
+
             id = id.toUpperCase();
             var room = rooms[id];
 
