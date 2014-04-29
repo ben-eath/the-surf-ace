@@ -344,10 +344,19 @@
 					console.log('winning sharks: ' + sharkIds);
 					this.c.sock.notifyVictory(sharkIds);
 					this.setSharksVisible(false);
+
+					var colorMatrix = [[1,0,0], [0,1,0], [0,0,1]];
+					for (var s in this.c.scores) {
+						if(this.c.scores[s] > 9000) {
+							this.colorMatrix = this.c.sock.data.sharks[s].obj.colorMatrix;
+						}
+					}
+					this.sharkSprite = new SpriteSheet('resource/glasses_shark/shark', 1, this.colorMatrix);
 				},
 				update: function(dt) {
 				},
 				draw: function(ctx) {
+					this.sharkSprite.draw(ctx, {x: this.center.x, y: this.center.y + 150}, {x: 39 * 2, y: 76 * 2});
 					this.drawLargeText(ctx, "VICTORY", '#33f');
 					ctx.font = '30pt VT323';
 					ctx.fillStyle = 'black';
