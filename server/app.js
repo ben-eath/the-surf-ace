@@ -64,6 +64,7 @@ function getRoomID() {
 }
 
 function addController(room, socket) {
+    if (!room) return -1;
     player = {
         socket: socket,
         score: 0
@@ -174,6 +175,10 @@ io.sockets.on('connection', function(socket) {
                 console.log("controller code")
                 var socketId = socket.id;
                 var index = addController(room, socket);
+                if (index == -1) {
+                    socket.emit('err', 'bad room');
+                    return;
+                }
 
                 players[socketId] = {
                     room: room,
