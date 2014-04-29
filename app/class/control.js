@@ -332,6 +332,7 @@
 			},
 			VICTORY: {
 				init: function() {
+					this.age = 0;
 					this.loopMusic('resource/music/titletheme.ogg');
 					var sharkIds = [];
 					var maxScore = 0;
@@ -360,6 +361,25 @@
 					this.drawLargeText(ctx, "VICTORY", '#f33');
 					ctx.font = '30pt VT323';
 					ctx.fillStyle = 'black';
+				},
+				next: function() {
+					if (this.age < DIALOGUE_MIN_TIME) return;
+					this.changeState("CREDITS");
+				}
+			},
+			CREDITS: {
+				init: function() {
+				},
+				update: function(dt) {
+				},
+				draw: function(ctx) {
+					var text = "CREDITS\nAndree @andreemonette\nBhushan\nChen\nErty @ertyseidel\nJeff @jeffowler\nLita @litacho\nNeeraj @neerajwahi\nPaul-Jean @rule142\nRiley @rileyjshaw\nRobert @rlordio\n\nFOR THE COQUETTE GAME ENGINE\nMary Rose Cook @maryrosecook\n\nRELOAD PAGE TO RESTART GAME";
+					ctx.textAlign = 'left';
+					ctx.font = '20pt VT323';
+					ctx.fillStyle = 'black';
+					wrapText(ctx, text, 10, 28, this.size.y - 10, 30);
+					ctx.fillStyle = 'white';
+					wrapText(ctx, text, 10, 25, this.size.y - 10, 30);
 				},
 				next: function() {
 				}
