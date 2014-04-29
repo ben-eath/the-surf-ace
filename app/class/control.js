@@ -68,7 +68,7 @@
 
 					if(this.c.sock.data.sharks && this.c.sock.data.sharks.length) {
 						var nPlayers = this.c.sock.data.sharks.length;
-						var text = nPlayers + " players. Tap to start.";
+						var text = nPlayers + " player(s). Tap to start.";
 						ctx.fillStyle = 'black';
 						ctx.fillText('' + text, this.center.x, this.center.y+173);
 						ctx.fillStyle = '#ff0';
