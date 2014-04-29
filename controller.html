@@ -90,8 +90,11 @@
       -o-user-select: none;
       user-select: none;
     }
-    #playScreen p {
+    #roundNo {
       display: none;
+    }
+    .roundNo #roundNo {
+      display: block;
     }
     #playName,
     #playScore
@@ -198,8 +201,9 @@
     <p id="waitMessage">Tilt to move, tap to chomp. Place the top of your phone in your left hand and tap to start!</p>
   </div>
 
-  <div class="touchup" id="playScreen">
+  <div class="roundNo" id="playScreen">
     <div class="inner">
+      <p id="roundNo">Round <span id="actualRoundNumber">1</span></p>
       <p id="playName">Riley</p>
       <p id="playScore">0</p>
       <p id="chomping">CHOMP!</p>
@@ -247,6 +251,7 @@
       var roomId = document.getElementById('roomId');
       var button = document.getElementById('button');
       var playScreen = document.getElementById('playScreen');
+      var actualRoundNumber = document.getElementById('actualRoundNumber');
       var scores = [
         document.getElementById('playScore')
       ];
@@ -344,6 +349,11 @@
           });
 
           socket.on('startRound', function(round) {
+            playScreen.className = "roundNo";
+            actualRoundNumber.textContent = round;
+            setTimeout(function() {
+              playscreen.className = "touchup";
+            }, 1600);
             changeScreen('play');
             vibratePhone();
           });
