@@ -148,6 +148,14 @@ io.sockets.on('connection', function(socket) {
                 }
             });
 
+            socket.on("startRound", function(round_num) {
+                socket.emit("startRound", round_num);
+            });
+
+            socket.on("finishRound", function(round_num, message) {
+                socket.emit("finishRound", round_num, message);
+            });
+
         } else if (type === 'controller') {
             id = id.toUpperCase();
             var room = rooms[id];
