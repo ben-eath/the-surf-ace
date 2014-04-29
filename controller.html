@@ -228,7 +228,6 @@
         });
       };
       connectSocket();
-      socket.on('startRound', function(round) {alert('hello')});
 
       var joinRoom = function(nameValue, idValue) {
         socket.emit('joinRoom', 'controller', nameValue, idValue);
