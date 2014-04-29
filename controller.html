@@ -333,6 +333,7 @@
 
       socket.on('verifyRoom', function(roomExists, index) {
         if(roomExists) {
+          waitMessage.textContent = 'Tilt to move, tap to chomp. Place the top of your phone in your left hand and tap to start!';
           changeScreen('wait');
           body.style.backgroundColor = playerColors[index];
           names.forEach(function(el) {
@@ -354,13 +355,13 @@
             playScreen.className = "roundNo";
             actualRoundNumber.textContent = round;
             setTimeout(function() {
-              playscreen.className = "touchup";
+              playScreen.className = "touchup";
             }, 1600);
             changeScreen('play');
             vibratePhone();
           });
 
-          socket.on('finishRound', function(message) {
+          socket.on('finishRound', function(round, message) {
             waitMessage.innerText = message;
             changeScreen('wait');
             vibratePhone();

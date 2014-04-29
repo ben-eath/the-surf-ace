@@ -64,6 +64,7 @@ function getRoomID() {
 }
 
 function addController(room, socket) {
+    if (!room) return -1;
     player = {
         socket: socket,
         score: 0
@@ -79,6 +80,7 @@ function addController(room, socket) {
 }
 
 function isPlayerInRoom(room, socket) {
+    if(!room) return false;
     for (var i = 0, _len = room.players.length; i < _len; i++) {
         if (player.socket === socket) {
             return true;
@@ -144,7 +146,7 @@ io.sockets.on('connection', function(socket) {
                         }
                     });
                 } else {
-                    socket.emit("err", "indexes are not valid for notifyVictory.")    
+                    socket.emit("err", "indexes are not valid for notifyVictory.")
                 }
             });
 
@@ -163,6 +165,8 @@ io.sockets.on('connection', function(socket) {
             });
 
         } else if (type === 'controller') {
+            if (typeof id !== "string") return;
+
             id = id.toUpperCase();
             var room = rooms[id];
 
@@ -172,6 +176,10 @@ io.sockets.on('connection', function(socket) {
                 console.log("controller code")
                 var socketId = socket.id;
                 var index = addController(room, socket);
+                if (index == -1) {
+                    socket.emit('err', 'bad room');
+                    return;
+                }
 
                 players[socketId] = {
                     room: room,
