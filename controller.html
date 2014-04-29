@@ -337,7 +337,7 @@
           changeScreen('wait');
           body.style.backgroundColor = playerColors[index];
           names.forEach(function(el) {
-            el.textContent = reconnectName + ":";
+            el.textContent = reconnectName;
           });
           socket.on('notifyDeath', function() {
 	    changeScreen('dead');

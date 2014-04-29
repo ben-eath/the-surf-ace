@@ -115,7 +115,7 @@ io.sockets.on('connection', function(socket) {
             });
 
             socket.on("updateScore", function(index, score) {
-                if (index && score) {
+                if (typeof index != 'undefined' && typeof score != 'undefined') {
                     updateScore(rooms[id], index, score);
                 } else {
                     socket.emit('err', "score or index not valid for updateScore.")
