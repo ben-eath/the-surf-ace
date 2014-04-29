@@ -149,12 +149,14 @@ io.sockets.on('connection', function(socket) {
             });
 
             socket.on("startRound", function(round_num) {
+                console.log("test");
                 rooms[id].players.forEach(function(player) {
                     player.socket.emit("startRound", round_num);
                 });
             });
 
             socket.on("finishRound", function(round_num, message) {
+                console.log("test");
                 rooms[id].players.forEach(function(player) {
                     player.socket.emit("finishRound", round_num, message);
                 });
