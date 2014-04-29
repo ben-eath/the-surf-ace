@@ -357,7 +357,7 @@
 				},
 				draw: function(ctx) {
 					this.sharkSprite.draw(ctx, {x: this.center.x, y: this.center.y + 150}, {x: 39 * 2, y: 76 * 2});
-					this.drawLargeText(ctx, "VICTORY", '#33f');
+					this.drawLargeText(ctx, "VICTORY", '#f33');
 					ctx.font = '30pt VT323';
 					ctx.fillStyle = 'black';
 				},
@@ -376,7 +376,7 @@
 					ctx.font = '30pt VT323';
 					ctx.fillStyle = 'black';
 
-					var text = "2 (bit)coins to continue.";
+					var text = "2 bitcoins to continue (or press refresh)";
 					ctx.fillStyle = 'black';
 					ctx.fillText('' + text, this.center.x, this.center.y+138);
 					ctx.fillStyle = '#ff0';

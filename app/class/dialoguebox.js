@@ -7,8 +7,11 @@
 	exports.DialogueBox = function(game, settings) {
 		this.c = game.c;
 		initObject(this, settings);
+		this.shortSprite = 1;
 		if(settings.dialoguePortrait === undefined) {
 			this.dialoguePortrait = new SpriteSheet('./resource/ben_eath_portrait/ben_eath', 2, COLOR_MATRIX_IDENTITY, 0.07);
+		} else {
+			this.shortSprite = 0.7;
 		}
 		this.initialY = settings.center.y;
 	};
@@ -42,7 +45,7 @@
 			var textY = (this.center.y) + DIALOGUE_PADDING;
 			var textW = this.size.x - this.size.y - DIALOGUE_PADDING;
 			ctx.fillStyle = 'rgba(0,0,0,0.35)';
-			ctx.fillRect(this.center.x - this.size.x / 2, this.center.y, this.size.x , this.size.y);
+			ctx.fillRect(this.center.x - this.size.x / 2, this.center.y, this.size.x, this.size.y);
 			ctx.font = '30pt VT323';
 			ctx.textAlign = 'left';
 			ctx.fillStyle = 'black';
@@ -56,9 +59,10 @@
 				},
 				{
 					x: this.size.y - (DIALOGUE_PADDING * 2),
-					y: this.size.y - (DIALOGUE_PADDING * 2)
+					y: this.shortSprite * this.size.y - (DIALOGUE_PADDING * 2)
 				}
 			);
+
 		}
 	};
 
