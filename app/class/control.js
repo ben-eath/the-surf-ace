@@ -78,8 +78,9 @@
 			},
 			ORIENTATION: {
 				init: function() {
+					var multiplayer = this.c.sock.data.sharks.length > 1 ? "EAT EVERYTHING BUT EACH OTHER.\n" : "EAT EVERYTHING.\n";
 					this.dialogue = this.createDialogue(
-						"TAP TO BITE AND CONTINUE.\nEAT EVERYTHING BUT EACH OTHER.\nYOU DIE IF YOUR SCORE HITS 0.\nPRESS 'M' TO MUTE THIS AWESOME MUSIC.",
+						"TAP TO BITE AND CONTINUE.\n" + multiplayer + "YOU DIE IF YOUR SCORE HITS 0.\nPRESS 'M' TO MUTE THIS AWESOME MUSIC.",
 						new SpriteSheet('./resource/orientation/orientation', 35, undefined, 0.2)
 					);
 					this.setSharksVisible(true);
