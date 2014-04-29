@@ -174,7 +174,7 @@
 				next: function() {
 					if (this.timer > this.currentLevelTime) {
 						this.changeState('AFTER_1');
-						this.c.sock.socket.emit("finishRound", 1, "This is sharky");
+						this.c.sock.socket.emit("finishRound", 1, "While more likely to die from drowning, surfers can succumb to shark attacks because of their boards, which to great whites resemble seals.");
 						this.clearScreen();
 					}
 				}
@@ -229,7 +229,7 @@
 				next: function() {
 					if (this.timer > this.currentLevelTime) {
 						this.changeState('AFTER_2');
-						this.c.sock.socket.emit("finishRound", 2, "This is sharky");
+						this.c.sock.socket.emit("finishRound", 2, "Signs that a circling shark will attack: it will hunch its back, swim in zigzag motions, and start humming the Jaws theme.");
 						this.clearScreen();
 					}
 				}
@@ -285,7 +285,7 @@
 				next: function() {
 					if (this.timer > this.currentLevelTime) {
 						this.changeState('AFTER_3');
-						this.c.sock.socket.emit("finishRound", 3, "This is sharky");
+						this.c.sock.socket.emit("finishRound", 3, "From 1580 to 2007, there were 64 reported fatal great white shark attacks. You just tripled that.");
 						this.clearScreen();
 					}
 				}
@@ -323,6 +323,7 @@
 					this.boatSpawnSpeed = 0;
 					this.surferSpawnSpeed = 0;
 					this.setSharksVisible(true);
+					this.c.sock.socket.emit("startRound", 4);
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt * 1.5);
