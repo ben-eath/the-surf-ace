@@ -6,6 +6,10 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <meta name="msapplication-TileColor" content="#943827">
+  <meta name="msapplication-TileImage" content="/favicon-144.png">
+  <link rel="apple-touch-icon-precomposed" href="/favicon-152.png">
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
@@ -64,6 +68,14 @@
       margin: 0;
       font-size: 48px;
     }
+    #lobbyScreen img {
+      display: inline-block;
+      margin-right: 12px;
+    }
+    #lobbyScreen h1 {
+      display: inline-block;
+      margin-bottom: 8px;
+    }
     #lobbyScreen .inner {
       background-image: url(resource/pretty_flower/hibiscus.png) no-repeat top right;
     }
@@ -81,10 +93,15 @@
     #playScreen p {
       display: none;
     }
-    #playScreen.touchup #playName,
-    #playScreen.touchup #playScore
+    #playName,
+    #playScore
     {
-      display: inline;
+      display: none;
+    }
+    .touchup #playName,
+    .touchup #playScore
+    {
+      display: block;
     }
     #chomping {
       display: none;
@@ -93,7 +110,6 @@
     .touchdown #chomping {
       display: block;
     }
-
 
     #deadScreen {
       background-color: #000000;
@@ -125,23 +141,25 @@
     #waitScreen {
       z-index: 100;
       top: 50%;
-      height: 180px;
+      height: 240px;
       left: 10%;
       right: 10%;
-      margin-top: -90px;
+      margin-top: -120px;
       border: 2px solid black;
       background: white;
       box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.8);
     }
     #waitScreen h1 {
-      height: 90px;
-      line-height: 90px;
-      font-size: 36px;
+      margin-bottom: .4em;
+      font-size: 48px;
       color: black;
     }
-    #waitScreen span {
-      display: block;
+    #waitScreen p {
+      line-height: 18px;
+      width: 80%;
+      margin: 1em auto 0;
       font-size: 18px;
+      color: black;
     }
     .waiting #button {
       /* load animation, if we have time */
@@ -165,6 +183,7 @@
 
   <div id="lobbyScreen">
     <div class="inner">
+      <img src="./favicon-32.png" alt="Ben Eath, Ace Surfer">
       <h1>Ben Eath: the Surf Ace</h1>
       <form id="joinRoom">
         <input id="playerName" type="text" name="playerName" placeholder="name" maxlength="5">
@@ -175,13 +194,13 @@
   </div>
 
   <div id="waitScreen">
-    <p id="waitMessage">Waiting <span id="waitReason"></span></h1>
-    <p class="thumbMessage">Tilt to move, tap to chomp!</p>
+    <h1>Waiting</h1>
+    <p id="waitMessage">Tilt to move, tap to chomp. Place the top of your phone in your left hand and tap to start!</p>
   </div>
 
   <div class="touchup" id="playScreen">
     <div class="inner">
-      <p id="playName"></p>
+      <p id="playName">Riley</p>
       <p id="playScore">0</p>
       <p id="chomping">CHOMP!</p>
     </div>
