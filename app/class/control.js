@@ -382,7 +382,7 @@
 				update: function(dt) {
 				},
 				draw: function(ctx) {
-					var text = "CREDITS\nAndree @andreemonette\nBhushan\nChen\nErty @ertyseidel\nJeff @jeffowler\nLita @litacho\nNeeraj @neerajwahi\nPaul-Jean @rule142\nRiley @rileyjshaw\nRobert @rlordio\n\nFOR THE COQUETTE GAME ENGINE\nMary Rose Cook @maryrosecook\n\nRELOAD PAGE TO RESTART GAME";
+					var text = "CREDITS\nAndree @andreemonette\nBhushan\nChen\nErty @ertyseidel\nJeff @jeffowler\nLita @litacho\nNeeraj @neerajwahi\nPaul-Jean @rule146\nRiley @rileyjshaw\nRobert @rlordio\n\nFOR THE COQUETTE GAME ENGINE\nMary Rose Cook @maryrosecook\n\nRELOAD PAGE TO RESTART GAME";
 					ctx.textAlign = 'left';
 					ctx.font = '20pt VT323';
 					ctx.fillStyle = 'black';

@@ -14,7 +14,7 @@ Made at [Hacker School](https://www.hackerschool.com/) in NYC.
 * Jeff — [@jeffowler](http://twitter.com/jeffowler)
 * Lita — [@litacho](http://twitter.com/litacho)
 * Neeraj — [@neerajwahi](http://twitter.com/neerajwahi)
-* Paul-Jean — [@rule142](http://twitter.com/rule142)
+* Paul-Jean — [@rule142](http://twitter.com/rule146)
 * Riley — [@rileyjshaw](http://twitter.com/rileyjshaw)
 * Robert — [@rlordio](http://twitter.com/rlordio)
 
