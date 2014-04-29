@@ -19,6 +19,8 @@
 		this.boatSpawnSpeed = 0;
 		this.surferSpawnSpeed = 0;
 		this.currentLevelTime = 0;
+		this.theme = null;
+		this.muted = false;
 
 		this.states[this.state].init.call(this);
 	};
@@ -30,6 +32,7 @@
 				init: function() {
 					this.surferSpawnSpeed = 1000 * 3;
 					this.setSharksVisible(true);
+					this.loopMusic('resource/music/titletheme.ogg');
 				},
 				update: function(dt) {
 					this.spawnSurferLoop(dt);
@@ -75,11 +78,13 @@
 			},
 			ORIENTATION: {
 				init: function() {
+					var multiplayer = this.c.sock.data.sharks.length > 1 ? "EAT EVERYTHING BUT EACH OTHER.\n" : "EAT EVERYTHING.\n";
 					this.dialogue = this.createDialogue(
-						"TAP TO BITE AND CONTINUE.\nEAT EVERYTHING BUT EACH OTHER.\nYOU DIE IF YOUR SCORE HITS 0.",
+						"TAP TO BITE AND CONTINUE.\n" + multiplayer + "YOU DIE IF YOUR SCORE HITS 0.\nPRESS 'M' TO MUTE THIS AWESOME MUSIC.",
 						new SpriteSheet('./resource/orientation/orientation', 35, undefined, 0.2)
 					);
 					this.setSharksVisible(true);
+					this.age = 0;
 				},
 				update: function(dt) {
 					this.age += dt;
@@ -99,6 +104,7 @@
 			},
 			INTRO_START: {
 				init: function() {
+					this.loopMusic('resource/music/leveltheme.ogg');
 					this.age = 0;
 					this.setSharksVisible(false);
 					this.ben = this.createBen(true);
@@ -200,8 +206,8 @@
 				init: function() {
 					this.dialogue.dialogueUp = false;
 					this.surferSpawnSpeed = 1000 * 1.5;
-					this.boatSpawnSpeed = 1000 * 15;
-					this.currentLevelTime = 120000;
+					this.boatSpawnSpeed = 1000 * 10;
+					this.currentLevelTime = 60000;
 					this.setSharksVisible(true);
 					this.timer = 0;
 				},
@@ -253,8 +259,8 @@
 				init: function() {
 					this.dialogue.dialogueUp = false;
 					this.surferSpawnSpeed = 1000 * 1.5;
-					this.boatSpawnSpeed = 1000 * 8;
-					this.currentLevelTime = 120000;
+					this.boatSpawnSpeed = 1000 * 7;
+					this.currentLevelTime = 100000;
 					this.setSharksVisible(true);
 					this.timer = 0;
 				},
@@ -279,6 +285,7 @@
 			},
 			AFTER_3: {
 				init: function() {
+					this.loopMusic('resource/music/bosstheme.ogg');
 					this.age = 0;
 					this.ben = this.createBen(true);
 					this.dialogue = this.createDialogue("WHAT THE SURF? LOOKS LIKE IF YOU WANT SOMETHING DONE RIGHT, YOU HAVE TO SURF IT YOURSELF. I'M THE SURF ACE!");
@@ -326,20 +333,62 @@
 			},
 			VICTORY: {
 				init: function() {
+					this.age = 0;
+					this.loopMusic('resource/music/titletheme.ogg');
+					var sharkIds = [];
+					var maxScore = 0;
+					for (var i=0; i<this.c.sock.data.sharks.length; i++) {
+						var sharkId = this.c.sock.data.sharks[i].obj.id;
+						if(this.c.scores[sharkId] >= maxScore) {
+							sharkIds.push(sharkId);
+						}
+					}
+					console.log('winning sharks: ' + sharkIds);
+					this.c.sock.notifyVictory(sharkIds);
 					this.setSharksVisible(false);
+
+					var colorMatrix = [[1,0,0], [0,1,0], [0,0,1]];
+					for (var s in this.c.scores) {
+						if(this.c.scores[s] > 9000) {
+							this.colorMatrix = this.c.sock.data.sharks[s].obj.colorMatrix;
+						}
+					}
+					this.sharkSprite = new SpriteSheet('resource/glasses_shark/shark', 1, this.colorMatrix);
 				},
 				update: function(dt) {
 				},
 				draw: function(ctx) {
-					this.drawLargeText(ctx, "VICTORY", '#33f');
+					this.sharkSprite.draw(ctx, {x: this.center.x, y: this.center.y + 150}, {x: 39 * 2, y: 76 * 2});
+					this.drawLargeText(ctx, "VICTORY", '#f33');
 					ctx.font = '30pt VT323';
 					ctx.fillStyle = 'black';
+				},
+				next: function() {
+					if (this.age < DIALOGUE_MIN_TIME) return;
+					this.changeState("CREDITS");
+				}
+			},
+			CREDITS: {
+				init: function() {
+				},
+				update: function(dt) {
+				},
+				draw: function(ctx) {
+					var text = "CREDITS\nAndree @andreemonette\nBhushan\nChen\nErty @ertyseidel\nJeff @jeffowler\nLita @litacho\nNeeraj @neerajwahi\nPaul-Jean @rule142\nRiley @rileyjshaw\nRobert @rlordio\n\nFOR THE COQUETTE GAME ENGINE\nMary Rose Cook @maryrosecook\n\nRELOAD PAGE TO RESTART GAME";
+					ctx.textAlign = 'left';
+					ctx.font = '20pt VT323';
+					ctx.fillStyle = 'black';
+					wrapText(ctx, text, 10, 28, this.size.y - 10, 30);
+					ctx.fillStyle = 'white';
+					wrapText(ctx, text, 10, 25, this.size.y - 10, 30);
 				},
 				next: function() {
 				}
 			},
 			GAME_OVER: {
 				init: function() {
+					this.loopMusic('resource/music/leveltheme.ogg');
+					this.c.sock.notifyGameOver();
 				},
 				update: function(dt) {
 				},
@@ -348,7 +397,7 @@
 					ctx.font = '30pt VT323';
 					ctx.fillStyle = 'black';
 
-					var text = "2 (bit)coins to continue.";
+					var text = "2 bitcoins to continue (or press refresh)";
 					ctx.fillStyle = 'black';
 					ctx.fillText('' + text, this.center.x, this.center.y+138);
 					ctx.fillStyle = '#ff0';
@@ -357,6 +406,17 @@
 				next: function() {
 				}
 			}
+		},
+		muteMusic: function(muted) {
+			this.muted = muted;
+			if(this.theme) this.theme.muted = muted;
+		},
+		loopMusic: function(url) {
+			if(this.theme) this.theme.pause();
+			this.theme = new Audio(url);
+			this.theme.loop = true;
+			this.theme.muted = this.muted;
+			this.theme.play();
 		},
 		showServerPass: function(ctx) {
 			ctx.font = '20pt VT323';
@@ -402,6 +462,11 @@
 		update: function(dt) {
 			this.timer += dt;
 			this.states[this.state].update.call(this, dt);
+
+			// Music muting ('M')
+			if(this.c.inputter.isPressed(77)) {
+				this.muteMusic(!this.muted);
+			}
 
 			// Check for game over (HACK)
 			if(this.c.sock.data && this.c.sock.data.sharks &&
@@ -473,7 +538,7 @@
 			this.surferSpawnTime += dt;
 			this.boatSpawnTime += dt;
 			if (this.boatSpawnSpeed && this.boatSpawnTime >= this.boatSpawnSpeed) {
-				this.boatSpawnTime = -100 * Math.random();
+				this.boatSpawnTime = -Math.random()*100;
 				this.c.entities.create(Boat, {
 					center: {
 						x: Math.random() * (this.size.x - 50) + 25,
